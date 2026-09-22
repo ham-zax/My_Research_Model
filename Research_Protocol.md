@@ -366,6 +366,8 @@ Prefer a kernel \(K(s)\) or distributed lag when responses are heterogeneous.
 
 A single \(\tau\) is acceptable only when an institutionally meaningful fixed delay exists.
 
+The dynamic state must carry the memory needed by the chosen response law. An exact fixed delay requires the relevant history segment; a general distributed kernel may also require a function-valued history. Use a finite-dimensional state and matrix Jacobian only for a justified exact realization or an explicitly labeled approximation. Record the approximation before interpreting eigenvalues as stability evidence for the financial mechanism.
+
 ---
 
 ## 8. Map propagation
@@ -822,7 +824,7 @@ Do not silently redefine variables after empirical failure.
 A theory-freeze policy is not itself a reproducible release. Before a confirmatory experiment begins:
 
 1. commit the canonical model and experiment specification;
-2. create immutable annotated Git tags for the frozen references, e.g. `mfsm-v1.0` and `e001-v1.0`;
+2. create immutable annotated Git tags for the frozen references, e.g. `mfsm-v1.0` and `e001-v1.1` for the current candidate;
 3. record the resolved commit SHAs in a separate freeze manifest **after** the tags exist;
 4. record data-schema, feature-schema, label-schema, and freeze timestamp;
 5. record the first-access timestamp for any strict holdout;

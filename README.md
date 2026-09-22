@@ -35,7 +35,7 @@ Its invariant question is:
   Selective audit of the later operationalization draft: incorporates finite-horizon transient amplification, consequence- and flow-profile-qualified absorptive capacity, and stress-state proxy-bias discipline while rejecting universal threshold overclaims.
 
 - [experiments/Experiment_001_Crypto_Liquidation_Response.md](./experiments/Experiment_001_Crypto_Liquidation_Response.md)
-  First prespecified empirical program: test whether a narrow MFSM state can distinguish forced-liquidation exhaustion from a continuing BTC deleveraging cascade, with ETH as a strict frozen confirmatory holdout.
+  First prespecified empirical program: test whether a narrow MFSM feature set improves 30-minute downside-before-recovery prediction after BTC downside events, with ETH as a strict frozen confirmatory holdout.
 
 - [experiments/Experiment_001_Freeze_Manifest.yaml](./experiments/Experiment_001_Freeze_Manifest.yaml)
   Administrative freeze manifest for the canonical model tag/commit, experiment-spec version/commit, data-feature-label schema versions, freeze timestamp, and first ETH access record.
@@ -65,7 +65,7 @@ Only level 4 would justify treating a component as demonstrated predictive edge.
 8. Treat **remaining continuation capacity** as a mechanism-indexed family \(\{R_{k,t}^+\}_k\), not one market-wide scalar; keep it separate from **headroom (H)** and **opposing absorptive capacity (R-)**; prefer \(R^-_t(h;\delta,\varepsilon,\varphi)\) when timing, shock type, tolerated consequence, and incoming-flow profile matter.
 9. Distinguish current headroom from the local initial-state buffer Jacobian \(\mathbf\Chi_B\), direct intervention sensitivity, and finite-shock buffer response \(\Delta\mathbf B^{\delta}\).
 10. Treat delay as a response-time structure or memory kernel when possible, not automatically as one fixed scalar.
-11. Require a **closed augmented latent state**: every independently evolving buffer, control state, coordination state, or hybrid regime needed for prediction must be inside \(\mathbf Z_t\) or explicitly incorporated into its transition law.
+11. Require a **closed augmented latent state**: every independently evolving buffer, control state, coordination state, hybrid regime, and necessary delay history must be included. A finite-dimensional state is exact only if the memory law admits a finite-dimensional realization; otherwise label the approximation.
 12. Separate the true observation mechanism from the analyst's measurement model; record identification status and plausible observationally equivalent alternatives.
 13. Allow strategic complementarity / coordination vulnerability even when no prior trend exists.
 14. Treat the conditional counterfactual path law \(\mathcal P_{t,h}^{\delta}\) as the theoretical response object; estimate only decision-relevant projections when practical.
@@ -90,6 +90,8 @@ where:
 - $\mathcal O$: true observation mechanism.
 
 Any endogenously or stochastically evolving topology, kernel, coefficient, buffer, coordination state, or hybrid regime required for prediction belongs inside $\mathbf Z_t$ unless it is a predetermined input or has an explicit exogenous law in $\mathcal G$. The local Jacobian $J_t$ and termination classification $M_t^{term}$ are derived objects.
+
+Closure also includes memory: a fixed delay generally requires a history segment rather than an instantaneous finite vector. A finite matrix $J_t$ applies to a justified finite-dimensional realization or a labeled approximation; exact delay stability requires the corresponding history-state analysis.
 
 A disturbance descriptor \(\delta=(c,V,a,d,t_0,p,\nu)\) must be paired with a structural intervention operator on the full counterfactual specification:
 
@@ -148,7 +150,7 @@ beyond ordinary momentum, volatility, leverage, valuation, liquidity, credit, an
 
 ## Current research phase
 
-The conceptual architecture is now in **pre-freeze / empirical-testing preparation mode**. Freeze sequence: (1) commit the current cleanup, (2) create immutable annotated tags such as `mfsm-v1.0` and `e001-v1.0`, and then (3) populate the Experiment 001 freeze manifest with the resolved commit SHAs, schema versions, freeze timestamp, and holdout-access record. Confirmatory work begins only after that manifest is complete. After the freeze, progress should come primarily from falsifiable implementations rather than additional conceptual variables.
+The conceptual architecture is now in **pre-freeze / empirical-testing preparation mode**. Freeze sequence: (1) commit the current cleanup, (2) create immutable annotated tags such as `mfsm-v1.0` and `e001-v1.1`, and then (3) populate the Experiment 001 freeze manifest with the resolved commit SHAs, schema versions, freeze timestamp, and holdout-access record. Confirmatory work begins only after that manifest is complete. After the freeze, progress should come primarily from falsifiable implementations rather than additional conceptual variables.
 
 ## Change discipline
 
@@ -160,4 +162,3 @@ When extending the repository:
 - preserve failed or rejected mappings;
 - add measurement and falsification criteria for every new state variable;
 - avoid retrospective explanations that cannot be prospectively tested.
-

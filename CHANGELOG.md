@@ -2,7 +2,20 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
-## 2026-09-23 - Experiment 001 preregistration completion pass
+## 2026-09-22 - Repository review corrections before Experiment 001 freeze
+
+These corrections amend the pre-freeze specification. They are **not** a completed experiment freeze, dataset audit, or empirical result.
+
+The candidate experiment version advances from `e001-v1.0` to `e001-v1.1`, and the label schema from `E001-label-v1` to `E001-label-v2`; neither candidate tag has been created. The experiment title and research question now describe the measured downside-first outcome rather than claiming that the binary label directly distinguishes liquidation mechanisms.
+
+- **Primary decision:** Previously, multiple horizons and qualitative success conditions left the confirmatory conclusion open to selection. Experiment 001 now makes 30-minute downside-before-recovery the sole primary label and paired Brier improvement over the same-data B4 model on ETH episodes inside a precommitted evaluation period the sole primary comparison. A positive BTC walk-forward improvement is the development gate; ETH success requires the lower endpoint of a prespecified week-block bootstrap interval to exceed zero. Insufficient eligible weeks is inconclusive. Secondary horizons and metrics cannot reverse that result. The consequence is a falsifiable, reproducible predictive claim, distinct from a trading-edge claim.
+- **Observable replenishment:** Previously, the estimator called aggregate L2 additions "durable" and allowed execution qualification as though per-order dwell or fate were observable. The [Bybit public order-book feed](https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook) reports price-level aggregate sizes and updates; it does not supply order identities. Experiment 001 now uses a conservative **observed price-level persistence** proxy with a full one-second pre-decision interval and explicitly disclaims order-level survival and execution attribution. Both B4 and MFSM receive the same neutral proxy. The consequence is a narrower, auditable measurement claim and possible undercount/hidden-replacement bias.
+- **State closure:** Previously, the finite-vector stochastic template could be read as exact for fixed delays and arbitrary kernels. The canonical model, foundations, protocol, and overview now require the history state for exact delays, or a justified finite-dimensional realization; a finite matrix Jacobian for an approximation must be labeled as such. This follows standard [delay differential equation state-space treatment](https://people.uleth.ca/~roussel/nld/delay.pdf). The consequence is that finite-dimensional eigenvalue conclusions cannot silently substitute for exact delayed-system stability.
+- **Lookback and labels:** Previously, a 30-minute panel ending at \(t_d=t_0+15s\) omitted the first 15 seconds of the pre-trigger 30-minute denominator. The panel now extends 30 minutes plus 15 seconds. The primary one-second first-passage label now excludes an episode if a required composite price is missing before the barrier hit or horizon; a feed gap cannot become a negative label. The freeze manifest records the BTC development cutoff, ETH evaluation end, and period rule.
+- **Pre-freeze contract follow-up:** Qualified the buffer-sensitivity Jacobian as finite-dimensional, with an operator on the history space for exact delay models. Restricted pre-freeze ETH schema planning to public, observation-free feed descriptions and made incompatible required ETH fields an inconclusive confirmation. Kept the persistence rate's right-edge censoring in its 15-second denominator, and set pooled inner-validation Brier score on calibrated probabilities as the shared tuning objective.
+- Corrected the prior entry's future-dated 2026-09-23 heading to the 2026-09-22 date of its repository commit.
+
+## 2026-09-22 - Experiment 001 preregistration completion pass
 
 This revision verifies commit `4623b4f` against its stated empirical contracts and tightens Experiment 001 without reopening the canonical MFSM architecture.
 

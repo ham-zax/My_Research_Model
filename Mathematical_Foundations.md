@@ -44,7 +44,9 @@ Interpretation:
 - \(\mathcal G\): the fixed structural form, including transition equations / kernels, mappings from state to delay-memory and propagation operators, controller architecture, exogenous disturbance law, and parameterization;
 - \(\mathcal O\): the true observation mechanism.
 
-Buffers \(B_t\), expectation / coordination state \(Q_t\), control states, discrete hybrid modes, and any endogenously evolving coefficients/topology are components or measurable projections of \(\mathbf Z_t\). A time-varying object outside \(\mathbf Z_t\) is permitted only when it is predetermined or exogenous with an explicit law in \(\mathcal G\). Thus \(K_t\), \(W_t\), or \(\Sigma_t\) must be functions of the closed state, fixed/predetermined inputs, or governed by explicit exogenous laws. The local Jacobian \(J_t\) is derived from linearizing \(\mathcal G\); the termination label \(M_t^{term}\) is a derived prospective classification, not primitive state.
+"Closed" includes the memory required by the transition law. For a fixed delay \(\tau\), the exact Markov state is a history segment (for example, \(\mathbf Z_{[t-\tau,t]}\)), not merely the instantaneous vector \(\mathbf Z_t\). A general distributed kernel can likewise require a function-valued history state. A finite-dimensional representation is exact only when the chosen kernel admits a finite-dimensional realization, such as the exponential kernel represented by its filter coordinate; otherwise it must be labeled an approximation.
+
+Buffers \(B_t\), expectation / coordination state \(Q_t\), control states, discrete hybrid modes, and any endogenously evolving coefficients/topology are components or measurable projections of \(\mathbf Z_t\). A time-varying object outside \(\mathbf Z_t\) is permitted only when it is predetermined or exogenous with an explicit law in \(\mathcal G\). Thus \(K_t\), \(W_t\), or \(\Sigma_t\) must be functions of the closed state, fixed/predetermined inputs, or governed by explicit exogenous laws. A finite local Jacobian \(J_t\) is derived only for a finite-dimensional realization or labeled approximation; exact fixed-delay linearization is an operator on histories. The termination label \(M_t^{term}\) is a derived prospective classification, not primitive state.
 
 Observed data \(\mathbf Y_t\) need not equal \(\mathbf Z_t\), and an analyst's fitted measurement model need not equal the true observation mechanism.
 
@@ -665,6 +667,7 @@ and has mean delay
 \]
 
 This turns the lagged control state into an exponentially weighted memory of past activity.
+The filter state \(y(t)\), initialized consistently with the past history, is an exact finite-dimensional realization of this exponential kernel. A fixed delay or an arbitrary kernel does not inherit that reduction merely because it has the same mean lag.
 
 ---
 
@@ -1149,7 +1152,7 @@ The relevant mismatch is not "eventual buyers exist." It is whether enough \(R^-
 
 ### 21.2 Constraint sensitivity and finite-shock buffer response
 
-Current headroom and state sensitivity are distinct.
+Current headroom and state sensitivity are distinct. The matrix form below assumes an exact finite-dimensional realization or a labeled finite-dimensional approximation.
 
 Let
 
@@ -1176,6 +1179,8 @@ D_{\mathbf z}
 \in\mathbb R^{m\times n}.
 }
 \]
+
+For an exact delay model, replace the current vector with the history state \(\boldsymbol\phi_t\in\mathcal X\), such as \(\mathcal X=C([-\tau,0];\mathbb R^n)\). Where the conditional expectation is Fréchet differentiable in that history, its initial-state sensitivity is an operator in \(\mathcal L(\mathcal X,\mathbb R^m)\), and the intervention projection applies the operator to the induced history perturbation. It is not generally an \(m\times n\) matrix.
 
 \(\mathbf\Chi_{B,t}(h)\) is specifically an **initial-state sensitivity**.
 
@@ -1236,7 +1241,7 @@ This is the mathematical slot for collateral feedback such as price \(\rightarro
 
 ## 22. Closed market-state dynamics
 
-A general continuous-time representation uses a **closed augmented state**:
+For applications whose specified memory has a finite-dimensional realization, a continuous-time representation uses a **closed augmented state**:
 
 \[
 \boxed{
@@ -1255,6 +1260,8 @@ d\mathbf Z_t
 where \(\boldsymbol\beta_t\) is Brownian motion and \(h_e\) is an expectation horizon.
 
 Capacities \(\mathbf r_t\), control / counterflow states \(\mathbf u_t\), coordination states, and discrete hybrid modes that evolve independently are coordinates of \(\mathbf Z_t\). If an application writes separate evolution equations for them, those equations are part of the structural transition law \(\mathcal G\).
+
+This stochastic differential equation is a finite-dimensional template, not an exact representation of every delay model above. Under a fixed delay, two paths with the same current \(\mathbf Z_t\) but different past segments can have different next derivatives. Use the history segment as the state for an exact delay model, or state the finite-memory approximation and its validation. The ordinary finite matrix \(J_t\), \(e^{J_t s}\), and its eigenvalues apply to the finite-dimensional realization or approximation; an exact fixed-delay model uses its history-state evolution and characteristic roots. The conditional expectation term also needs an expectation-formation rule in \(\mathcal G\) before this template defines a transition law.
 
 ### 22.1 True observation mechanism and analyst measurement model
 
@@ -2229,7 +2236,7 @@ Choose the smallest economically meaningful latent structural state
 \mathbf Z_t.
 \]
 
-Specify the closed augmented state and distinguish the unknown true observation mechanism \(\mathbf Y_t=g_*(\mathbf Z_t)+\boldsymbol\eta_t\) from the analyst's candidate measurement models \(g^{(m)}(\cdot;\psi^{(m)})\). Do not add state variables merely because data are available.
+Specify the closed augmented state, including the required history for exact delay or general-memory dynamics, and distinguish the unknown true observation mechanism \(\mathbf Y_t=g_*(\mathbf Z_t)+\boldsymbol\eta_t\) from the analyst's candidate measurement models \(g^{(m)}(\cdot;\psi^{(m)})\). State whether any finite-memory representation is exact or approximate. Do not add state variables merely because data are available.
 
 ---
 
@@ -2272,7 +2279,7 @@ Prefer:
 
 ## 45. Estimate local dynamics
 
-Estimate or posit
+For a specified finite-dimensional realization or labeled approximation, estimate or posit
 
 \[
 J_t.

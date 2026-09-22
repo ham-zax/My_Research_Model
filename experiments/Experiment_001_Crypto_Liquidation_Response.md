@@ -1,4 +1,4 @@
-# Experiment 001 — Crypto Liquidation Exhaustion vs Continuing Deleveraging
+# Experiment 001 — Crypto Downside Response After Spot Declines
 
 Status: experimental, non-canonical
 Primary market: BTC perpetuals with independent BTC spot reference
@@ -12,10 +12,10 @@ This file is a **pre-freeze candidate specification**. No confirmatory ETH analy
 Required immutable references:
 
 - MFSM architecture tag: `mfsm-v1.0`;
-- Experiment 001 specification tag: `e001-v1.0`;
+- Experiment 001 specification tag: `e001-v1.1`;
 - raw-data schema version: **TBD before data extraction**;
 - feature-schema version: **TBD before model fitting**;
-- label-schema version: `E001-label-v1`;
+- label-schema version: `E001-label-v2`;
 - freeze timestamp: **TBD**.
 
 Because a Git commit cannot contain its own final hash without changing that hash, the exact resolved commit SHAs are recorded **after** the frozen commits/tags exist in `Experiment_001_Freeze_Manifest.yaml`. That manifest is an administrative research record and may be committed after the tagged model/spec commit or archived with the research run.
@@ -24,13 +24,9 @@ Any later change to labels, feature definitions, data semantics, holdout policy,
 
 ## 1. Research question
 
-Can observable MFSM-style state distinguish:
+Can observable MFSM-style features improve calibrated prediction, beyond a flexible same-information-set baseline, of whether a further decline reaches its barrier before a recovery does within 30 minutes after a standardized spot decline?
 
-1. **forced-liquidation exhaustion** — the initial deleveraging wave has largely cleared and liquidity is recovering;
-
-from
-
-2. **continuing deleveraging cascade** — losses are still generating forced same-direction flow faster than opposing capacity can replenish?
+Forced-liquidation exhaustion and continuing deleveraging are candidate mechanisms that motivate the features. The binary target does not identify either mechanism: its negative class also includes unresolved paths.
 
 The target is **not** generic BTC direction prediction.
 
@@ -73,6 +69,10 @@ Confirmatory holdout:
 - ETH, with definitions and model specification frozen before evaluation.
 
 **Strict holdout rule:** no ETH data may be inspected, summarized, plotted, used for feature selection, threshold selection, model tuning, propagation analysis, or narrative development before the BTC development specification is frozen and the confirmatory protocol is locked. After the frozen ETH confirmatory score has been computed, ETH may be used for clearly labeled post-confirmatory secondary analysis.
+
+Before freeze, ETH schema planning may use provider-published feed documentation and static field-availability descriptions only; these must contain no ETH market observations, outcome values, event counts, or distribution summaries. No ETH records or derived statistics may be opened. Select the primary shared feature schema from BTC feed audits and those public descriptions. After first ETH access, verify the frozen schema against actual ETH feed semantics and coverage without changing features or scoring rules. If a required frozen field is unavailable or incompatible, report the confirmation as inconclusive; do not substitute another field, drop it selectively, or refit either model.
+
+Freeze a **BTC development cutoff** and an **ETH evaluation end timestamp** before any ETH access. Final primary models may use only BTC episodes whose complete 30-minute labels are available by the cutoff. The ETH confirmatory set consists of every otherwise eligible ETH event with \(t_0\) strictly after the cutoff and \(t_d+30\text{ minutes}\) no later than the fixed ETH evaluation end. Earlier ETH events and episodes whose full primary outcome window extends past that end are not part of the primary test. Record both timestamps and this inclusion rule in the freeze manifest before opening ETH. This prevents a BTC model trained on later market history from scoring an earlier ETH episode as though it were a prospective forecast, and prevents extending the holdout until the score becomes favorable.
 
 Do not pool incompatible venue fields merely because they have the same name.
 
@@ -169,7 +169,7 @@ For \(s>t_d\), define first-passage times
 \inf\{s>t_d:P_s\ge B_+\}.
 \]
 
-For evaluation horizon \(h\in\{30\text{ min},120\text{ min}\}\), the primary binary target is
+For evaluation horizon \(h\in\{30\text{ min},120\text{ min}\}\), define the binary target
 
 \[
 \boxed{
@@ -185,6 +185,8 @@ Y_h
 \]
 
 Thus "additional decline" and "recovery" are both anchored to \(P_d\), not to \(P_{t_0}\) or to an ex-post extremum. If neither barrier is reached before \(t_d+h\), then \(Y_h=0\).
+
+Evaluate first passage on the canonical one-second spot-composite grid, starting with the first grid point strictly after \(t_d\). A triggered episode has a valid \(Y_h\) only if every required grid price is valid through the first observed barrier hit or, if neither barrier is hit, through \(t_d+h\). A missing or stale composite price before that stopping point makes the label unavailable and excludes the episode from that horizon's scored sample; it is never coded as \(Y_h=0\). Apply the same rule to BTC development and ETH confirmation, and record the exclusion reason before scoring. The raw-data schema must specify the composite's exact validity and staleness rule before any event extraction.
 
 Interpret \(Y_h\) as **downside continuation before recovery versus not-downside-first**. It is not, by itself, a literal two-class label for "liquidation exhaustion" versus "continuing cascade," because the negative class includes both recovery-first paths and unresolved/sideways paths.
 
@@ -202,7 +204,7 @@ C_h
 
 using the same \(\tau_-\), \(\tau_+\), and horizon. Survival / competing-risk analyses should use \(C_h\) or the underlying passage times rather than silently treating every \(Y_h=0\) path as exhaustion.
 
-This is deliberately path-dependent.
+This is deliberately path-dependent. **The 30-minute target \(Y_{30m}\) is the sole primary confirmatory endpoint.** The 120-minute target, competing-risk states, and all targets in Section 7 are secondary. They cannot replace \(Y_{30m}\) after results are seen.
 
 ## 7. Secondary targets
 
@@ -383,7 +385,7 @@ h_R
 
 where \(D^{exec}_{v,t_d}(\varepsilon_P)\) is immediately executable bid notional within \(\varepsilon_P\).
 
-#### Durable replenishment estimator
+#### Observable price-level persistence estimator
 
 Set the primary replenishment lookback to
 
@@ -401,16 +403,25 @@ ending at \(t_d\), and the minimum durability interval to
 }
 \]
 
-Within \([t_d-w_{repl},t_d]\), track positive bid-depth deltas at fixed price levels that are inside the contemporaneous \(\varepsilon_P\) band.
+Use the sequence of valid, consecutive reconstructed L2 updates at each fixed bid price \(p\). Let \(\Delta D_{p,u}\) be the change in displayed base-asset size at update \(u\), after applying the venue's frozen snapshot/delta semantics. For every positive change at \(t_{add}\in[t_d-w_{repl},t_d]\) with \(p\) inside the contemporaneous \(\varepsilon_P\) band, define the credited notional
 
-A positive depth delta added at time \(t_{add}\) contributes to **durable replenishment** only if its qualifying evidence is fully observable by \(t_d\):
+\[
+\boxed{
+Q^{persist}_{p,t_{add}}
+=
+p\,\max\left\{0,
+\Delta D_{p,t_{add}}
+-\sum_{u\in(t_{add},t_{add}+\tau_{dwell}]}
+(-\Delta D_{p,u})_+
+\right\}.
+}
+\]
 
-1. **dwell-qualified:** \(t_{add}+\tau_{dwell}\le t_d\) and the added quantity remains resting at that same price level through \(t_{add}+\tau_{dwell}\); or
-2. **execution-qualified:** the added quantity is observably executed against incoming sell flow at some \(t_{exec}\le t_d\) before cancellation.
+Credit it only when \(t_{add}+\tau_{dwell}\le t_d\), the price remains inside the contemporaneous band at the dwell endpoint, and the required update sequence is complete. A price level disappearing is a reduction to zero. Subsequent positive changes do not undo an intervening reduction for this cohort. Charging every observed reduction against each still-qualifying positive change is deliberately conservative; it can undercount persistence. There is **no execution-qualified route** from aggregate L2 plus trades: those feeds cannot identify which order or added quantity was executed or cancelled.
 
-Orders added too late to complete the dwell interval by \(t_d\) receive **no dwell credit**, unless they satisfy the execution-qualified rule by \(t_d\).
+This is a proxy for **persistence of displayed price-level additions at the feed's resolution**. It does not identify individual resting orders or rule out unobserved replacement between updates. If the reconstruction has a sequence gap, a snapshot reset, or a missing update inside a required dwell interval, mark the venue's replenishment and dependent capacity/ratio features unavailable for that event; do not replace missing data with zero. All credited intervals must end by \(t_d\). No post-\(t_d\) book state, trades, or cancellations may enter the feature.
 
-If the historical feed cannot distinguish execution from cancellation at the required granularity, use the conservative dwell-only rule. Under no circumstance may post-\(t_d\) book state, executions, or cancellations be consulted when constructing \(\widehat q^{repl}_{v,t_d}\).
+The right edge is intentionally censored: with a 15-second lookback and one-second dwell, additions after \(t_d-1\text{ second}\) cannot qualify. The rate still divides by the full 15-second window, not the 14-second eligible-addition span. This fixed convention adds a downward edge bias; do not silently shorten the denominator or shift the window.
 
 Define
 
@@ -419,14 +430,14 @@ Define
 \widehat q^{repl}_{v,t_d}(\varepsilon_P)
 =
 \frac{
-\sum \text{durable bid replenishment notional}
+\sum_{p,t_{add}} Q^{persist}_{p,t_{add}}
 }{
 w_{repl}
 }.
 }
 \]
 
-This excludes gross add-cancel churn from the replenishment estimate. It also uses only the frozen primitive history
+This discounts observed add-remove churn without claiming order-level durability. It uses only the frozen primitive history
 
 \[
 X^{raw}_{[t_d-w,t_d]}
@@ -550,7 +561,7 @@ For every Experiment 001 proxy, record not only ordinary measurement error but h
 | Latent target | Observable proxy | Stress-state failure mode | Expected sign + rationale |
 | --- | --- | --- | --- |
 | Short-horizon \(R^-\) | executable visible bid depth | quotes can cancel before impact, while hidden liquidity/new capital are absent from the displayed book | **ambiguous**: cancellation biases displayed capacity high; hidden/new capacity biases it low |
-| Replenishment component of \(R^-\) | durable pre-decision refill-rate estimate | liquidity providers can withdraw when toxicity/volatility jumps | usually **high/optimistic** if recent refill behavior fails to persist |
+| Replenishment component of \(R^-\) | pre-decision price-level persistence-rate estimate | aggregate L2 cannot identify order replacement between updates, and liquidity providers can withdraw when toxicity/volatility jumps | **ambiguous** for observed persistence because replacement can overstate order durability while the conservative reduction charge can undercount it; usually **high/optimistic** as a forecast if recent refill behavior fails to persist |
 | Liquidation pressure | venue liquidation feed | sampled/delayed/incomplete messages or duplicated event semantics | usually **low** if incomplete, but can be **high** if duplicate/repeated events are not removed |
 | Generic aggressive selling | aggressive sell trade flow | mixes informed, discretionary, hedging, inventory, and possibly unidentified forced flow | **ambiguous mechanism attribution** rather than a simple level bias |
 | Residual leverage | open interest level/change | openings and closings can offset; venue aggregation masks position direction | **ambiguous** |
@@ -638,7 +649,7 @@ Define a frozen primitive information panel
 X^{raw}_{[t_d-w,t_d]},
 \]
 
-with \(w=30\) minutes by default, containing the exact primitive observations available by \(t_d\): prices/returns, raw trades and aggressor flags, liquidation messages and event identifiers where available, raw L2 order-book snapshots/deltas or the highest-fidelity historical book feed used to reconstruct fixed-price-level depth changes, OI, funding/basis state, mark/index state, venue-status fields, and any other primitive series required to construct an MFSM feature.
+with the **primary lookback \(w=30\text{ minutes}+15\text{ seconds}\)**, so its left endpoint is exactly \(t_0-30\text{ minutes}\). It contains the primitive observations available by \(t_d\): prices/returns, raw trades and aggressor flags, liquidation messages and event identifiers where available, L2 snapshots/deltas and their sequence-validity fields needed to reconstruct fixed-price-level depth changes, OI, funding/basis state, mark/index state, venue-status fields, and any other primitive series required to construct an MFSM feature. The snapshot immediately preceding the left endpoint may be read solely to initialize the book; its observations are not model features.
 
 B4 must receive this **same primitive historical information**, not merely contemporaneous B3 snapshots. If an MFSM feature requires an additional primitive history, that history must also be available to B4 before freeze.
 
@@ -671,7 +682,7 @@ where the underlying feed supports them:
 - liquidation notional / rate;
 - aggressive-buy and aggressive-sell notional / rate;
 - gross bid/ask add rate;
-- durable bid/ask add rate under the frozen dwell rule;
+- observed price-level persistent bid/ask add rate under the frozen dwell rule;
 - cancel rate;
 - observable execution rate;
 - current and lagged executable depth;
@@ -680,7 +691,7 @@ where the underlying feed supports them:
 - funding, basis, and mark/index divergence;
 - returns and realized-volatility summaries.
 
-These are **neutral summaries**, not MFSM interactions. For example, B4 receives durable replenishment rate itself, not only raw order-book deltas, because MFSM also uses that event-stream information.
+These are **neutral summaries**, not MFSM interactions. For example, B4 receives the same observed price-level persistence rate used by MFSM, not only raw order-book deltas.
 
 #### Frozen scale-normalization policy
 
@@ -713,7 +724,7 @@ as the neutral preprocessing panel after the frozen causal scale normalizations 
 
 Raw scale-sensitive values may be retained only for clearly labeled **within-BTC secondary diagnostics**. They are excluded from the primary cross-asset confirmatory models so MFSM cannot appear to transfer better merely because its ratios are dimensionless while B4 is exposed to BTC-scale notionals.
 
-The primary \(U^{norm}_{t_d}\) schema may contain only features whose field semantics and historical availability pass the frozen data-schema audit for both the BTC development universe and the ETH confirmatory universe. Venue/asset-specific extras may appear only in secondary within-BTC analyses.
+The primary \(U^{norm}_{t_d}\) schema may contain only features whose field semantics and historical availability pass the BTC data-schema audit and are supported for ETH by the pre-freeze public-documentation check described in Section 3. Actual ETH compatibility is verified only after the holdout is opened under the frozen inconclusive-result rule. Venue/asset-specific extras may appear only in secondary within-BTC analyses.
 
 A flexible nonlinear learner receiving \(U^{norm}_{t_d}\) is the mandatory primary B4 comparator.
 
@@ -736,11 +747,15 @@ Model-selection parity is required:
 - B4 hyperparameter-search budget no smaller than the MFSM feature model's tuning budget;
 - identical calibration and scoring procedures where applicable.
 
+The primary B4 and MFSM models use the **same histogram-based gradient-boosted classifier family with probability calibration**, the same eligible episodes, and the same BTC-only tuning procedure; the only input difference is the prespecified MFSM combinations. Freeze the exact feature list, learner/library version, tuning grid, inner folds, calibration method, missing-feature policy, and final BTC-fitted model artifacts before opening ETH. Secondary logistic and competing-risk models cannot be substituted for either primary model after ETH scoring.
+
+For both primary models, select hyperparameters by **minimizing the pooled, episode-weighted Brier score of calibrated 30-minute probabilities** across the BTC inner-validation episodes. Each validation episode contributes once, with equal weight; preprocessing, model fitting, and calibration for a fold use only BTC data permitted before that fold's validation period. Freeze any deterministic tie-break rule with the tuning grid before ETH access.
+
 If MFSM beats B1/B2 but not B4, classify the result as useful feature engineering rather than demonstrated incremental structural information.
 
 ## 12. Initial model family
 
-Start with:
+For secondary BTC development and diagnostics, consider:
 
 - regularized logistic regression;
 - survival / competing-risk models where appropriate;
@@ -748,11 +763,11 @@ Start with:
 
 Do not begin with a large neural state-space model.
 
-The first question is whether any stable incremental information exists.
+The primary BTC-to-ETH comparison uses the matched calibrated gradient-boosted family fixed in Section 11. The first question is whether any stable incremental information exists.
 
 ## 13. Validation design
 
-Use episode-level walk-forward or expanding-window evaluation.
+Use episode-level walk-forward or expanding-window evaluation on BTC. At every fit or calibration cutoff, include an episode only if its full label horizon has ended and its label data are available by that cutoff. A future episode's features may exist while its label is still immature; that label cannot enter training or model selection. Apply identical cutoffs and episode rows to B4 and MFSM.
 
 Do not randomly split ticks from the same cascade across train and test.
 
@@ -762,7 +777,7 @@ Required checks:
 - Brier score;
 - log loss;
 - precision-recall for rare continuation/cascade events;
-- episode-clustered confidence intervals;
+- paired uncertainty intervals that keep episodes from the same UTC calendar week together;
 - economic value after costs;
 - sensitivity to event-threshold choices fixed before holdout;
 - leave-largest-events-out analysis;
@@ -869,15 +884,31 @@ If these occur, do not add more conceptual variables to rescue the test.
 
 ## 19. Success criterion
 
-A result becomes scientifically interesting if the prespecified MFSM feature set:
+### 19.1 Primary confirmatory comparison
 
-1. improves out-of-sample probability calibration or path-target prediction over B4;
-2. survives episode-clustered uncertainty;
-3. preserves mechanism-consistent directions;
-4. transfers with frozen definitions to ETH and/or another holdout;
-5. produces net economic value after realistic costs when used as a risk controller or regime filter.
+Score the frozen BTC-fitted B4 and MFSM models on exactly the same eligible **ETH episodes inside the precommitted evaluation period**, with the frozen 30-minute label and no ETH refitting, recalibration, threshold choice, period extension, or row selection based on outcomes. For episode \(i\), let \(p_{B4,i}\) and \(p_{M,i}\) be the two predicted probabilities of \(Y_{30m,i}=1\). The sole primary score difference is the paired Brier improvement
 
-Only after those conditions are met should the project consider a more complex latent-state implementation or live execution integration.
+\[
+\boxed{
+\Delta_{ETH}
+=
+\frac1N\sum_{i=1}^{N}
+\left[
+(Y_{30m,i}-p_{B4,i})^2
+-(Y_{30m,i}-p_{M,i})^2
+\right].
+}
+\]
+
+Positive \(\Delta_{ETH}\) favors MFSM. Each eligible episode has equal weight; both models use the same rows. Before ETH access, freeze the data-quality and missing-label rules that determine eligibility, and publish counts and reasons for every excluded triggered episode. A feed gap is not a negative outcome.
+
+For uncertainty, resample **UTC calendar weeks** with replacement, keeping every eligible episode and its paired score difference inside its week. Use 10,000 bootstrap replicates and random seed 1001; recompute the episode-weighted \(\Delta_{ETH}\) in each replicate. Report the 2.5th and 97.5th percentiles. Require at least 20 distinct UTC weeks with eligible ETH episodes and both outcome classes represented; otherwise the confirmation is **inconclusive**. This block rule acknowledges that multiple two-hour episodes can belong to the same market stress period.
+
+The BTC development gate is a positive paired mean 30-minute Brier improvement over B4 in the frozen BTC walk-forward evaluation. If it is nonpositive, record a failed development result and leave ETH sealed. If it is positive, freeze the final BTC models and evaluate ETH once. **Confirmatory predictive success** requires the lower endpoint of the ETH 95% bootstrap interval for \(\Delta_{ETH}\) to exceed zero. A computable interval whose lower endpoint is zero or below is a failed confirmation under this rule, even if another metric or the 120-minute target looks favorable. Too few eligible ETH weeks or an uncomputable primary score is inconclusive; neither permits replacement by another holdout.
+
+Log loss, calibration plots, precision-recall, competing risks, 120-minute outcomes, venue/time sensitivities, and mechanism-consistent directions remain reported secondary evidence. They explain a primary result but cannot reverse its classification. A positive primary result demonstrates incremental **predictive performance of the engineered feature representation** under this experiment; it does not identify the structural counterfactual path law or prove a new financial mechanism.
+
+**Trading edge is a separate claim.** It additionally requires a prespecified risk-controller or regime-filter policy, a comparator policy, position sizing, costs/latency, and net decision-value test on untouched data. If that policy is not frozen before the relevant evaluation, report predictive performance only. A more complex latent-state implementation or live execution integration should wait for confirmatory prediction and, where claimed, decision-value evidence.
 
 ## 20. Implementation boundary
 

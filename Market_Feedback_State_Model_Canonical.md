@@ -253,6 +253,8 @@ where:
 - \(\mathcal G\) = the fixed structural form: transition equations / kernels, mappings from state to delay-memory and propagation operators, controller architecture, disturbance law, and parameterization;
 - \(\mathcal O\) = the true observation mechanism linking latent state to recorded data.
 
+Closure includes **memory**, not just current coordinates. If a transition depends on a fixed delay or a general kernel of past states, the exact state must include the required history (for example, the segment \(\mathbf Z_{[t-\tau,t]}\) for a delay \(\tau\)). A current finite-dimensional vector is closed only when the specified memory has an exact finite-dimensional realization, such as an exponential kernel represented by its filter state, or when the application explicitly declares and validates a finite-dimensional approximation. Different histories can share the same current vector and imply different next responses.
+
 Closure rule: any object written with a time index—such as \(K_t\), \(W_t\), \(\Sigma_t\), a time-varying coefficient, funding regime, or controller state—must satisfy exactly one of the following:
 
 1. it is a deterministic / predetermined input known at the decision time;
@@ -421,11 +423,11 @@ price up -> collateral value up -> borrowing capacity up -> buying up -> price u
 
 price down -> collateral value down -> margin pressure up -> forced selling up -> price down
 
-The full object should be represented locally by a state-dependent response matrix or Jacobian:
+For a finite-dimensional realization or a labeled finite-dimensional approximation, represent the local response by a state-dependent matrix or Jacobian:
 
 Delta x_dot approximately equals J_t Delta x.
 
-J_t captures how small perturbations in one state variable affect others around the current regime.
+J_t captures how small perturbations in one state variable affect others around the current regime in that finite-dimensional representation. Exact fixed-delay dynamics instead require the relevant history-state linearization.
 
 ### 6.1 Derived amplification diagnostic A_t
 
@@ -635,7 +637,7 @@ This creates a direct link between buffers and delay.
 
 Current headroom and the sensitivity of future headroom are different objects.
 
-If \(\mathbf B_t\in\mathbb R^m\) is a vector of buffers / constraints and \(\mathbf Z_t\in\mathbb R^n\) is the latent structural state, the local sensitivity is an \(m\times n\) Jacobian:
+For an exact finite-dimensional realization or a labeled finite-dimensional approximation, let \(\mathbf B_t\in\mathbb R^m\) be a vector of buffers / constraints and \(\mathbf Z_t\in\mathbb R^n\) the latent structural state. The local sensitivity is then an \(m\times n\) Jacobian:
 
 \[
 \boxed{
@@ -652,7 +654,9 @@ D_{\mathbf z}
 }
 \]
 
-This Jacobian is specifically an **initial-state sensitivity**. For a small intervention that acts solely through an instantaneous displacement of the initial state, with induced direction \(\mathbf v_{\delta}=D_{\delta}\mathbf Z_t[\dot\delta]\), the chain rule gives
+For an exact delay model, the state is instead a history \(\boldsymbol\phi_t\in\mathcal X\) (for example, \(\mathcal X=C([-\tau,0];\mathbb R^n)\)). When differentiable, the analogous initial-state sensitivity is a Fréchet derivative in \(\mathcal L(\mathcal X,\mathbb R^m)\); its intervention projection applies that operator to an induced history perturbation, not an \(m\times n\) matrix to a current-state vector.
+
+This finite-dimensional Jacobian is specifically an **initial-state sensitivity**. For a small intervention that acts solely through an instantaneous displacement of the initial state, with induced direction \(\mathbf v_{\delta}=D_{\delta}\mathbf Z_t[\dot\delta]\), the chain rule gives
 
 \[
 \boldsymbol\chi_{B,t}^{\delta}(h)
@@ -1319,7 +1323,7 @@ Identification remains a separate problem. Estimation requires an explicit struc
 
 This section is intentionally a compact bridge. Exact derivations, assumptions, stability boundaries, distributed-memory results, non-normal transient amplification, stochastic recovery mathematics, threshold/hybrid dynamics, and Physarum adaptive-network equations are preserved in `Mathematical_Foundations.md`.
 
-A general continuous-time conceptual representation uses the **closed augmented state** \(\mathbf Z_t\):
+A finite-dimensional continuous-time conceptual representation uses the **closed augmented state** \(\mathbf Z_t\), when the chosen memory and expectations admit such a representation:
 
 ### 18.1 Closed state dynamics
 
@@ -1338,6 +1342,7 @@ d\mathbf Z_t
 where \(\boldsymbol\beta_t\) is Brownian motion and \(h_e\) is an expectation horizon.
 
 Capacities, buffers, control states, and discrete regimes that evolve independently are coordinates of \(\mathbf Z_t\), not hidden side states.
+The displayed finite-dimensional equation does not cover an exact fixed delay or arbitrary distributed kernel unless the necessary history is included in a function-valued state or the kernel has an exact finite-dimensional realization. A finite matrix \(J_t\) and its eigenvalues describe the finite-dimensional realization or a labeled approximation; exact delay stability uses the corresponding history-state/characteristic equation. Forward-looking expectations also require a specified expectation-formation rule inside \(\mathcal G\).
 
 ### 18.2 Capacity components
 

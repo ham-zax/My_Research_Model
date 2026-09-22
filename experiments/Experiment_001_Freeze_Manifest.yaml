@@ -3,15 +3,18 @@ model:
   release_tag: mfsm-v1.0
   resolved_commit: null
 experiment:
-  spec_tag: e001-v1.0
+  spec_tag: e001-v1.1
   resolved_commit: null
   spec_file: experiments/Experiment_001_Crypto_Liquidation_Response.md
 schemas:
   raw_data: null
   feature: null
-  label: E001-label-v1
+  label: E001-label-v2
 freeze:
   timestamp_utc: null
+  btc_development_cutoff_utc: null
+  eth_evaluation_end_utc: null
+  eth_evaluation_period_rule: "all otherwise eligible ETH events with t0 strictly after btc_development_cutoff_utc and td + 30 minutes no later than eth_evaluation_end_utc"
   operator: null
   notes: >
     Populate this manifest only after the frozen model/spec commits and annotated
