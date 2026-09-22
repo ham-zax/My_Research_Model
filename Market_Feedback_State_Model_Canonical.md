@@ -449,14 +449,57 @@ The causal estimation problem is difficult because price, flow, and information 
 
 Even if all local eigenvalues imply asymptotic stability, a non-normal or thresholded system may display large transient amplification.
 
+A derived finite-horizon diagnostic is
+
+\[
+\boxed{
+\mathcal A_t^{tr}(h)
+=
+\sup_{0\le s\le h}
+\|\Phi(t+s,t)\|_2,
+}
+\]
+
+where \(\Phi\) is the local tangent/state-transition operator. Under a locally frozen linearization,
+
+\[
+\Phi(t+s,t)=e^{J_t s}.
+\]
+
+The locally frozen numerical abscissa
+
+\[
+\omega(J_t)
+=
+\lambda_{\max}
+\left(
+\frac{J_t+J_t^\ast}{2}
+\right)
+\]
+
+tests whether at least one perturbation direction has immediate Euclidean growth.
+
+These are **derived response diagnostics**, not new state variables and not universal fragility scores. Their interpretation depends on coordinates, norm, horizon, and the specified local model.
+
 The relevant questions are therefore:
 
 - does a small perturbation decay monotonically?
 - does it oscillate while decaying?
 - does it transiently amplify before decaying?
+- is transient amplification large relative to the distance to a switching surface?
 - does it generate an oscillatory instability?
 - does it generate a monotonic instability?
 - does it cross a nonlinear threshold into a different regime?
+
+The important implication is
+
+\[
+\boxed{
+\text{asymptotic stability}
+\not\Rightarrow
+\text{finite-horizon path safety}.
+}
+\]
 
 The model must not equate one mathematical instability type with all financial crashes.
 
@@ -516,18 +559,47 @@ Low H means a small adverse move can transform voluntary actors into forced acto
 
 R_minus = capacity available to take the opposite side of an unwind.
 
-The stronger canonical form is horizon-qualified and, when the disturbance changes willingness or financing conditions, disturbance-conditioned:
+The strongest operational form is horizon-qualified, disturbance-conditioned, consequence-tolerance-qualified, and **incoming-flow-profile-qualified**.
+
+Let \(\varphi:[0,h]\to\mathbb R_+\) be a prespecified normalized arrival profile,
+
+\[
+\int_0^h\varphi(s)\,ds=1,
+\]
+
+so total flow \(q\) arrives at rate \(q\varphi(s)\). The profile \(\varphi\) is the **incoming stress-flow schedule whose capacity is being measured**, not a replacement for the intervention-time profile already contained in \(\delta\). Let \(\mathfrak d_{t,h}(\delta,q\varphi)\) denote the named adverse-consequence metric.
+
+Then
 
 \[
 \boxed{
-R^-_t(h;\delta)
+R^-_t(h;\delta,\varepsilon,\varphi)
 =
-\text{opposing capacity that can actually act by horizon }h
-\text{ under intervention }\delta.
+\sup
+\left\{
+q\ge0:
+\mathfrak d_{t,h}(\delta,q'\varphi)
+\le\varepsilon
+\;\;
+\forall q'\in[0,q]
+\right\}.
 }
 \]
 
-When a disturbance family and amplitude are already fixed by the research design, \(R^-_t(h)\) is acceptable shorthand.
+For consequence metrics monotone in flow scale, the condition may be evaluated at \(q\) directly.
+
+The consequence metric attached to \(\varepsilon\) must be named explicitly. Examples include:
+
+- maximum tolerated price displacement \(\varepsilon_P\);
+- maximum spread widening;
+- maximum threshold-loss probability;
+- maximum path-loss severity under a prespecified \((\ell,\rho)\).
+
+If the design specifies a set \(\Phi\) of admissible arrival profiles, a conservative capacity may be defined by the worst profile in that set.
+
+Thus a quantity of visible depth is not automatically \(R^-\). Absorptive capacity is always defined relative to a horizon, disturbance environment, tolerated consequence, and incoming-flow schedule.
+
+When \(\varphi\) is fixed by the research design, \(R^-_t(h;\delta,\varepsilon)\) is acceptable shorthand. When tolerance and profile are fixed, \(R^-_t(h;\delta)\) is acceptable shorthand. When disturbance, tolerance, and profile are all fixed, \(R^-_t(h)\) is acceptable shorthand.
 
 Examples:
 
@@ -541,7 +613,7 @@ Examples:
 
 This distinction matters because a market can have abundant eventual buyers but almost no capital able to act before a margin or redemption deadline, and because the same nominal flow may attract liquidity under a routine rebalance but repel it under a suspected information or collateral shock.
 
-Low short-horizon \(R^-_t(h;\delta)\) means the market may have difficulty absorbing forced flow even if longer-horizon fundamental value appears attractive.
+Low short-horizon \(R^-_t(h;\delta,\varepsilon,\varphi)\) means the market may have difficulty absorbing the specified flow schedule within the consequence tolerance even if longer-horizon fundamental value appears attractive.
 
 ### 7.4 Effective capacity is time-dependent
 
@@ -766,6 +838,14 @@ Do not count connections. Identify the strongest self-reinforcing propagation mo
 
 Any spectral statistic must inherit its financial meaning from an explicit propagation law. A large eigenvalue of an arbitrary correlation matrix is not sufficient.
 
+A threshold such as
+
+\[
+\rho(P)=1
+\]
+
+is a theorem about a **specified linear propagation operator** \(P\), not a universal market-crisis boundary. State dependence, saturation, defaults, interventions, thresholds, and nonlinear recovery can invalidate the linear extrapolation outside its stated domain.
+
 ---
 
 ## 10. D_t: functional diversity
@@ -874,6 +954,8 @@ Represent this conceptually by:
 where \(a_i^*\) is participant \(i\)'s optimal action and \(\bar a_{-i}\) summarizes relevant actions of others.
 
 High positive \(\Gamma_t\) means behavior is strategically complementary: others withdrawing, selling, redeeming, or refusing rollover can make the same action individually rational for another participant.
+
+There is **no universal \(\Gamma_t=1\) run threshold** in MFSM. A critical value is meaningful only after an application specifies the strategic response map whose local derivative \(\Gamma_t\) represents.
 
 This allows MFSM to represent run-like coordination vulnerability even when no preceding price trend exists.
 
@@ -1269,7 +1351,7 @@ If \(\mathbf r_t\) denotes the capacity coordinates of \(\mathbf Z_t\), an appli
 \mathbf c(\mathbf Z_t,\mathbf r_t),
 \]
 
-to separate replenishment from consumption. Relevant projections include mechanism-specific \(R^+\), headroom \(H\), and disturbance-conditioned \(R^-_t(h;\delta)\).
+to separate replenishment from consumption. Relevant projections include mechanism-specific \(R^+\), headroom \(H\), and horizon-/disturbance-/tolerance-/flow-profile-qualified \(R^-_t(h;\delta,\varepsilon,\varphi)\).
 
 ### 18.3 Delayed response
 
@@ -1763,11 +1845,11 @@ Identify:
 - funding deadlines;
 - mandate constraints.
 
-### Step 7: Estimate opposing capacity \(R^-_t(h;\delta)\)
+### Step 7: Estimate opposing capacity \(R^-_t(h;\delta,\varepsilon,\varphi)\)
 
-Who can take the other side under **this specified disturbance** by the relevant horizon?
+Who can take the other side under **this specified disturbance**, arrival profile, and horizon **without breaching the prespecified consequence tolerance**?
 
-Distinguish quoted liquidity from committed risk-bearing capacity, eventual capital from capital that can arrive before forced-action deadlines, and realized absorption from prospective willingness to absorb.
+Name the consequence metric attached to \(\varepsilon\) and the incoming-flow profile \(\varphi\), or define an admissible class \(\Phi\). Distinguish quoted liquidity from committed risk-bearing capacity, eventual capital from capital that can arrive before forced-action deadlines, and realized absorption from prospective willingness to absorb.
 
 ### Step 8: Identify opposing mechanisms and controller topology
 
@@ -1882,9 +1964,19 @@ Then, where the task is structural susceptibility rather than scenario consequen
 
 Never convert "strong" directly into "safe", and never compare susceptibility slopes produced under incompatible shock parameterizations.
 
-### Step 16: State missing information, measurement assumptions, and falsifiers
+### Step 16: State missing information, measurement assumptions, stress-bias sign/rationale, and falsifiers
 
-For every strong conclusion, state what observation would weaken or reverse it. Distinguish latent quantities from their proxies and record model/kernel choices that could change the estimate.
+For every strong conclusion, state what observation would weaken or reverse it. Distinguish latent quantities from their proxies and record:
+
+- candidate measurement/kernel model;
+- ordinary-condition bias;
+- stress-state failure mode;
+- expected sign of proxy error in the regime being studied plus rationale; use `ambiguous` when opposing failure modes are plausible;
+- alternative proxy;
+- identification status;
+- falsifier.
+
+A proxy that becomes optimistically biased under stress must not be treated as a conservative risk measure.
 
 ---
 
@@ -1924,7 +2016,7 @@ When another LLM applies this model, it should return something structurally sim
 - local initial-state \(\mathbf\Chi_B\):
 - direct intervention sensitivity, if identified:
 - finite-shock \(\Delta\mathbf B^{\delta}\):
-- \(R^-_t(h;\delta)\):
+- \(R^-_t(h;\delta,\varepsilon,\varphi)\):
 
 ### Counterforces and timing
 - \(N\): endogenous counterflow / antagonism
@@ -1936,6 +2028,13 @@ When another LLM applies this model, it should return something structurally sim
 - \(W\) channels:
 - specified propagation law:
 - derived \(C\) / propagation potential:
+
+### Finite-horizon local response
+- \(\mathcal A_t^{tr}(h)\), if identified:
+- \(\omega(J_t)\), if identified:
+- nearest relevant switching surface / signed distance:
+- norm / coordinate convention used:
+- warning if not identifiable from available data:
 
 ### Functional diversity and coordination
 - \(D_t\):
@@ -1990,6 +2089,9 @@ When another LLM applies this model, it should return something structurally sim
 - Identification status:
 - Closest observationally equivalent alternative:
 - Kernel / measurement assumptions:
+- Ordinary-condition bias:
+- Stress-state failure mode:
+- Expected stress-state bias sign + rationale:
 - Main measurement risks:
 
 ### Dominant feedback mode
@@ -2205,9 +2307,9 @@ and critical disturbance amplitudes where possible. Test whether these susceptib
 
 Test whether strong same-direction feedback becomes especially dangerous when current headroom is low **and/or** a small state change rapidly destroys future headroom. Compare local \(\mathbf\Chi_{B,t}\) with finite-shock \(\Delta\mathbf B_t^{\delta}\).
 
-### Priority 4: Horizon- and disturbance-dependent opposing capacity
+### Priority 4: Horizon-, disturbance-, tolerance-, and arrival-profile-dependent opposing capacity
 
-Estimate \(R^-_t(h;\delta)\): who can actually absorb forced flow under the specified disturbance by the relevant deadline, not merely who may eventually find the asset attractive.
+Estimate \(R^-_t(h;\delta,\varepsilon,\varphi)\): who can actually absorb the specified flow schedule under the disturbance by the relevant deadline without breaching the consequence tolerance, not merely who may eventually find the asset attractive.
 
 ### Priority 5: Delay and deadline mismatch
 
@@ -2249,7 +2351,7 @@ When loading this file, treat the following as authoritative for the current ver
 4. Distinguish a disturbance class, the descriptor \(\delta=(c,V,a,d,t_0,p,\nu)\), and the full intervention operator \(\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta})\). Do not place an endogenous outcome such as a run or cascade directly inside \(do(\cdot)\).
 5. The fundamental theoretical response object is the conditional counterfactual path law \(\mathcal P_{t,h}^{\delta}\). Mean response is only one projection of that law.
 6. The mechanism-indexed family \(\{R_{k,t}^+\}_k\), \(H\), and \(R^-\) must never be collapsed into a generic resource variable without explicit justification; \(R^+\) alone is only a category label.
-7. Opposing absorptive capacity should be horizon- and disturbance-qualified as \(R^-_t(h;\delta)\) when timing or shock type matters.
+7. Opposing absorptive capacity should be horizon-, disturbance-, consequence-tolerance-, and flow-profile-qualified as \(R^-_t(h;\delta,\varepsilon,\varphi)\) when timing, shock type, allowable damage, or arrival schedule matters.
 8. Current headroom, the local initial-state constraint-sensitivity Jacobian \(\mathbf\Chi_{B,t}\), the direct intervention derivative, and the finite-shock buffer response \(\Delta\mathbf B_t^{\delta}\) are distinct.
 9. Delay must be interpreted jointly with gain and response timescale; prefer a kernel or distribution when data allow.
 10. Connectivity is not monotonically destabilizing; use explicit propagation mechanisms.
@@ -2270,7 +2372,7 @@ When loading this file, treat the following as authoritative for the current ver
 
 The entire framework can be compressed to the following:
 
-> A financial market is a state-dependent response system. Its current **closed augmented state** determines how new disturbances are amplified, damped, delayed, transmitted, or converted into forced behavior. Price trends are one state-transforming process among several: coordination runs, collateral feedback, funding stress, strategy imitation, and network spillovers can also rewrite the response law. MFSM therefore requires a structural intervention operator, evaluates that intervention through a conditional counterfactual path law, derives decision-relevant path functionals from that law, separates absolute stressed consequence from incremental causal consequence, and treats structural susceptibility as the change in loss-oriented consequence as a standardized intervention amplitude varies. The relevant state includes same-direction capacity, financing and collateral headroom, horizon- and disturbance-dependent opposing absorptive capacity, local and finite-shock buffer response, delayed or distributed counterforces, participant reaction diversity, strategic complementarity, network propagation, and threshold geometry. The same market can be robust to one disturbance and vulnerable to another.
+> A financial market is a state-dependent response system. Its current **closed augmented state** determines how new disturbances are amplified, damped, delayed, transmitted, or converted into forced behavior. Price trends are one state-transforming process among several: coordination runs, collateral feedback, funding stress, strategy imitation, and network spillovers can also rewrite the response law. MFSM therefore requires a structural intervention operator, evaluates that intervention through a conditional counterfactual path law, derives decision-relevant path functionals from that law, separates absolute stressed consequence from incremental causal consequence, and treats structural susceptibility as the change in loss-oriented consequence as a standardized intervention amplitude varies. The relevant state includes same-direction capacity, financing and collateral headroom, horizon-/disturbance-/consequence-/flow-profile-qualified opposing absorptive capacity, local and finite-shock buffer response, delayed or distributed counterforces, participant reaction diversity, strategic complementarity, network propagation, and threshold geometry. The same market can be robust to one disturbance and vulnerable to another.
 
 The deepest operating question is:
 
@@ -2372,7 +2474,7 @@ structural_operators:
 capacity_components:
   R_plus_k: family_of_mechanism_specific_remaining_same_direction_capacities
   H: financing_collateral_and_risk_headroom
-  R_minus_h_delta: opposing_absorptive_capacity_available_by_horizon_under_intervention
+  R_minus_h_delta_epsilon_phi: opposing_absorptive_capacity_available_by_horizon_under_intervention_and_flow_profile_before_prespecified_consequence_tolerance_is_breached
   Chi_B: local_initial_state_buffer_sensitivity_jacobian
   intervention_buffer_derivative: direct_local_derivative_with_respect_to_general_intervention
   Delta_B_delta: finite_shock_buffer_response
@@ -2390,6 +2492,8 @@ derived_diagnostics:
   C: derived_effective_propagation_potential_from_specified_W_and_propagation_law
   E: conceptual_endogenous_to_external_confirmation_ratio_not_literal_default_estimator
   L: optional_derived_threshold_concentration_summary_not_primitive_state
+  A_tr_h: finite_horizon_transient_amplification_from_tangent_state_transition_operator
+  omega_J: local_numerical_abscissa_immediate_growth_diagnostic
 
 termination_mechanisms:
   - fuel_exhaustion
@@ -2419,7 +2523,7 @@ core_constraints:
   - dynamic_state_must_be_closed
   - every_time_varying_structural_object_must_be_state_predetermined_or_have_explicit_exogenous_law
   - do_not_collapse_R_plus_k_family_H_R_minus
-  - make_R_minus_horizon_and_disturbance_qualified_when_relevant
+  - make_R_minus_horizon_disturbance_consequence_tolerance_and_flow_profile_qualified_when_relevant
   - distinguish_headroom_from_initial_state_sensitivity_general_intervention_sensitivity_and_finite_shock_response
   - distinguish_disturbance_class_descriptor_and_intervention_operator
   - do_not_intervene_on_endogenous_outcome_labels
@@ -2427,11 +2531,15 @@ core_constraints:
   - require_loss_orientation_and_severity_functionals_for_F
   - normalize_amplitude_before_cross_system_susceptibility_comparisons
   - do_not_treat_connectivity_as_monotonic_risk
+  - spectral_radius_thresholds_are_conditional_on_specified_linear_propagation_laws
+  - strategic_complementarity_has_no_universal_numeric_run_threshold
+  - local_asymptotic_stability_does_not_imply_finite_horizon_path_safety
   - do_not_treat_delay_without_gain
   - do_not_equate_participant_count_with_diversity
   - allow_run_like_vulnerability_without_prior_trend
   - separate_true_observation_distribution_from_analyst_probabilistic_measurement_model
   - report_identification_status_and_observationally_equivalent_alternative
+  - record_proxy_failure_mode_and_stress_state_bias_direction
   - do_not_treat_CSD_as_universal_crash_warning
   - do_not_use_biological_analogy_as_predictive_evidence
   - do_not_create_scalar_universal_fragility_score
@@ -2441,7 +2549,8 @@ empirical_priority:
   - counterfactual_path_response_functionals
   - shock_consequence_vs_susceptibility
   - headroom_x_amplification
-  - horizon_dependent_absorptive_capacity
+  - horizon_disturbance_tolerance_and_flow_profile_dependent_absorptive_capacity
+  - finite_horizon_transient_amplification_relative_to_threshold_distance
   - local_and_finite_shock_constraint_response
   - delay_mismatch
   - strategic_complementarity
@@ -2450,10 +2559,12 @@ empirical_priority:
   - termination_mechanism_classification
   - state_dependent_response_matrix
   - measurement_identification
+  - stress_state_proxy_bias_sign_and_rationale
 
 validation_standard:
   - prespecified_definitions
   - explicit_disturbance_class_descriptor_operator_amplitude_units_path_and_horizon
+  - explicit_absorptive_capacity_consequence_tolerance_and_incoming_flow_profile
   - explicit_path_loss_orientation_and_severity_functionals
   - explicit_counterfactual_coupling_if_incremental_pathwise_effects_are_reported
   - real_time_data
@@ -2464,6 +2575,7 @@ validation_standard:
   - rare_event_correction
   - causal_identification_where_possible
   - prespecified_finite_measurement_model_set
+  - explicit_stress_state_proxy_bias_sign_and_rationale
   - explicit_identification_status
   - explicit_falsifiers
 ```

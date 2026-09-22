@@ -658,11 +658,13 @@ Potential stabilizing capital can arrive gradually after a shock because capital
 MFSM mapping:
 
 \[
-R^-_t(h;\delta)
+R^-_t(h;\delta,\varepsilon,\varphi)
 =
 \text{opposing capacity able to act by horizon }h
-\text{ under the specified disturbance.}
+\text{ under the specified disturbance and arrival profile before consequence exceeds }\varepsilon.
 \]
+
+When the tolerance and flow profile are fixed by the application, \(R^-_t(h;\delta)\) is acceptable shorthand.
 
 MFSM lesson:
 
@@ -786,7 +788,7 @@ Leveraged derivative/repo exposures, collateral demands, forced gilt sales, and 
 MFSM mapping:
 
 \[
-H \times R^-_t(h;\delta) \times W_t \times \Psi.
+H \times R^-_t(h;\delta,\varepsilon,\varphi) \times W_t \times \Psi.
 \]
 
 MFSM lesson:
@@ -1174,16 +1176,16 @@ Candidate empirical designs include collateral-price shocks, margin schedule cha
 
 ## 29. \(R^-\): opposing absorptive capacity
 
-The preferred object is horizon- and disturbance-qualified:
+The preferred operational object is horizon-, disturbance-, consequence-tolerance-, and flow-profile-qualified:
 
 \[
-R^-_t(h;\delta)
+R^-_t(h;\delta,\varepsilon,\varphi)
 =
-\text{opposing capacity usable by horizon }h
-\text{ under the specified intervention.}
+\text{maximum opposing capacity usable by horizon }h
+\text{ under the specified intervention and arrival profile before consequence exceeds }\varepsilon.
 \]
 
-When the intervention is fixed by design, \(R^-_t(h)\) is acceptable shorthand.
+The consequence metric attached to \(\varepsilon\) and the incoming-flow profile \(\varphi\) must be named. In market-microstructure work, \(\varepsilon_P\) can denote a maximum tolerated price displacement while \(\varphi\) specifies whether sell pressure arrives uniformly, as a burst, or through another prespecified schedule. When \(\varphi\) is fixed by design, \(R^-_t(h;\delta,\varepsilon)\) is acceptable shorthand.
 
 Possible proxies:
 
@@ -1196,7 +1198,7 @@ Possible proxies:
 - stress-period replenishment rate;
 - measured arrival time of new risk-bearing capital.
 
-Gross trading volume is not sufficient. Eventual capital is not equivalent to capital available before a forced-action deadline. Realized absorption under a known shock is easier to estimate than total **prospective** \(R^-_t(h;\delta)\), which is often only partially identified.
+Gross trading volume is not sufficient. Eventual capital is not equivalent to capital available before a forced-action deadline. Visible depth alone is not absorptive capacity because quotes can cancel and replenishment can collapse under stress. The same total sell notional can also produce different damage when front-loaded versus spread through time. Realized absorption under a known shock is easier to estimate than total **prospective** \(R^-_t(h;\delta,\varepsilon,\varphi)\), which is often only partially identified.
 
 ---
 
@@ -1309,12 +1311,30 @@ For every latent quantity, record:
 - proxy definition;
 - model/kernel choice;
 - timestamp availability;
-- expected bias;
+- expected bias in ordinary conditions;
+- **stress-state failure mode**;
+- **expected sign of proxy error under the regime being studied, plus rationale; `ambiguous` is valid when opposing failure modes are plausible**;
 - regime sensitivity;
 - alternative proxy constructions;
 - identification status: point-identified / partially identified / structurally identified / unidentified;
 - closest plausible observationally equivalent data-generating process;
 - negative control or mechanism-discriminating test where available.
+
+A useful measurement contract is therefore:
+
+\[
+\boxed{
+\text{latent object}
+\rightarrow
+\text{observable proxy}
+\rightarrow
+\text{failure mode}
+\rightarrow
+\text{stress-state bias sign + rationale}.
+}
+\]
+
+This prevents a proxy from being treated as conservative when it actually becomes optimistically biased under stress.
 
 Important structural claims should survive a prespecified finite set of reasonable measurement models. This is especially important for inferred endogeneity, crowding, strategic complementarity, network state, and criticality.
 

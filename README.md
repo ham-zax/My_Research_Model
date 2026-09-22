@@ -31,6 +31,9 @@ Its invariant question is:
 - [artifacts/independent_review_synthesis_2026-09-22.md](./artifacts/independent_review_synthesis_2026-09-22.md)
   Convergence report from the five independent mathematical, causal-identification, empirical-finance, crypto-quant, and adversarial reviews that motivated the theory-freeze cleanup.
 
+- [artifacts/operationalization_source_audit_2026-09-22.md](./artifacts/operationalization_source_audit_2026-09-22.md)
+  Selective audit of the later operationalization draft: incorporates finite-horizon transient amplification, consequence- and flow-profile-qualified absorptive capacity, and stress-state proxy-bias discipline while rejecting universal threshold overclaims.
+
 - [experiments/Experiment_001_Crypto_Liquidation_Response.md](./experiments/Experiment_001_Crypto_Liquidation_Response.md)
   First prespecified empirical program: test whether a narrow MFSM state can distinguish forced-liquidation exhaustion from a continuing BTC deleveraging cascade, with ETH as a strict frozen confirmatory holdout.
 
@@ -59,7 +62,7 @@ Only level 4 would justify treating a component as demonstrated predictive edge.
 5. Do not collapse the model into a scalar score without new evidence.
 6. Keep **Trend Strength (T)** and **Trend Sustainability (U)** separate from **absolute stressed consequence** \(F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)\), incremental causal consequence, and structural susceptibility.
 7. Distinguish a disturbance class, the descriptor \(\delta=(c,V,a,d,t_0,p,\nu)\), and the full intervention operator \(\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta})\); do not treat an endogenous outcome such as a run or cascade as the intervention itself.
-8. Treat **remaining continuation capacity** as a mechanism-indexed family \(\{R_{k,t}^+\}_k\), not one market-wide scalar; keep it separate from **headroom (H)** and **opposing absorptive capacity (R-)**; use \(R^-_t(h;\delta)\) when timing or shock type matters.
+8. Treat **remaining continuation capacity** as a mechanism-indexed family \(\{R_{k,t}^+\}_k\), not one market-wide scalar; keep it separate from **headroom (H)** and **opposing absorptive capacity (R-)**; prefer \(R^-_t(h;\delta,\varepsilon,\varphi)\) when timing, shock type, tolerated consequence, and incoming-flow profile matter.
 9. Distinguish current headroom from the local initial-state buffer Jacobian \(\mathbf\Chi_B\), direct intervention sensitivity, and finite-shock buffer response \(\Delta\mathbf B^{\delta}\).
 10. Treat delay as a response-time structure or memory kernel when possible, not automatically as one fixed scalar.
 11. Require a **closed augmented latent state**: every independently evolving buffer, control state, coordination state, or hybrid regime needed for prediction must be inside \(\mathbf Z_t\) or explicitly incorporated into its transition law.

@@ -200,37 +200,238 @@ while liquidity replenishment slows and residual leverage remains high.
 
 The intended measured components are:
 
-### 8.1 Forced-flow pressure
+### 8.1 Liquidation-specific pressure versus generic aggressive selling
 
-Candidate construction:
+Do not call ordinary aggressive selling "forced." Keep the two observable mechanisms separate.
+
+Define
 
 \[
-\frac{
-\text{recent liquidation / aggressive-sell notional}
-}{
-\text{executable bid depth}
-}.
+Q^{liq}_{v,\mathrm{recent}}
+=
+\text{venue-identified liquidation sell notional}
 \]
 
-Liquidation feed semantics must be audited venue by venue.
+over the prespecified strictly pre-decision window.
+
+Separately define
+
+\[
+Q^{aggr,exliq}_{v,\mathrm{recent}}
+=
+\text{aggressive sell notional excluding executions identified as liquidation flow where possible}.
+\]
+
+Where venue identifiers permit matching, executions already represented in the liquidation feed must be removed from \(Q^{aggr,exliq}\). If the venue feed cannot support reliable de-duplication, report \(Q^{liq}\) separately but flag \(Q^{aggr,exliq}\) as potentially contaminated. Even after removing identified liquidations, \(Q^{aggr,exliq}\) is **not assumed voluntary**; it may still contain unidentified forced, hedging, informed, or discretionary flow.
+
+The primary mechanism-specific MFSM interaction is liquidation pressure relative to short-horizon opposing capacity:
+
+\[
+\boxed{
+\mathrm{LFP}_{v,t_d}
+=
+\frac{
+Q^{liq}_{v,\mathrm{recent}}
+}{
+\widetilde R^-_{v,t_d}
+(h_R;\delta,\varepsilon_P,\varphi_{unif})
+}
+}
+\]
+
+The secondary generic sell-pressure interaction is
+
+\[
+\boxed{
+\mathrm{SPP}_{v,t_d}
+=
+\frac{
+Q^{aggr,exliq}_{v,\mathrm{recent}}
+}{
+\widetilde R^-_{v,t_d}
+(h_R;\delta,\varepsilon_P,\varphi_{unif})
+}.
+}
+\]
+
+If only \(\mathrm{SPP}\) predicts continuation while \(\mathrm{LFP}\) does not, the result should not be described as evidence for forced-liquidation pressure specifically.
+
+For comparison, retain ordinary aggressive-sell notional divided by executable visible depth as a conventional microstructure baseline feature.
+
+Liquidation-feed and trade-feed semantics must be audited venue by venue.
 
 ### 8.2 Short-horizon opposing capacity
 
-Approximate the observable portion of
+The theoretical object is flow-profile-qualified:
 
 \[
-R^-_t(h;\delta)
+R^-_t(h;\delta,\varepsilon_P,\varphi),
 \]
 
-with:
+where \(\varepsilon_P\) is a maximum tolerated adverse price displacement and \(\varphi\) specifies how incoming sell flow arrives through the horizon.
 
-- bid depth at fixed basis-point distances;
-- executable depth;
-- spread;
-- depth replenishment after aggressive selling;
-- cross-venue liquidity response.
+For Experiment 001, use a **primary microstructure tolerance**
 
-Do not claim this is total latent absorptive capacity.
+\[
+\boxed{
+\varepsilon_P=25\text{ bps}
+}
+\]
+
+from each venue's local mid-price at \(t_d\), a primary opposing-capacity horizon
+
+\[
+\boxed{
+h_R=30\text{ seconds},
+}
+\]
+
+and the standardized uniform arrival profile
+
+\[
+\boxed{
+\varphi_{unif}(s)
+=
+\frac{1}{h_R}
+\mathbf 1_{[0,h_R]}(s).
+}
+\]
+
+This is a standardized benchmark, not a claim that realized liquidation pressure is uniform. More front-loaded flow can imply lower effective capacity. Any secondary front-loaded profile must be specified before freeze.
+
+For venue \(v\), define the observable proxy
+
+\[
+\boxed{
+\widehat R^-_{v,t_d}
+(h_R;\delta,\varepsilon_P,\varphi_{unif})
+=
+D^{exec}_{v,t_d}(\varepsilon_P)
++
+h_R
+\widehat q^{repl}_{v,t_d}(\varepsilon_P).
+}
+\]
+
+where \(D^{exec}_{v,t_d}(\varepsilon_P)\) is immediately executable bid notional within \(\varepsilon_P\).
+
+#### Durable replenishment estimator
+
+Set the primary replenishment lookback to
+
+\[
+\boxed{
+w_{repl}=15\text{ seconds}
+}
+\]
+
+ending at \(t_d\), and the minimum durability interval to
+
+\[
+\boxed{
+\tau_{dwell}=1\text{ second}.
+}
+\]
+
+Within \([t_d-w_{repl},t_d]\), track positive bid-depth deltas at fixed price levels that are inside the contemporaneous \(\varepsilon_P\) band.
+
+A positive depth delta contributes to **durable replenishment** only to the extent that the added quantity:
+
+1. remains resting at that same price level for at least \(\tau_{dwell}\); or
+2. is observably executed against incoming sell flow before cancellation.
+
+If the historical feed cannot distinguish execution from cancellation at the required granularity, use the conservative rule that only quantity still resting after \(\tau_{dwell}\) counts.
+
+Define
+
+\[
+\boxed{
+\widehat q^{repl}_{v,t_d}(\varepsilon_P)
+=
+\frac{
+\sum \text{durable bid replenishment notional}
+}{
+w_{repl}
+}.
+}
+\]
+
+This excludes gross add-cancel churn from the replenishment estimate. It also uses only the frozen primitive history
+
+\[
+X^{raw}_{[t_d-w,t_d]}
+\]
+
+available by the decision timestamp. Do not use realized replenishment after \(t_d\) as a predictor.
+
+#### Near-zero capacity rule
+
+The denominator floor must transfer unchanged from BTC development to the strict ETH holdout, so it is defined from each event's own **pre-trigger observable liquidity scale**, not from the holdout distribution.
+
+Let
+
+\[
+D^{pre}_{v,t_0}(\varepsilon_P)
+=
+\operatorname{median}_{s\in[t_0-30\mathrm{m},t_0)}
+D^{exec}_{v,s}(\varepsilon_P).
+\]
+
+Freeze the scale fraction
+
+\[
+\boxed{
+\eta_{floor}=0.01
+}
+\]
+
+and define
+
+\[
+\boxed{
+R^{floor}_{v,t_0}
+=
+\eta_{floor}
+D^{pre}_{v,t_0}(\varepsilon_P).
+}
+\]
+
+Then use
+
+\[
+\boxed{
+\widetilde R^-_{v,t_d}
+(h_R;\delta,\varepsilon_P,\varphi_{unif})
+=
+\max
+\left[
+\widehat R^-_{v,t_d}
+(h_R;\delta,\varepsilon_P,\varphi_{unif}),
+R^{floor}_{v,t_0}
+\right].
+}
+\]
+
+In ratio features also include the low-capacity indicator
+
+\[
+\boxed{
+I^{lowcap}_{v,t_d}
+=
+\mathbf 1
+\left\{
+\widehat R^-_{v,t_d}
+(h_R;\delta,\varepsilon_P,\varphi_{unif})
+\le R^{floor}_{v,t_0}
+\right\}.
+}
+\]
+
+If the venue lacks a valid positive pre-trigger depth median over the required window, exclude that venue-specific capacity feature for the event rather than inventing an ad hoc denominator. This rule is deterministic and uses only information available before the event/decision timestamp, so it can be applied unchanged to ETH without inspecting its outcome distribution.
+
+Do not automatically sum venue capacities: capital, inventory, and transferability constraints can make apparent cross-venue depth non-fungible. Venue-specific values should remain separate unless an aggregation rule is justified and frozen.
+
+This is an observable proxy for short-horizon absorptive capacity under the standardized \(\varphi_{unif}\) profile, not a claim to measure the full latent \(R^-\).
 
 ### 8.3 Response-time structure
 
@@ -272,6 +473,21 @@ ETH variables are excluded from development because ETH is the strict confirmato
 
 Do not call lead-lag or correlation a causal network without a stronger design.
 
+### 8.7 Measurement failure-direction contract
+
+For every Experiment 001 proxy, record not only ordinary measurement error but how that proxy is expected to fail **during a liquidation cascade**.
+
+| Latent target | Observable proxy | Stress-state failure mode | Expected sign + rationale |
+| --- | --- | --- | --- |
+| Short-horizon \(R^-\) | executable visible bid depth | quotes can cancel before impact, while hidden liquidity/new capital are absent from the displayed book | **ambiguous**: cancellation biases displayed capacity high; hidden/new capacity biases it low |
+| Replenishment component of \(R^-\) | durable pre-decision refill-rate estimate | liquidity providers can withdraw when toxicity/volatility jumps | usually **high/optimistic** if recent refill behavior fails to persist |
+| Liquidation pressure | venue liquidation feed | sampled/delayed/incomplete messages or duplicated event semantics | usually **low** if incomplete, but can be **high** if duplicate/repeated events are not removed |
+| Generic aggressive selling | aggressive sell trade flow | mixes informed, discretionary, hedging, inventory, and possibly unidentified forced flow | **ambiguous mechanism attribution** rather than a simple level bias |
+| Residual leverage | open interest level/change | openings and closings can offset; venue aggregation masks position direction | **ambiguous** |
+| Derivative/spot stress | funding, basis, mark/index divergence | update-frequency and index-methodology differences | **ambiguous / venue-dependent**, often lagged |
+
+"Ambiguous" is an admissible preregistered bias sign when opposing failure modes are economically plausible. The requirement is **expected sign plus rationale**, not forced certainty. Any change after viewing holdout performance requires a new experiment version.
+
 ## 9. Exhaustion signature
 
 A candidate exhaustion pattern is:
@@ -301,9 +517,10 @@ Do not make success depend on estimating:
 - true counterparty/exposure network \(W_t\);
 - unrestricted causal counterfactual path law;
 - generic controller topology;
-- a universal \(R^+\) scalar.
+- a universal \(R^+\) scalar;
+- full-system non-normal transient amplification \(\mathcal A_t^{tr}(h)\) or pseudospectral diagnostics unless a separate identification design is developed.
 
-These may remain theoretical objects or future research targets.
+These may remain theoretical objects or future research targets. Experiment 001 should not become a catch-all implementation of the full MFSM architecture.
 
 ## 11. Baseline ladder
 
@@ -351,7 +568,7 @@ Define a frozen primitive information panel
 X^{raw}_{[t_d-w,t_d]},
 \]
 
-with \(w=30\) minutes by default, containing the exact primitive BTC observations available by \(t_d\): prices/returns, trades, liquidation messages, OI, funding/basis state, spread, executable depth, book imbalance, mark/index state, venue-status fields, and any other primitive series required to construct an MFSM feature.
+with \(w=30\) minutes by default, containing the exact primitive BTC observations available by \(t_d\): prices/returns, raw trades and aggressor flags, liquidation messages and event identifiers where available, raw L2 order-book snapshots/deltas or the highest-fidelity historical book feed used to reconstruct fixed-price-level depth changes, OI, funding/basis state, mark/index state, venue-status fields, and any other primitive series required to construct an MFSM feature.
 
 B4 must receive this **same primitive historical information**, not merely contemporaneous B3 snapshots. The fixed lag grid / window representation supplied to B4 must be prespecified before the final holdout. If an MFSM feature requires an additional primitive history, that history must also be made available to B4 before freeze.
 
@@ -470,7 +687,7 @@ Suppose an existing strategy normally fades sharp BTC selloffs.
 
 MFSM-derived features should suppress or downsize the fade while:
 
-- forced-flow pressure relative to depth remains high;
+- liquidation pressure \(\mathrm{LFP}\) remains high relative to short-horizon opposing capacity;
 - residual OI remains elevated;
 - book replenishment is weak;
 - spreads remain impaired;

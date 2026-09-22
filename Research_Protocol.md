@@ -157,6 +157,7 @@ For each arrow record:
 | Forced or voluntary | Can the actor choose not to react? |
 | Evidence level | Theory / empirical / causal / hypothesis |
 | Proxy | What data could observe it? |
+| Stress-state proxy failure | How can that proxy fail in the regime of interest? Give expected sign + rationale; `ambiguous` is valid when opposing failure modes are plausible. |
 | Falsifier | What would contradict the mechanism? |
 
 If an arrow cannot be completed, it should not enter the operational model.
@@ -169,10 +170,14 @@ For each state variable distinguish:
 - observed proxy;
 - candidate measurement/kernel/model choice;
 - timestamp availability;
-- expected bias;
+- expected bias in ordinary conditions;
+- **stress-state failure mode**;
+- **expected sign of proxy error during the state of interest, plus rationale; use `ambiguous` when opposing failure modes are plausible**;
 - alternative proxy;
 - identification status: point-identified / partially identified / structurally identified / unidentified;
 - closest plausible observationally equivalent data-generating process.
+
+The last two bias fields matter because a proxy can fail most severely in exactly the regime MFSM is trying to diagnose. For example, visible order-book depth may overstate prospective \(R^-\) if quotes cancel during aggressive flow.
 
 Conceptually distinguish the true observation mechanism
 
@@ -298,13 +303,14 @@ H
 \]
 
 \[
-R^-_t(h;\delta)
+R^-_t(h;\delta,\varepsilon,\varphi)
 =
 \text{opposing absorptive capacity usable by horizon }h
-\text{ under the specified intervention.}
+\text{ under the specified intervention and incoming-flow profile}
+\text{ before consequence exceeds }\varepsilon.
 \]
 
-When the intervention is already fixed by design, \(R^-_t(h)\) may be used as shorthand.
+State the consequence metric attached to \(\varepsilon\) and the normalized incoming stress-flow profile \(\varphi\) explicitly. \(\varphi\) describes the flow whose absorptive capacity is being measured and is distinct from the intervention-time profile already encoded in \(\delta\). For an order-book study this may pair a price-displacement tolerance \(\varepsilon_P\) with a uniform, front-loaded, or otherwise prespecified sell-flow schedule. When \(\varphi\) is fixed by design, \(R^-_t(h;\delta,\varepsilon)\) may be used as shorthand; when tolerance and profile are fixed, \(R^-_t(h;\delta)\) is acceptable shorthand.
 
 Also record local **initial-state constraint sensitivity** separately from current headroom:
 
@@ -869,9 +875,9 @@ Which specific continuation mechanisms remain active, and how much capacity rema
 
 How far are current participants from forced action?
 
-## \(R^-_t(h;\delta)\)
+## \(R^-_t(h;\delta,\varepsilon,\varphi)\)
 
-Who can absorb the opposite flow **under this disturbance and by the relevant horizon**?
+Who can absorb the opposite flow **under this disturbance, arrival profile, and horizon, without breaching the prespecified consequence tolerance**?
 
 ## Response-time structure
 

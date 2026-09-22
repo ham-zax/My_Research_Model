@@ -2,6 +2,49 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
+## 2026-09-22 - Operationalization refinement: transient amplification, flow-conditioned capacity, and stress-bias discipline
+
+This revision follows a later operationalization pass over the conversation-supplied document `Pasted markdown(20260922-170823).md` and a subsequent staged review. It refines measurement and experiment contracts without adding new primitive MFSM state variables.
+
+### Finite-horizon response
+
+- Added the derived transient-amplification diagnostic
+  \[
+  \mathcal A_t^{tr}(h)=\sup_{0\le s\le h}\|\Phi(t+s,t)\|_2,
+  \]
+  together with the locally frozen numerical abscissa \(\omega(J_t)\).
+- Linked transient amplification explicitly to switching-surface geometry: asymptotic stability does not imply finite-horizon path safety.
+- Corrected the spectral-radius theorem so \(\rho(P)<1\) is an asymptotic result for a fixed time-invariant propagation matrix \(P\). Pointwise \(\rho(P_t)<1\) for a time-varying sequence is only a locally frozen diagnostic unless stronger product-growth conditions are established.
+- Retained \(\Gamma_t\) without adopting a universal \(\Gamma=1\) run threshold.
+
+### Opposing absorptive capacity
+
+- Strengthened the preferred operational object to
+  \[
+  R^-_t(h;\delta,\varepsilon,\varphi),
+  \]
+  where \(\varepsilon\) names the tolerated adverse consequence and \(\varphi\) specifies the normalized incoming-flow arrival profile.
+- Added an admissible-profile formulation for conservative capacity when a set \(\Phi\) of plausible arrival schedules is prespecified.
+- This prevents equal total notionals delivered instantaneously and gradually from being treated as the same stress.
+
+### Measurement discipline
+
+- Added a stress-state proxy contract recording ordinary bias, failure mode, and **expected sign plus rationale** during the regime of interest.
+- Explicitly permits `ambiguous` when economically plausible failure modes push measurement error in opposite directions.
+
+### Experiment 001
+
+- Split venue-identified liquidation flow \(Q^{liq}\) from aggressive sell flow excluding identified liquidation executions \(Q^{aggr,exliq}\); ordinary aggressive selling is no longer labeled forced flow, and the residual aggressive-flow measure is not assumed voluntary.
+- Defined liquidation pressure and generic sell-pressure interactions separately so generic selling cannot be mistaken for evidence of forced deleveraging.
+- Fixed the standardized capacity profile to uniform arrival over the primary 30-second horizon; any front-loaded sensitivity profile must be frozen before evaluation.
+- Defined durable replenishment from positive bid-depth deltas that survive a one-second dwell interval or are observably executed, preventing gross add-cancel churn from masquerading as refill capacity.
+- Unified the primitive-history notation to \(X^{raw}_{[t_d-w,t_d]}\).
+- Added a deterministic near-zero denominator rule using 1% of each event's pre-trigger median executable depth plus a low-capacity indicator; this transfers unchanged to the strict ETH holdout without inspecting its feature/outcome distribution.
+
+### Provenance
+
+- Added `artifacts/operationalization_source_audit_2026-09-22.md` to preserve what was incorporated, retained only conditionally, and rejected from the conversation-supplied operationalization document.
+
 ## 2026-09-22 - Five-review convergence cleanup and theory freeze
 
 This revision incorporates the convergent findings of independent mathematical, causal-identification, empirical-finance, adversarial, and crypto-implementation reviews. It is intentionally a **contraction / typing pass**, not a conceptual expansion.

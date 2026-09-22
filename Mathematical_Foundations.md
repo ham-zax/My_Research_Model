@@ -54,7 +54,9 @@ Useful derived diagnostics include
 A,\quad
 \{R_k^+\}_k,\quad
 H,\quad
-R^-_t(h;\delta),\quad
+R^-_t(h;\delta,\varepsilon,\varphi),\quad
+\mathcal A_t^{tr}(h),\quad
+\omega(J_t),\quad
 \mathbf\Chi_B,\quad
 \Delta\mathbf B^{\delta},\quad
 N,\quad
@@ -68,7 +70,7 @@ S^{end},\quad
 L.
 \]
 
-These are not assumed to enter a universal additive score. \(C\) must be derived from a specified propagation operator rather than treated as a free primitive, \(\Theta\) is a summary of response-time structure rather than a substitute for \(K\), and \(L\) is optional derived threshold exposure rather than an independent state variable.
+These are not assumed to enter a universal additive score. \(C\) must be derived from a specified propagation operator rather than treated as a free primitive, \(\Theta\) is a summary of response-time structure rather than a substitute for \(K\), \(L\) is optional derived threshold exposure rather than an independent state variable, and \(\mathcal A_t^{tr}(h)\) / \(\omega(J_t)\) are finite-horizon/local response diagnostics rather than primitive state.
 
 ---
 
@@ -154,14 +156,31 @@ The finite-time propagator is
 e^{Jt}.
 \]
 
-The largest possible Euclidean amplification at horizon \(t\) is
+The largest possible Euclidean amplification at horizon \(s\) is
 
 \[
-G_{max}(t)
+G(s)
 =
-\|e^{Jt}\|_2
+\|e^{Js}\|_2
 =
-\sigma_{\max}(e^{Jt}).
+\sigma_{\max}(e^{Js}).
+\]
+
+The finite-horizon transient amplification diagnostic is
+
+\[
+\boxed{
+\mathcal A_t^{tr}(h)
+=
+\sup_{0\le s\le h}
+\|\Phi(t+s,t)\|_2,
+}
+\]
+
+where \(\Phi(t+s,t)\) is the tangent/state-transition operator along the specified local trajectory. Under a locally frozen linearization,
+
+\[
+\Phi(t+s,t)=e^{J_t s}.
 \]
 
 Therefore
@@ -174,13 +193,61 @@ Therefore
 does not imply
 
 \[
-G_{max}(t)\le1
-\quad\forall t.
+\mathcal A_t^{tr}(h)\le1.
+\]
+
+An instantaneous growth diagnostic for the locally frozen linear system is the numerical abscissa
+
+\[
+\boxed{
+\omega(J_t)
+=
+\lambda_{\max}
+\left(
+\frac{J_t+J_t^\ast}{2}
+\right).
+}
+\]
+
+If \(\omega(J_t)>0\), there exists a perturbation direction with immediate Euclidean growth even when the spectral abscissa is negative.
+
+These quantities are **derived diagnostics**, not new primitive state variables and not universal fragility scores. Their magnitude depends on the chosen coordinates, norm, local model, and horizon.
+
+### Threshold crossing under transient amplification
+
+Let a switching surface be represented locally by a signed distance-like function \(d_j(\mathbf Z)>0\) in the safe region, with failure/forced action when \(d_j\le0\). For a small initial perturbation \(\Delta\mathbf z_0\), the first-order disturbed path is
+
+\[
+\Delta\mathbf Z_{t+s}
+\approx
+\Phi(t+s,t)\Delta\mathbf z_0.
+\]
+
+A local threshold-crossing condition is therefore
+
+\[
+\boxed{
+\exists s\in[0,h]:
+d_j(\mathbf Z_{t+s}^{0})
++
+\nabla d_j(\mathbf Z_{t+s}^{0})^\top
+\Phi(t+s,t)
+\Delta\mathbf z_0
+\le0.
+}
+\]
+
+This makes the central distinction explicit:
+
+\[
+\text{asymptotic stability}
+\not\Rightarrow
+\text{finite-horizon path safety}.
 \]
 
 ### MFSM interpretation
 
-A market can be locally mean-reverting in an asymptotic sense and still be capable of large temporary displacement when several response channels align.
+A market can be locally mean-reverting in an asymptotic sense and still be capable of large temporary displacement when several response channels align. The danger is strongest when transient amplification is large relative to the distance to financing, liquidity, or behavioral switching surfaces.
 
 Potential financial contributors include:
 
@@ -191,7 +258,7 @@ Potential financial contributors include:
 - funding stress;
 - synchronized volatility targeting.
 
-This is why MFSM should study response modes, not only long-run equilibrium stability.
+This is why MFSM should study finite-horizon response paths and threshold crossings, not only long-run equilibrium stability.
 
 ---
 
@@ -1026,34 +1093,59 @@ Interpretation:
 
 This is a concrete finance-specific form of timescale mismatch.
 
-### 21.1 Horizon- and disturbance-dependent opposing capacity
+### 21.1 Horizon-, disturbance-, tolerance-, and arrival-profile-dependent opposing capacity
 
 A single \(R^-_t\) is insufficient when stabilizing capital arrives at different speeds or when willingness to absorb depends on the type of shock.
 
-Define
+Capacity also depends on **how incoming flow arrives through time**.
+
+Let \(\varphi:[0,h]\to\mathbb R_+\) be a prespecified normalized incoming-flow profile,
+
+\[
+\int_0^h \varphi(s)\,ds=1,
+\]
+
+so total incoming flow \(q\) arrives at rate \(q\varphi(s)\). The profile \(\varphi\) is the **stress-flow schedule whose absorptive capacity is being measured**; it is distinct from any temporal intervention profile already contained in \(\delta\). Let \(\mathfrak d_{t,h}(\delta,q\varphi)\) be the named adverse-consequence metric under intervention \(\delta\) and that flow schedule.
+
+Define the operational object by the largest flow scale for which **all smaller scales remain within tolerance**:
 
 \[
 \boxed{
-R^-_t(h;\delta)
+R^-_t(h;\delta,\varepsilon,\varphi)
 =
-\text{opposing risk-bearing capacity that can become effective by horizon }h
-\text{ under }\delta.
+\sup
+\left\{
+q\ge0:
+\mathfrak d_{t,h}(\delta,q'\varphi)
+\le\varepsilon
+\;\;
+\forall q'\in[0,q]
+\right\}.
 }
 \]
 
-When the intervention is fixed by design, \(R^-_t(h)\) is acceptable shorthand.
+If the consequence metric is monotone in \(q\), this reduces to the simpler threshold condition at \(q\) itself.
 
-For a fixed intervention one may often expect
+The tolerance \(\varepsilon\) must be attached to a specified consequence metric. For market-microstructure applications, a common choice is a maximum adverse price displacement \(\varepsilon_P\). For broader stress applications, \(\varepsilon\) can refer to a prespecified path-loss or threshold criterion.
+
+If the research question concerns a class \(\Phi\) of plausible arrival schedules rather than one profile, a conservative capacity can be defined as
 
 \[
-R^-_t(h_1;\delta)\le R^-_t(h_2;\delta)
-\qquad
-\text{for }h_1<h_2,
+\boxed{
+R^-_t(h;\delta,\varepsilon,\Phi)
+=
+\inf_{\varphi\in\Phi}
+R^-_t(h;\delta,\varepsilon,\varphi).
+}
 \]
 
-when capacity only accumulates with time, although withdrawals, changing toxicity, or state changes can violate simple monotonicity.
+This definition makes explicit that liquidity quantity and absorptive capacity are not the same object, and that the same total notional can imply different capacity requirements when it arrives instantaneously versus gradually.
 
-The relevant mismatch is not "eventual buyers exist." It is whether enough \(R^-_t(h;\delta)\) becomes usable before the forced-action horizon.
+When \(\varphi\) is fixed by design, \(R^-_t(h;\delta,\varepsilon)\) is acceptable shorthand. When tolerance and profile are fixed, \(R^-_t(h;\delta)\) is acceptable shorthand. When disturbance, tolerance, and profile are all fixed, \(R^-_t(h)\) is acceptable shorthand.
+
+If horizons are compared under a **compatible standardized arrival convention** and usable capacity only accumulates with time, longer horizons may admit weakly greater capacity. There is no generic monotonicity theorem when changing \(h\) also changes the incoming-flow schedule, toxicity, state, or willingness to absorb risk.
+
+The relevant mismatch is not "eventual buyers exist." It is whether enough \(R^-_t(h;\delta,\varepsilon,\varphi)\) becomes usable before the forced-action horizon for the specified arrival profile without breaching the prespecified consequence tolerance.
 
 ### 21.2 Constraint sensitivity and finite-shock buffer response
 
@@ -1386,28 +1478,46 @@ Raw correlation is not a substitute for \(W_t\).
 
 ## 25. Spectral direction
 
-For a local linear propagation law
+For a **fixed time-invariant** linear propagation law
 
 \[
-\mathbf z_{t+1}
+\mathbf z_{n+1}
 =
-P_t\mathbf z_t,
+P\mathbf z_n,
 \]
 
 define the spectral radius
 
 \[
 \boxed{
-\rho(P_t)
+\rho(P)
 =
-\max_i|\lambda_i(P_t)|.
+\max_i|\lambda_i(P)|.
 }
 \]
 
-For this specified linear system:
+For this specified fixed linear system:
 
-- \(\rho(P_t)<1\): perturbations decay asymptotically;
-- \(\rho(P_t)>1\): at least one propagation mode expands.
+- \(\rho(P)<1\): perturbations decay asymptotically;
+- \(\rho(P)>1\): at least one propagation mode expands.
+
+The boundary \(\rho(P)=1\) is conditional on this fixed linear iteration.
+
+For a time-varying sequence
+
+\[
+\mathbf z_{n+1}=P_n\mathbf z_n,
+\]
+
+the individual conditions \(\rho(P_n)<1\) do **not** in general imply that
+
+\[
+P_{n-1}\cdots P_1P_0
+\]
+
+decays. Products of individually stable noncommuting matrices can transiently or asymptotically amplify. A pointwise \(\rho(P_n)\) should therefore be interpreted only as a locally frozen / one-step diagnostic unless stronger contractivity, common-Lyapunov, joint-spectral-radius, or direct product-growth conditions are established.
+
+Neither the fixed-matrix boundary nor a locally frozen spectral diagnostic is a universal financial-system cascade threshold once the operator changes with the state, losses saturate, institutions switch regimes, defaults truncate exposures, or policy/intermediation changes the propagation law.
 
 This does not imply that more links are always destabilizing. The result depends on weights, buffers, recovery, and the actual propagation law.
 
@@ -1460,6 +1570,8 @@ A local conceptual measure is
 \]
 
 Positive \(\Gamma_t\) represents strategic complementarity: withdrawal can make withdrawal optimal, refusal to roll funding can make refusal optimal, and selling can make selling rational even before price feedback is the dominant channel.
+
+No universal numerical instability boundary follows from the symbol alone. A condition such as \(\Gamma=1\) is meaningful only inside a specified best-response / coordination mapping with the relevant normalization and regularity assumptions.
 
 This is distinct from \(A_t\), which summarizes endogenous state/flow amplification.
 
@@ -2140,10 +2252,10 @@ For every proposed arrow, state:
 Estimate or proxy
 
 \[
-\{R^+_{k,t}\}_{k\in\mathcal K},\quad H,\quad R^-_t(h;\delta).
+\{R^+_{k,t}\}_{k\in\mathcal K},\quad H,\quad R^-_t(h;\delta,\varepsilon,\varphi).
 \]
 
-Do not call them all “liquidity,” and do not treat realized absorption as identical to prospective capacity.
+Do not call them all “liquidity,” and do not treat realized absorption as identical to prospective capacity. State the consequence metric attached to \(\varepsilon\) and the incoming-flow profile \(\varphi\).
 
 ---
 
@@ -2406,7 +2518,7 @@ The derivations above follow directly from the equations stated in this document
 - Yi, Huang, Simon, and Doyle, integral feedback in bacterial chemotaxis: https://www.pnas.org/doi/pdf/10.1073/pnas.97.9.4649
 - Carlson and Doyle, Highly Optimized Tolerance: https://harvest.aps.org/v2/journals/articles/10.1103/PhysRevLett.84.2529/fulltext
 
-For finance-side evidence, measurement discipline, and the empirical motivation for \(R^-_t(h;\delta)\), \(\mathbf\Chi_B\), \(\Delta\mathbf B^{\delta}\), \(\Gamma_t\), the intervention/path-law layer, and the observation/identification layer, read Empirical_Finance_Foundations.md.
+For finance-side evidence, measurement discipline, and the empirical motivation for \(R^-_t(h;\delta,\varepsilon,\varphi)\), \(\mathbf\Chi_B\), \(\Delta\mathbf B^{\delta}\), \(\Gamma_t\), the intervention/path-law layer, and the observation/identification layer, read Empirical_Finance_Foundations.md.
 
 ---
 
