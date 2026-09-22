@@ -6,6 +6,14 @@ Date: 2026-09-22
 Status: Research framework, not a validated trading system
 Primary purpose: Diagnose the internal feedback state of reflexive markets and generate falsifiable hypotheses about continuation, exhaustion, instability, and failure propagation.
 
+Companion specifications:
+
+- `Mathematical_Foundations.md` — exact delay, memory-kernel, local-stability, stochastic-recovery, network, threshold, and adaptive-capacity mathematics.
+- `Empirical_Finance_Foundations.md` — finance-native evidence base, measurement map, falsification standards, and durable source list.
+- `Research_Protocol.md` — required procedure for applying, testing, extending, and versioning MFSM.
+
+The canonical file defines the model. The mathematical file preserves exact formal results. The empirical file determines what is finance-supported. The protocol controls how the model may evolve.
+
 ---
 
 ## 0. Executive definition
@@ -817,6 +825,8 @@ The first empirical goal is not to optimize a score. It is to estimate whether t
 
 ## 18. Mathematical template
 
+This section is intentionally a compact bridge. Exact derivations, assumptions, stability boundaries, distributed-memory results, non-normal transient amplification, stochastic recovery mathematics, threshold/hybrid dynamics, and Physarum adaptive-network equations are preserved in `Mathematical_Foundations.md`.
+
 A general continuous-time conceptual representation is:
 
 ### 18.1 Market activity
@@ -1165,6 +1175,8 @@ If it does not, the framework may remain explanatory but should not be claimed a
 
 ## 24. Empirical design principles
 
+The durable finance-side literature map, mechanism-to-variable mapping, candidate proxies, and minimum evidence standard are maintained in `Empirical_Finance_Foundations.md`.
+
 Any serious implementation should follow these rules.
 
 ### 24.1 Prespecify definitions
@@ -1412,6 +1424,8 @@ When another LLM applies this model, it should return something structurally sim
 ---
 
 ## 27. Rules for extending the framework
+
+These gates are summarized here; the mandatory operational workflow, evidence labels, stop conditions, versioning rules, and future-LLM output schema are maintained in `Research_Protocol.md`.
 
 Any proposed new variable or analogy must pass the following gate.
 
