@@ -18,11 +18,13 @@ The canonical file defines the model. The mathematical file preserves exact form
 
 ## 0. Executive definition
 
-The Market Feedback-State Model (MFSM) is a causal framework for analyzing markets as complex adaptive systems whose current price dynamics change the conditions that govern their own future continuation and failure.
+The Market Feedback-State Model (MFSM) is a causal framework for analyzing markets as complex adaptive systems whose current structural state changes the law governing their own future response.
 
 Its central proposition is:
 
-> A trend is not merely an observed path of prices. It is a state-transforming process. As the trend unfolds, it changes leverage, collateral, risk budgets, liquidity, positioning, incentives, participant synchronization, network exposure, expectations, and the timing of counterforces. Those state changes alter how the market will respond to the next disturbance.
+> A market state is not merely a collection of prices and positions. It is a response-generating architecture. As the state evolves, it changes leverage, collateral, risk budgets, liquidity, positioning, incentives, participant synchronization, network exposure, expectations, the availability of stabilizing capital, and the timing or topology of counterforces. Those changes alter how the market will respond to the next disturbance.
+
+A directional trend is one important way this state transformation can occur, but it is not required. Bank-run-like coordination, funding stress, or threshold fragility can exist even without a preceding trend.
 
 The model therefore does not begin with the question:
 
@@ -30,11 +32,11 @@ The model therefore does not begin with the question:
 
 It begins with:
 
-> What feedback regime is the market in, what sustains it, what capacities and constraints are being changed by the move, how quickly can counterforces respond, how can shocks propagate, and what kind of termination mechanism is becoming more likely?
+> What structural state is the market in, what feedbacks and constraints define that state, which disturbance classes matter, how quickly can reinforcing or stabilizing forces respond, and how would the next shock propagate through the current architecture?
 
 The deepest operational question is:
 
-> How is the current trend changing the system's response to the next disturbance?
+> How is the current structural state changing the system's response law for the next disturbance?
 
 MFSM is explicitly not a universal crash predictor, not a scalar fragility score, not a claim that markets are literally biological systems, and not a claim that natural systems have solved market instability. Cross-domain analogies are used only to discover recurrent causal architectures. Financial validity must come from financial mechanisms, data, and empirical tests.
 
@@ -140,57 +142,171 @@ U depends on factors such as:
 
 A strong trend can have low U.
 
-### 3.3 Failure Fragility: F
+### 3.3 Shock-conditioned failure consequence: F
 
-Failure Fragility asks how severe the consequences could become if the current regime is disturbed.
+MFSM does not attach one context-free fragility number to a market. It first asks what happens under a **fully specified intervention** and what form of damage matters.
 
-Conceptually:
+Let \(\delta\) denote a concrete structural intervention, \(h\) the horizon, \(\ell\) a path-level loss or failure functional, and \(\rho\) a risk / severity functional. The shock-conditioned consequence is
 
-F = conditional severity and propagation potential of failure.
+\[
+\boxed{
+F_t(\delta,h;\ell,\rho)
+=
+\rho_{\mathcal P_{t,h}^{\delta}}
+\left[
+\ell\!\left(\mathbf Z_{[t,t+h]}^{\delta}\right)
+\right].
+}
+\]
 
-F depends especially on:
+Examples include:
 
-- leverage and threshold exposure;
-- low financing or collateral headroom;
-- shallow opposing liquidity;
-- common reaction functions;
-- network propagation channels;
-- forced liquidation mechanics;
-- concentration of ownership or funding;
-- nonlinear constraints.
+- probability that a liquidation threshold is crossed;
+- expected maximum adverse excursion;
+- expected cascade size;
+- expected shortfall of path loss;
+- probability that liquidity fails to recover by horizon \(h\).
 
-A trend can therefore occupy the state:
+This matters because the same structural state can be robust to one intervention and vulnerable to another, and because two users may care about different failure functionals.
 
-T high, U falling, F rising.
+For trend applications, one can still observe
 
-This means the market can remain visibly strong while becoming less sustainable and more dangerous if disturbed.
+\[
+T\uparrow,\qquad U\downarrow,
+\]
+
+while the consequences of a specified adverse intervention rise sharply.
+
+### 3.4 Structural susceptibility
+
+Shock consequence and structural fragility are not identical. A large intervention can produce a large loss even in a comparatively resilient system.
+
+For a disturbance class \(c\), define an intervention family \(\delta(c,a)\) indexed by amplitude \(a\). The susceptibility profile is the response curve
+
+\[
+\boxed{
+a
+\longmapsto
+F_t(\delta(c,a),h;\ell,\rho).
+}
+\]
+
+Useful derived diagnostics include a local slope
+
+\[
+\frac{\partial F_t}{\partial a},
+\]
+
+and a critical disturbance amplitude
+
+\[
+\boxed{
+a_q^*
+=
+\inf
+\left\{
+a:
+\Pr_{\mathcal P_{t,h}^{\delta(c,a)}}
+\left(
+\ell(\mathbf Z_{[t,t+h]}^{\delta(c,a)})
+\ge
+\ell^*
+\right)
+\ge q
+\right\}.
+}
+\]
+
+A system that fails after a very small disturbance can therefore be structurally more susceptible than one that suffers a larger absolute loss only after a much larger intervention. MFSM should report shock-conditioned consequence and susceptibility separately.
 
 ---
 
 ## 4. Canonical model objects
 
-The mature representation is not a seven-factor checklist. The current canonical model is:
+The mature representation is not a seven-factor checklist. The current canonical model distinguishes the latent system from its measurements:
 
-M_t = {X_t, J_t, K_t, W_t, B_t, Q_t, M_t^term, Sigma_t}
+\[
+\boxed{
+\mathcal M_t
+=
+\{\mathbf Z_t,J_t,K_t,W_t,B_t,Q_t,\mathcal C_{I,t},M_t^{term},\Sigma_t,\mathcal O_t\}
+}
+\]
 
 where:
 
-- X_t = observable and latent market state;
-- J_t = local state-dependent response matrix / Jacobian;
-- K_t = delay and memory kernels;
-- W_t = economic propagation network;
-- B_t = usable buffers, capacities, and thresholds;
-- Q_t = signal-source decomposition and expectations state;
-- M_t^term = candidate regime-termination mechanism;
-- Sigma_t = stochastic disturbance structure.
+- \(\mathbf Z_t\) = latent structural market state;
+- \(J_t\) = local state-dependent response matrix / Jacobian;
+- \(K_t\) = delay and memory kernels;
+- \(W_t\) = economic propagation network;
+- \(B_t\) = usable buffers, capacities, and thresholds;
+- \(Q_t\) = signal-source, expectation, and coordination state;
+- \(\mathcal C_{I,t}\) = topology of opposing / control mechanisms;
+- \(M_t^{term}\) = candidate regime-termination mechanism;
+- \(\Sigma_t\) = stochastic disturbance structure;
+- \(\mathcal O_t\) = observation / measurement process mapping latent state into measured data.
+
+Observed data are therefore not identified with the state itself:
+
+\[
+\mathbf Y_t = g(\mathbf Z_t;\psi_t)+\boldsymbol\eta_t.
+\]
+
+MFSM then distinguishes a disturbance **class** from a concrete structural intervention. A class such as "funding withdrawal" is not yet an intervention. A concrete intervention can be represented schematically as
+
+\[
+\boxed{
+\delta
+=
+(c,V,a,d,t_0,p,\nu),
+}
+\]
+
+where \(c\) is the disturbance class, \(V\) the structural target, \(a\ge0\) the amplitude, \(d\) the direction, \(t_0\) the onset, \(p(s)\) the temporal profile, and \(\nu\) any stochastic component. Endogenous outcomes such as "bank run" or "liquidation cascade" should not themselves be inserted into \(do(\cdot)\); the intervention must act on a causally upstream variable.
+
+Let \(\mathcal I_t\) denote the information genuinely available at time \(t\). When \(\mathbf Z_t\) is latent, conditioning on \(\mathcal I_t\) integrates over state-estimation uncertainty rather than pretending the exact latent state is observed. Given \(\mathcal I_t\), the fundamental response object is the **conditional counterfactual path law**
+
+\[
+\boxed{
+\mathcal P_{t,h}^{\delta}
+=
+\mathcal L
+\left(
+\{\mathbf Z_{t+s}^{\delta}\}_{0\le s\le h}
+\mid
+\mathcal I_t
+\right).
+}
+\]
+
+The no-intervention baseline is \(\mathcal P_{t,h}^{0}\).
+
+The previous terminal-expectation response is retained only as a derived mean causal response:
+
+\[
+\boxed{
+\mathbf m_t^{\delta}(s)
+=
+\mathbb E
+\left[
+\mathbf Z_{t+s}^{\delta}
+-
+\mathbf Z_{t+s}^{0}
+\mid
+\mathcal I_t
+\right].
+}
+\]
+
+This counterfactual difference removes ordinary drift that would occur even without the intervention. In practice, an empirical implementation need not estimate the unrestricted path law; it can target decision-relevant functionals such as threshold probabilities, maximum stress, tail loss, cascade size, or recovery time.
 
 Several earlier scalar variables remain useful as derived diagnostics, but they are not all primitive state variables.
 
 ---
 
-## 5. X_t: market state
+## 5. \(\mathbf Z_t\): latent structural market state
 
-X_t contains the set of variables required for the application. It should not be overstuffed by default.
+\(\mathbf Z_t\) contains the economically meaningful state variables required for the application. It should not be overstuffed by default. Observed proxies belong to \(\mathbf Y_t\) and need not equal the latent state exactly.
 
 Candidate components include:
 
@@ -319,6 +435,16 @@ Low H means a small adverse move can transform voluntary actors into forced acto
 
 R_minus = capacity available to take the opposite side of an unwind.
 
+The stronger canonical form is horizon-qualified:
+
+\[
+\boxed{
+R^-_t(h)
+=
+\text{opposing capacity that can actually act by horizon }h.
+}
+\]
+
 Examples:
 
 - dealer balance-sheet capacity;
@@ -329,7 +455,9 @@ Examples:
 - available financing for stabilizing traders;
 - investors with mandate and horizon to absorb distressed flow.
 
-Low R_minus means the market may have difficulty absorbing forced flow even if fundamental value appears attractive.
+This distinction matters because a market can have abundant eventual buyers but almost no capital able to act before a margin or redemption deadline.
+
+Low short-horizon \(R^-_t(h)\) means the market may have difficulty absorbing forced flow even if longer-horizon fundamental value appears attractive.
 
 ### 7.4 Effective capacity is time-dependent
 
@@ -346,6 +474,66 @@ Therefore:
 available resources != usable resources within the required timescale.
 
 This creates a direct link between buffers and delay.
+
+### 7.5 Constraint sensitivity and finite-shock buffer response
+
+Current headroom and the sensitivity of future headroom are different objects.
+
+If \(\mathbf B_t\in\mathbb R^m\) is a vector of buffers / constraints and \(\mathbf Z_t\in\mathbb R^n\) is the latent structural state, the local sensitivity is an \(m\times n\) Jacobian:
+
+\[
+\boxed{
+\mathbf\Chi_{B,t}(h)
+=
+D_{\mathbf z}
+\,
+\mathbb E
+\left[
+\mathbf B_{t+h}^{0}
+\mid
+\mathbf Z_t=\mathbf z,\mathcal I_t
+\right].
+}
+\]
+
+For a small intervention whose induced local state direction is \(\mathbf v_{\delta}\),
+
+\[
+\boxed{
+\boldsymbol\chi_{B,t}^{\delta}(h)
+=
+\mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
+}
+\]
+
+If a single scalar is required, it must use an explicit buffer weighting \(\mathbf w_B\):
+
+\[
+\chi_{B,t}^{\delta,w}(h)
+=
+\mathbf w_B^{\top}
+\mathbf\Chi_{B,t}(h)
+\mathbf v_{\delta}.
+\]
+
+For finite interventions, especially near thresholds, the derivative can be misleading. The preferred object is then the finite-shock buffer response
+
+\[
+\boxed{
+\Delta\mathbf B_t^{\delta}(s)
+=
+\mathbb E
+\left[
+\mathbf B_{t+s}^{\delta}
+-
+\mathbf B_{t+s}^{0}
+\mid
+\mathcal I_t
+\right].
+}
+\]
+
+Two systems can have the same current \(H_t\) but radically different vulnerability if a small state change destroys future headroom much faster in one than in the other. Collateral-based credit cycles are a canonical financial example.
 
 ---
 
@@ -492,6 +680,18 @@ A market with thousands of institutions can have low functional diversity if the
 
 Conversely, a smaller set of participants can be functionally diverse if their horizons, liabilities, constraints, valuation rules, and funding structures differ.
 
+Functional diversity is also dynamic rather than fixed. Relative strategy performance, capital flows, imitation, benchmark pressure, and constraints can change the distribution of reaction functions:
+
+\[
+\boxed{
+D_{t+1}
+=
+g(D_t,\text{relative strategy performance},\text{flows},\text{constraints}).
+}
+\]
+
+A successful strategy can therefore attract capital, reduce functional diversity, and increase the market impact of that same strategy.
+
 ### 10.1 Synchronization is not automatically harmful
 
 Common reaction to genuine new information can improve price discovery.
@@ -550,6 +750,26 @@ How much of current continuation is being validated by external information vers
 An increasing E may indicate growing dependence on self-generated continuation, but estimating it requires decomposition of information, flow, and mechanical impact.
 
 Persistent order flow, persistent information, and permanent price impact are not interchangeable.
+
+### 11.4 Strategic complementarity and coordination state
+
+Some fragility is generated not by price-to-flow feedback but by the fact that one participant's optimal action depends on expected actions of others.
+
+Represent this conceptually by:
+
+\[
+\boxed{
+\Gamma_t
+\sim
+\frac{\partial a_i^*}{\partial \bar a_{-i}}
+}
+\]
+
+where \(a_i^*\) is participant \(i\)'s optimal action and \(\bar a_{-i}\) summarizes relevant actions of others.
+
+High positive \(\Gamma_t\) means behavior is strategically complementary: others withdrawing, selling, redeeming, or refusing rollover can make the same action individually rational for another participant.
+
+This allows MFSM to represent run-like coordination fragility even when no preceding price trend exists.
 
 ---
 
@@ -820,6 +1040,74 @@ Reasons:
 10. rare-event validation creates severe overfitting risk.
 
 The first empirical goal is not to optimize a score. It is to estimate whether theoretically predicted interactions exist.
+
+A further reason a scalar score is inadequate is that robustness is disturbance-specific. A system can be highly robust to one shock direction and highly fragile to another.
+
+### 17.1 Counterfactual path law and response functionals
+
+The fundamental response target is the conditional path law
+
+\[
+\boxed{
+\mathcal P_{t,h}^{\delta}
+=
+\mathcal L
+\left(
+\mathbf Z_{[t,t+h]}^{\delta}
+\mid
+\mathcal I_t
+\right).
+}
+\]
+
+It asks:
+
+> Given the current structural state and this fully specified intervention, what paths can the system follow, with what probabilities, what becomes forced, what stabilizing capacity can arrive in time, and where can the disturbance propagate?
+
+Useful empirical targets are projections of this law rather than an unrestricted nonparametric estimate of the entire distribution. Examples include
+
+\[
+\Pr(\tau_{\mathrm{hit}}\le h),
+\qquad
+\mathbb E[\mathrm{MAE}_{0:h}],
+\qquad
+\mathbb E[S_{\mathrm{cascade}}],
+\qquad
+ES_{\alpha}(\ell),
+\qquad
+\Pr(\tau_{\mathrm{recovery}}\le h).
+\]
+
+The mean causal response is
+
+\[
+\mathbf m_t^{\delta}(s)
+=
+\mathbb E[
+\mathbf Z_{t+s}^{\delta}
+-
+\mathbf Z_{t+s}^{0}
+\mid
+\mathcal I_t
+],
+\]
+
+which is only one summary of the path law.
+
+A distribution of pathwise individual counterfactual differences \(\mathbf Z^{\delta}-\mathbf Z^0\) requires a structural coupling of the two potential paths, not merely their marginal laws. MFSM should state that coupling when such distributional differences are used.
+
+Shock-conditioned consequence is then defined through a path-level loss functional \(\ell\) and a risk / severity functional \(\rho\):
+
+\[
+F_t(\delta,h;\ell,\rho)
+=
+\rho_{\mathcal P_{t,h}^{\delta}}
+\left[
+\ell(\mathbf Z_{[t,t+h]}^{\delta})
+\right].
+\]
+
+Identification remains a separate problem. Estimation requires an explicit structural model, natural experiment, instrument, simulation calibrated to defensible mechanisms, or another justified design.
 
 ---
 
@@ -1245,13 +1533,37 @@ Specify:
 - relevant derivative markets;
 - key external fundamentals.
 
-### Step 2: Identify external drivers
+### Step 2: Define the disturbance class, intervention, and horizon
+
+First specify the disturbance class \(c\), such as funding withdrawal, margin increase, redemption, collateral haircut, volatility shock, supply shock, or policy shock.
+
+Then instantiate it as a structural intervention:
+
+\[
+\delta=(c,V,a,d,t_0,p,\nu).
+\]
+
+Record:
+
+- intervention target \(V\);
+- amplitude \(a\);
+- direction \(d\);
+- onset \(t_0\);
+- temporal profile / duration \(p(s)\);
+- stochastic component \(\nu\), if any;
+- horizon \(h\).
+
+A label such as "coordination run" can remain a friendly class name, but the mathematical intervention must act on a causally upstream variable such as withdrawal demand, rollover availability, or a common signal. Do not intervene on the endogenous outcome itself.
+
+Do not analyze structural susceptibility without specifying what disturbance family is being varied.
+
+### Step 3: Identify external drivers
 
 What new information or fundamental state is entering the system?
 
-Estimate S_ext.
+Estimate \(S^{ext}\).
 
-### Step 3: Identify endogenous reinforcing loops
+### Step 4: Identify endogenous reinforcing loops
 
 For each suspected loop, write it causally.
 
@@ -1261,7 +1573,7 @@ return -> inflow -> market impact -> return.
 
 Do not call momentum itself a feedback mechanism without identifying the behavior that closes the loop.
 
-### Step 4: Estimate or proxy remaining trend fuel R_plus
+### Step 5: Estimate or proxy remaining trend fuel R_plus
 
 Who can still add in the same direction?
 
@@ -1269,9 +1581,44 @@ What constraints their capacity?
 
 Is capacity replenishing or being consumed?
 
-### Step 5: Estimate headroom H
+### Step 6: Estimate headroom \(H\), local constraint sensitivity, and finite-shock buffer response
 
 Where do voluntary decisions become forced decisions?
+
+For local analysis, estimate the Jacobian
+
+\[
+\mathbf\Chi_{B,t}(h)
+=
+D_{\mathbf z}
+\mathbb E[
+\mathbf B_{t+h}^{0}
+\mid
+\mathbf Z_t=\mathbf z,\mathcal I_t
+].
+\]
+
+For the specified intervention, identify its induced state direction \(\mathbf v_{\delta}\) and, where useful, the projection
+
+\[
+\boldsymbol\chi_{B,t}^{\delta}(h)
+=
+\mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
+\]
+
+For finite shocks, especially near thresholds, prefer
+
+\[
+\Delta\mathbf B_t^{\delta}(s)
+=
+\mathbb E[
+\mathbf B_{t+s}^{\delta}
+-
+\mathbf B_{t+s}^{0}
+\mid
+\mathcal I_t
+].
+\]
 
 Identify:
 
@@ -1282,13 +1629,13 @@ Identify:
 - funding deadlines;
 - mandate constraints.
 
-### Step 6: Estimate opposing capacity R_minus
+### Step 7: Estimate opposing capacity \(R^-_t(h)\)
 
-Who can take the other side under stress?
+Who can take the other side under stress **by the relevant horizon**?
 
-Distinguish quoted liquidity from committed risk-bearing capacity.
+Distinguish quoted liquidity from committed risk-bearing capacity, and eventual capital from capital that can arrive before forced-action deadlines.
 
-### Step 7: Identify delayed counterforces I
+### Step 8: Identify opposing mechanisms and controller topology
 
 What does the current state induce later?
 
@@ -1302,7 +1649,22 @@ Examples:
 - policy;
 - capital raising.
 
-### Step 8: Measure response-time structure K and Theta
+Classify the topology where possible:
+
+\[
+\mathcal C_I
+\in
+\{
+\text{feed-forward},
+\text{feedback},
+\text{integral},
+\text{depletion},
+\text{saturation},
+\text{threshold}
+\}.
+\]
+
+### Step 9: Measure response-time structure K and Theta
 
 How fast does reinforcement operate?
 
@@ -1310,7 +1672,7 @@ How fast can constraints, buffers, and opposing capital respond?
 
 Is the response a fixed delay, a broad distribution, or immediate state-dependent action?
 
-### Step 9: Map W and C
+### Step 10: Map W and C
 
 What links transmit disturbances?
 
@@ -1323,15 +1685,25 @@ Examples:
 - benchmarks;
 - shared market makers.
 
-### Step 10: Estimate functional diversity D
+### Step 11: Estimate functional diversity \(D\) and strategic complementarity \(\Gamma\)
 
 How differently will important participants react to the same shock?
 
-### Step 11: Estimate threshold exposure L
+Is \(D_t\) changing because successful strategies are attracting capital or reaction rules are converging?
+
+Do participant actions become more individually attractive when others take the same action?
+
+\[
+\Gamma_t
+\sim
+\frac{\partial a_i^*}{\partial \bar a_{-i}}.
+\]
+
+### Step 12: Estimate threshold exposure L
 
 Which state changes can force discrete behavior?
 
-### Step 12: Classify likely termination mechanism M_term
+### Step 13: Classify likely termination mechanism M_term
 
 Choose among:
 
@@ -1341,15 +1713,38 @@ Choose among:
 - threshold unwind;
 - or explicitly state that no dominant termination mechanism is identified.
 
-### Step 13: Separate T, U, and F
+### Step 14: Define the path-level loss and severity functional
 
-Report them separately.
+Specify what failure or damage means through \(\ell\), for example:
 
-Never convert "strong" directly into "safe" or "fragile" directly into "imminent reversal."
+- maximum drawdown;
+- liquidation-threshold crossing;
+- cascade notional;
+- order-book impairment;
+- stablecoin depeg;
+- failure to recover by horizon \(h\).
 
-### Step 14: State missing information and falsifiers
+Then specify how uncertainty is summarized through \(\rho\), such as expectation, probability, quantile, or expected shortfall.
 
-For every strong conclusion, state what observation would weaken or reverse it.
+### Step 15: Report consequence and structural susceptibility separately
+
+For trend applications, report \(T\) and \(U\) separately.
+
+Report the shock-conditioned consequence
+
+\[
+F_t(\delta,h;\ell,\rho)
+\]
+
+for the fully specified intervention.
+
+Then, where the task is structural fragility rather than scenario consequence, vary disturbance amplitude \(a\) within the class \(c\) and report a susceptibility profile, local slope, or critical amplitude \(a_q^*\).
+
+Never convert "strong" directly into "safe", and never compare two fragility values produced by materially different shock magnitudes as if the underlying systems had equal susceptibility.
+
+### Step 16: State missing information, measurement assumptions, and falsifiers
+
+For every strong conclusion, state what observation would weaken or reverse it. Distinguish latent quantities from their proxies and record model/kernel choices that could change the estimate.
 
 ---
 
@@ -1359,9 +1754,20 @@ When another LLM applies this model, it should return something structurally sim
 
 ### System boundary
 - Market:
-- Horizon:
 - Relevant participants:
 - Funding / derivatives context:
+
+### Disturbance definition
+- Disturbance class \(c\):
+- Structural target \(V\):
+- Amplitude \(a\):
+- Direction \(d\):
+- Onset \(t_0\):
+- Temporal profile \(p(s)\):
+- Stochastic component \(\nu\), if any:
+- Horizon \(h\):
+- Observed / hypothetical:
+
 
 ### External confirmation S_ext
 - Current evidence:
@@ -1373,21 +1779,27 @@ When another LLM applies this model, it should return something structurally sim
 - Estimated strength / uncertainty:
 
 ### Capacities
-- R_plus:
-- H:
-- R_minus:
+- \(R^+\):
+- \(H\):
+- local \(\mathbf\Chi_B\):
+- intervention projection \(\boldsymbol\chi_B^{\delta}\):
+- finite-shock \(\Delta\mathbf B^{\delta}\):
+- \(R^-_t(h)\):
 
 ### Counterforces and timing
-- I:
-- K(s) or qualitative delay distribution:
-- Theta / Phi interpretation:
+- \(I\):
+- controller topology \(\mathcal C_I\):
+- \(K(s)\) or qualitative delay distribution:
+- \(\Theta\) / \(\Phi\) interpretation:
 
 ### Network
 - W channels:
 - C / propagation potential:
 
-### Functional diversity
-- D:
+### Functional diversity and coordination
+- \(D_t\):
+- Is \(D_t\) rising or falling?
+- Strategic complementarity \(\Gamma_t\):
 
 ### Threshold exposure
 - L:
@@ -1401,10 +1813,35 @@ When another LLM applies this model, it should return something structurally sim
 - Most plausible M_term:
 - Alternatives:
 
+### Path-response targets
+- Mean causal response \(\mathbf m_t^{\delta}(s)\):
+- Threshold-hit probability:
+- Maximum adverse excursion / maximum stress:
+- Cascade-size functional:
+- Recovery probability / recovery-time functional:
+
+### Loss and severity definition
+- Path loss / failure functional \(\ell\):
+- Risk / severity functional \(\rho\):
+
 ### State outputs
-- T: trend strength
-- U: trend sustainability
-- F: failure fragility
+- \(T\): trend strength, if a trend is present
+- \(U\): trend sustainability, if a trend is present
+- \(F_t(\delta,h;\ell,\rho)\): shock-conditioned consequence
+- Susceptibility profile \(a\mapsto F_t(\delta(c,a),h;\ell,\rho)\), if required
+- Critical amplitude \(a_q^*\), if identified
+
+### Shock-response path
+- Expected sequence after \(\delta\):
+- What becomes forced?
+- What can absorb the shock before horizon \(h\)?
+- Where can it propagate?
+
+### Observation model
+- Latent quantities:
+- Observed proxies:
+- Kernel / measurement assumptions:
+- Main measurement risks:
 
 ### Dominant feedback mode
 - Stable decay / damped oscillation / transient amplification / threshold risk / other:
@@ -1559,16 +1996,21 @@ For example, average collateral headroom can look healthy while a systemically i
 
 MFSM should be considered practically useful only if a prespecified implementation can do at least one of the following out of sample:
 
-1. distinguish continuation from quiet exhaustion better than ordinary momentum and valuation measures;
-2. identify when similarly strong trends have materially different failure severity;
-3. improve prediction of forced-liquidation or fire-sale episodes using headroom and capacity interactions;
-4. identify propagation risk beyond raw correlation using exposure topology;
-5. separate flow-driven temporary price pressure from information-driven permanent repricing;
-6. improve calibration of transition hazards without unacceptable false-alarm rates.
+1. discriminate materially different path responses to prespecified structural interventions using calibrated functionals of \(\mathcal P_{t,h}^{\delta}\);
+2. estimate shock-conditioned consequence \(F_t(\delta,h;\ell,\rho)\) with useful calibration for prespecified loss and severity definitions;
+3. distinguish structural susceptibility across otherwise comparable states through amplitude-response curves or critical disturbance amplitudes;
+4. distinguish continuation from quiet exhaustion better than ordinary momentum and valuation measures;
+5. identify when similarly strong trends have materially different intervention-conditioned outcomes;
+6. improve prediction of forced-liquidation or fire-sale episodes using headroom, local constraint sensitivity, finite-shock buffer response, and capacity interactions;
+7. identify propagation risk beyond raw correlation using exposure topology;
+8. separate flow-driven temporary price pressure from information-driven permanent repricing;
+9. identify run-like or coordination fragility not captured by trend variables alone;
+10. improve calibration of transition hazards without unacceptable false-alarm rates;
+11. remain materially robust to reasonable alternative measurement models, kernels, proxy definitions, and intervention specifications.
 
 The framework does not need to predict exact tops to be useful.
 
-State diagnosis is the primary objective.
+Structural state and shock-response diagnosis are the primary objectives.
 
 ---
 
@@ -1593,33 +2035,57 @@ An explanatory vocabulary without incremental empirical value should not be pres
 
 The current highest-value research directions are:
 
-### Priority 1: Headroom x amplification
+### Priority 1: Counterfactual path-response estimation
 
-Test whether strong same-direction feedback becomes especially dangerous when financing, margin, or collateral headroom is low.
+Estimate decision-relevant functionals of \(\mathcal P_{t,h}^{\delta}\) for fully specified interventions rather than relying on terminal expected-state response alone.
 
-### Priority 2: R_minus and absorptive liquidity
+Priority targets include threshold-hit probability, maximum adverse excursion, cascade size, tail loss, and recovery probability.
 
-Measure who can actually absorb forced flow, not just quoted volume.
+### Priority 2: Consequence-versus-susceptibility separation
 
-### Priority 3: Delay mismatch
+Estimate amplitude-response curves
 
-Measure mobilization time of buffers relative to forced-action deadlines.
+\[
+a\mapsto F_t(\delta(c,a),h;\ell,\rho)
+\]
 
-### Priority 4: Functional synchronization x connectivity
+and critical disturbance amplitudes where possible. Test whether these susceptibility measures add information beyond consequence under one arbitrarily chosen shock.
+
+### Priority 3: Headroom x constraint sensitivity x amplification
+
+Test whether strong same-direction feedback becomes especially dangerous when current headroom is low **and/or** a small state change rapidly destroys future headroom. Compare local \(\mathbf\Chi_{B,t}\) with finite-shock \(\Delta\mathbf B_t^{\delta}\).
+
+### Priority 4: Horizon-dependent opposing capacity
+
+Estimate \(R^-_t(h)\): who can actually absorb forced flow by the relevant deadline, not merely who may eventually find the asset attractive.
+
+### Priority 5: Delay and deadline mismatch
+
+Measure mobilization time of buffers and stabilizing capital relative to forced-action deadlines.
+
+### Priority 6: Strategic complementarity and dynamic diversity
+
+Test whether run-like coordination and performance-driven convergence of reaction functions add explanatory value beyond ordinary crowding and positioning measures.
+
+### Priority 7: Functional synchronization x connectivity
 
 Test whether common reaction functions become dangerous primarily when the network can transmit their common behavior and opposing capacity is limited.
 
-### Priority 5: External vs endogenous confirmation
+### Priority 8: External vs endogenous confirmation
 
 Develop credible decomposition of fundamental information, return-induced flows, and mechanical impact.
 
-### Priority 6: Termination-mechanism classification
+### Priority 9: Termination-mechanism and controller-topology classification
 
-Determine whether fuel exhaustion, delayed counterflow, saturation, and threshold unwind can be empirically distinguished before or during transitions.
+Determine whether fuel exhaustion, delayed counterflow, saturation, threshold unwind, feed-forward opposition, feedback, and other controller structures can be empirically distinguished.
 
-### Priority 7: State-dependent response matrix
+### Priority 10: State-dependent response matrix
 
 Move from a verbal checklist toward estimated local dynamics.
+
+### Priority 11: Measurement-model robustness
+
+Stress-test estimated amplification, crowding, criticality, and network state against plausible kernels, regime definitions, sampling choices, and proxy constructions.
 
 ---
 
@@ -1628,19 +2094,25 @@ Move from a verbal checklist toward estimated local dynamics.
 When loading this file, treat the following as authoritative for the current version of MFSM:
 
 1. MFSM is a market-state and feedback-dynamics framework, not a directional trading rule.
-2. The central object is the evolving system state, not price alone.
-3. Trend Strength T, Trend Sustainability U, and Failure Fragility F must remain separate outputs.
-4. R_plus, H, and R_minus must never be collapsed into a generic resource variable without explicit justification.
-5. Delay must be interpreted jointly with gain and response timescale; prefer a kernel or distribution when data allow.
-6. Connectivity is not monotonically destabilizing; use explicit propagation mechanisms.
-7. Functional diversity means diversity of reaction functions, not participant count.
-8. Separate external confirmation from endogenous market-generated reinforcement.
-9. Distinguish fuel exhaustion, delayed counterflow, gain saturation, and threshold unwind as different termination mechanisms.
-10. Do not build a scalar fragility score unless empirical work justifies the functional form.
-11. Biological and physical analogies generate hypotheses; they do not validate financial predictions.
-12. Any extension must specify mechanism, mapping, measurement, falsifier, and incremental value.
-13. Any application must report missing data and uncertainty.
-14. Prefer out-of-sample state diagnosis over retrospective crash storytelling.
+2. The central object is the evolving **structural response architecture**, not price alone and not trend alone.
+3. Trend Strength \(T\) and Trend Sustainability \(U\) are trend-specific outputs. Shock-conditioned consequence is \(F_t(\delta,h;\ell,\rho)\); structural susceptibility is a response profile across disturbance amplitude, not the same object.
+4. Distinguish a disturbance class from a fully specified structural intervention. Do not place an endogenous outcome such as a run or cascade directly inside \(do(\cdot)\).
+5. The fundamental theoretical response object is the conditional counterfactual path law \(\mathcal P_{t,h}^{\delta}\). Mean response is only one projection of that law.
+6. \(R^+\), \(H\), and \(R^-\) must never be collapsed into a generic resource variable without explicit justification.
+7. Opposing absorptive capacity should be horizon-qualified as \(R^-_t(h)\) when mobilization time matters.
+8. Current headroom, the local constraint-sensitivity Jacobian \(\mathbf\Chi_{B,t}\), and the finite-shock buffer response \(\Delta\mathbf B_t^{\delta}\) are distinct.
+9. Delay must be interpreted jointly with gain and response timescale; prefer a kernel or distribution when data allow.
+10. Connectivity is not monotonically destabilizing; use explicit propagation mechanisms.
+11. Functional diversity means diversity of reaction functions, not participant count, and \(D_t\) can evolve endogenously through strategy performance and capital flows.
+12. Separate external confirmation from endogenous market-generated reinforcement.
+13. Allow strategic complementarity / coordination fragility through \(Q_t\) or \(\Gamma_t\); run-like fragility need not be preceded by a trend.
+14. Distinguish fuel exhaustion, delayed counterflow, gain saturation, and threshold unwind as different termination mechanisms.
+15. Distinguish controller topology: feed-forward opposition, feedback, integral control, depletion, saturation, and threshold switching are not interchangeable.
+16. Treat measured indicators as observations of latent state, not as the state itself; explicitly model or discuss measurement error and identification.
+17. Do not build a scalar universal fragility score. A loss functional, severity functional, intervention, and horizon must be specified.
+18. Biological and physical analogies generate hypotheses; they do not validate financial predictions.
+19. Any extension must specify mechanism, mapping, measurement, falsifier, and incremental value.
+20. Prefer out-of-sample state and path-response diagnosis over retrospective crash storytelling.
 
 ---
 
@@ -1648,11 +2120,11 @@ When loading this file, treat the following as authoritative for the current ver
 
 The entire framework can be compressed to the following:
 
-> A financial trend is a state-transforming feedback process. Its future depends not only on the force currently driving price, but on how that movement changes same-direction capacity, financing and collateral headroom, opposing absorptive capacity, delayed counterflows, participant reaction diversity, network propagation, threshold exposure, and the balance between external information and endogenous reinforcement. Stability depends on the interaction of loop gain, finite buffers, response-time distributions, expectations, nonlinear thresholds, and topology. The same observed trend can therefore be strong and sustainable, strong but exhausting, or strong and highly fragile. The model's task is to diagnose which regime exists and how the next disturbance will propagate, not to assume that any single indicator predicts a top or crash.
+> A financial market is a state-dependent response system. Its current structural state determines how new disturbances are amplified, damped, delayed, transmitted, or converted into forced behavior. Price trends are one state-transforming process among several: coordination runs, collateral feedback, funding stress, strategy imitation, and network spillovers can also rewrite the response law. MFSM therefore evaluates a fully specified structural intervention through a conditional counterfactual path law, derives decision-relevant path functionals from that law, defines shock consequence only after specifying a loss functional and severity functional, and treats structural susceptibility as the change in consequence as intervention amplitude varies. The relevant state includes same-direction capacity, financing and collateral headroom, horizon-dependent opposing absorptive capacity, local and finite-shock buffer response, delayed or distributed counterforces, participant reaction diversity, strategic complementarity, network propagation, threshold exposure, and the balance between external information and endogenous reinforcement. The same market can be robust to one disturbance and fragile to another.
 
 The deepest operating question is:
 
-> How is the current trend changing the system's response to the next disturbance?
+> **How is the current structural state changing the system's response law for the next disturbance?**
 
 ---
 
@@ -1685,6 +2157,23 @@ The following works are especially relevant to the current framework.
 - Inaki Aldasoro, Claudio Borio, and Mathias Drehmann, "Early Warning Indicators of Banking Crises: Expanding the Family." BIS: https://www.bis.org/publications/early-warning-indicators-banking-crises-expanding-family_0.pdf
 - Michael McLeay, Amar Radia, and Ryland Thomas, "Money Creation in the Modern Economy," Bank of England, 2014.
 
+### Additional finance and control foundations
+
+- Douglas W. Diamond and Philip H. Dybvig, "Bank Runs, Deposit Insurance, and Liquidity," Journal of Political Economy 91(3), 1983, pp. 401-419. The paper supplies the multiple-equilibrium / self-fulfilling run mechanism; MFSM's \(\Gamma_t\) is its own abstraction of coordination dependence. https://www.journals.uchicago.edu/doi/10.1086/261155
+- Nobuhiro Kiyotaki and John Moore, "Credit Cycles," 1997: collateral-value feedback and constraint amplification. https://msuweb.montclair.edu/~lebelp/KyotakiMooreCreditCyclesJPE1997.pdf
+- Darrell Duffie, slow-moving capital / Presidential Address: horizon-dependent arrival of stabilizing capital. https://web.stanford.edu/~duffie/PresidentialAddressApril15NormalFormat.pdf
+- Vladimir Filimonov and Didier Sornette, Hawkes-process criticality diagnostics: measurement and specification risk when inferring endogeneity. https://ideas.repec.org/a/taf/quantf/v15y2015i8p1293-1314.html
+- William Brock / Cars Hommes and related heterogeneous-expectations work; source reviewed here: https://papers.tinbergen.nl/15088.pdf
+- Bank for International Settlements, crypto carry and leveraged/arbitrage-capacity state: https://www.bis.org/publications/working-paper-1087-crypto-carry.pdf
+- Jason Milionis et al., "Loss-Versus-Rebalancing": economics of passive AMM liquidity provision. https://arxiv.org/pdf/2208.06046v2
+- Bank of England, "An anatomy of the 2022 gilt market crisis": collateral deadlines, forced selling, and intermediary capacity. https://www.bankofengland.co.uk/working-paper/2023/an-anatomy-of-the-2022-gilt-market-crisis
+- Malcolm Baker and Jeffrey Wurgler, market timing and capital structure: valuation-sensitive issuance as delayed supply. https://pages.stern.nyu.edu/~jwurgler/papers/capstruct.pdf
+- Hyman Minsky, financing-composition / financial-instability work: https://www.levyinstitute.org/pubs/wp74.pdf
+- Uri Alon / Mangan–Alon feed-forward-loop motif work: controller topology and timing. https://www.weizmann.ac.il/mcb/alon/sites/mcb.UriAlon/files/structure_and_function_of_the_feed-forward_loop_network_motif.pdf
+- Yi, Huang, Simon, and Doyle, integral feedback in bacterial chemotaxis: https://www.pnas.org/doi/pdf/10.1073/pnas.97.9.4649
+- Carlson and Doyle, Highly Optimized Tolerance: robustness can coexist with shock-specific fragility. https://harvest.aps.org/v2/journals/articles/10.1103/PhysRevLett.84.2529/fulltext
+- Extended source-by-source audit: `artifacts/source_review_extended_2026-09-22.md`
+
 ### Delay, dynamics, and natural-system inspiration
 
 - G. E. Hutchinson, "Circular Causal Systems in Ecology," 1948. https://people.wku.edu/charles.smith/biogeog/HUTC1948.htm
@@ -1705,36 +2194,46 @@ model:
   name: Market Feedback-State Model
   acronym: MFSM
   status: research_framework
-  objective: diagnose_market_feedback_state
-  primary_question: "How is the current trend changing the system's response to the next disturbance?"
+  objective: diagnose_structural_market_response_state
+  primary_question: "How is the current structural state changing the system's response law for the next disturbance?"
 
 outputs:
-  T: trend_strength
-  U: trend_sustainability
-  F: failure_fragility
+  T: trend_strength_when_a_trend_is_present
+  U: trend_sustainability_when_a_trend_is_present
+  F: shock_conditioned_consequence_F_t_delta_h_loss_risk
+  susceptibility_profile: consequence_as_function_of_intervention_amplitude
+  critical_amplitude: minimum_amplitude_reaching_prespecified_failure_probability
 
 primitive_objects:
-  X_t: market_state
+  Z_t: latent_structural_market_state
   J_t: state_dependent_response_matrix
   K_t: delay_and_memory_kernel
   W_t: economic_propagation_network
   B_t: capacities_buffers_and_thresholds
-  Q_t: signal_source_and_expectations_state
+  Q_t: signal_expectation_and_coordination_state
+  controller_topology: opposing_mechanism_topology
   Sigma_t: disturbance_structure
+  O_t: observation_and_measurement_process
 
 capacity_components:
   R_plus: remaining_same_direction_fuel
   H: financing_collateral_and_risk_headroom
-  R_minus: opposing_absorptive_capacity
+  R_minus_h: opposing_absorptive_capacity_available_by_horizon
+  Chi_B: local_buffer_sensitivity_jacobian
+  chi_B_delta: intervention_direction_projection_of_local_buffer_sensitivity
+  Delta_B_delta: finite_shock_buffer_response
+
+coordination_and_behavior:
+  Gamma: strategic_complementarity
+  D: dynamic_functional_diversity
+  S_ext: external_confirmation
+  S_end: endogenous_confirmation
 
 derived_diagnostics:
   A: endogenous_loop_gain
   Theta: inhibitory_timescale_over_amplification_timescale
   Phi: gain_delay_interaction
   C: effective_propagation_potential
-  D: functional_diversity
-  S_ext: external_confirmation
-  S_end: endogenous_confirmation
   E: endogenous_to_external_confirmation_ratio
   L: nonlinear_threshold_exposure
 
@@ -1744,31 +2243,64 @@ termination_mechanisms:
   - gain_saturation
   - threshold_unwind
 
+controller_topologies:
+  - feed_forward_opposition
+  - feedback
+  - integral_feedback
+  - depletion
+  - saturation
+  - threshold_switching
+
+response_objects:
+  intervention: fully_specified_structural_intervention_delta
+  path_law: conditional_counterfactual_path_law_P_delta
+  baseline_path_law: no_intervention_path_law_P_zero
+  mean_response: counterfactual_mean_difference_m_delta
+  loss_functional: path_level_damage_definition_ell
+  severity_functional: risk_summary_rho
+
 core_constraints:
   - do_not_collapse_R_plus_H_R_minus
+  - make_R_minus_horizon_qualified_when_timing_matters
+  - distinguish_headroom_from_local_constraint_sensitivity_and_finite_shock_buffer_response
+  - distinguish_disturbance_class_from_structural_intervention
+  - do_not_intervene_on_endogenous_outcome_labels
+  - distinguish_shock_consequence_from_structural_susceptibility
+  - require_loss_and_severity_functionals_for_F
   - do_not_treat_connectivity_as_monotonic_risk
   - do_not_treat_delay_without_gain
   - do_not_equate_participant_count_with_diversity
+  - allow_fragility_without_prior_trend
+  - separate_latent_state_from_observed_proxy
   - do_not_treat_CSD_as_universal_crash_warning
   - do_not_use_biological_analogy_as_predictive_evidence
-  - do_not_create_scalar_fragility_score_without_validation
+  - do_not_create_scalar_universal_fragility_score
 
 empirical_priority:
+  - counterfactual_path_response_functionals
+  - shock_consequence_vs_susceptibility
   - headroom_x_amplification
-  - absorptive_capacity
+  - horizon_dependent_absorptive_capacity
+  - local_and_finite_shock_constraint_response
   - delay_mismatch
+  - strategic_complementarity
   - synchronization_x_connectivity
   - external_vs_endogenous_confirmation
   - termination_mechanism_classification
   - state_dependent_response_matrix
+  - measurement_identification
 
 validation_standard:
   - prespecified_definitions
+  - explicit_disturbance_class_structural_intervention_amplitude_path_and_horizon
+  - explicit_path_loss_and_severity_functionals
   - real_time_data
   - strong_baselines
   - out_of_sample_evaluation
+  - disturbance_class_holdouts_where_possible
   - rare_event_correction
   - causal_identification_where_possible
+  - explicit_measurement_model
   - explicit_falsifiers
 ```
 

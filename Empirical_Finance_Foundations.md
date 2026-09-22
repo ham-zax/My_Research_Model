@@ -14,25 +14,28 @@ This document answers a stricter question:
 
 > Which parts of MFSM already correspond to established financial mechanisms, which parts are empirically supported only under conditions, and which parts remain hypotheses that must earn predictive validity?
 
-The current evidence supports MFSM primarily as a **conditional map of amplification mechanisms**, especially:
+The current evidence supports MFSM primarily as a **conditional map of state-dependent response mechanisms**, especially:
 
-- funding constraints;
-- leverage feedback;
-- forced liquidation;
+- funding constraints and leverage feedback;
+- collateral-sensitive borrowing capacity;
+- forced liquidation and deadline mismatch;
 - common-exposure fire sales;
-- limits to arbitrage;
-- endogenous risk;
+- slow-moving stabilizing capital and limits to arbitrage;
+- strategic complementarity / run-like coordination;
+- endogenous risk and strategy convergence;
 - flow-induced price pressure;
 - network propagation;
-- state-dependent strategy vulnerability.
+- state-dependent strategy vulnerability;
+- measurement risk when latent endogeneity is inferred from noisy or misspecified proxies.
 
 The evidence does **not** currently establish:
 
 - a universal MFSM fragility score;
 - a universal crash threshold;
+- that any one estimated endogeneity/criticality statistic identifies the latent feedback state;
 - that saturation predicts tops;
 - that biological analogy supplies predictive power;
-- that the current full state vector improves out-of-sample decisions.
+- that the current full state vector or shock-response representation improves out-of-sample decisions.
 
 Those are empirical questions.
 
@@ -582,6 +585,244 @@ Distinguish:
 
 ---
 
+## 18A. Strategic complementarity and bank-run coordination
+
+### Diamond and Dybvig — Bank Runs, Deposit Insurance, and Liquidity
+
+Primary source:
+https://www.journals.uchicago.edu/doi/10.1086/261155
+
+Diamond and Dybvig (1983), *Journal of Political Economy* 91(3), pp. 401-419, model demand-deposit arrangements with multiple equilibria, including a bank-run equilibrium.
+
+Core mechanism:
+
+A participant's optimal action can depend on expected actions of others. This creates multiple-equilibrium / coordination fragility that does not require a preceding price trend.
+
+MFSM mapping:
+
+- \(Q_t\): expectations and coordination state;
+- \(\Gamma_t\): MFSM's abstraction of strategic-complementarity / coordination dependence;
+- path-law and susceptibility analysis for run-like responses.
+
+The exact quantity
+
+\[
+\Gamma_t
+\sim
+\frac{\partial a_i^*}{\partial \bar a_{-i}}
+\]
+
+is an MFSM abstraction; it is not presented as a formula taken from Diamond-Dybvig.
+
+MFSM lesson:
+
+Do not require visible momentum before diagnosing run-like fragility.
+
+---
+
+## 18B. Collateral constraints and state-sensitive headroom
+
+### Kiyotaki and Moore — Credit Cycles
+
+Source:
+https://msuweb.montclair.edu/~lebelp/KyotakiMooreCreditCyclesJPE1997.pdf
+
+Core mechanism:
+
+Asset prices affect collateral capacity; collateral capacity affects future spending / demand; this feeds back into asset prices and propagation.
+
+MFSM mapping:
+
+- \(H_t\): current headroom;
+- \(\mathbf\Chi_{B,t}\): local Jacobian of future buffers with respect to current latent state;
+- \(\Delta\mathbf B_t^{\delta}\): finite-shock buffer response;
+- \(A_t\): collateral-price amplification.
+
+MFSM lesson:
+
+Two states with identical current headroom can have different vulnerability if price changes destroy headroom at different rates.
+
+---
+
+## 18C. Slow-moving stabilizing capital
+
+### Duffie — slow-moving capital / Presidential Address
+
+Source:
+https://web.stanford.edu/~duffie/PresidentialAddressApril15NormalFormat.pdf
+
+Core mechanism:
+
+Potential stabilizing capital can arrive gradually after a shock because capital raising, search, approval, funding, or position entry takes time.
+
+MFSM mapping:
+
+\[
+R^-_t(h)
+=
+\text{opposing capacity able to act by horizon }h.
+\]
+
+MFSM lesson:
+
+"Buyers exist" is not enough. The empirical question is whether they can act before forced sellers must act.
+
+---
+
+## 18D. Measurement risk when inferring endogeneity
+
+### Filimonov and Sornette
+
+Source:
+https://ideas.repec.org/a/taf/quantf/v15y2015i8p1293-1314.html
+
+Core warning:
+
+Estimated branching / endogeneity measures can be distorted by kernel misspecification, outliers, nonstationarity, edge effects, and regime mixtures.
+
+MFSM mapping:
+
+\[
+\mathbf Y_t=g(\mathbf Z_t;\psi_t)+\boldsymbol\eta_t.
+\]
+
+MFSM lesson:
+
+\(\hat A_t\), \(\hat C_t\), or a fitted "criticality" statistic is an estimator of latent structure, not the latent structure itself.
+
+---
+
+## 18E. Dynamic strategy composition
+
+### Hommes / in 't Veld and heterogeneous-expectations work
+
+Source reviewed:
+https://papers.tinbergen.nl/15088.pdf
+
+Core mechanism:
+
+Relative strategy performance can cause agents/capital to switch among forecasting or trading rules, creating self-reinforcing changes in market composition.
+
+MFSM mapping:
+
+\[
+D_{t+1}=g(D_t,\text{relative performance},\text{flows},\text{constraints}).
+\]
+
+MFSM lesson:
+
+Crowding can be produced by prior strategy success. Functional diversity should be modeled dynamically, not as a fixed market characteristic.
+
+---
+
+## 18F. Crypto carry as a joint state variable
+
+### BIS — Crypto Carry
+
+Source:
+https://www.bis.org/publications/working-paper-1087-crypto-carry.pdf
+
+Core evidence:
+
+In the studied crypto markets, carry is linked to leveraged speculative demand / attention and limited arbitrage capacity, and high carry contains information about subsequent downside risk.
+
+MFSM mapping:
+
+- \(A\): speculative reinforcement;
+- \(H\): leverage / margin state;
+- \(R^-\): arbitrage capacity.
+
+MFSM lesson:
+
+Carry is a candidate composite observable for a specific asset class, not a universal crash threshold.
+
+---
+
+## 18G. Economics of passive absorptive liquidity
+
+### Milionis et al. — Loss-Versus-Rebalancing
+
+Source:
+https://arxiv.org/pdf/2208.06046v2
+
+Core mechanism:
+
+Passive AMM liquidity provision can incur a predictable loss-versus-rebalancing cost associated with arbitrage / adverse selection and foregone rebalancing.
+
+MFSM mapping:
+
+Opposing capacity should have its own economics:
+
+\[
+\dot R^-_t
+=
+\rho^-(\text{fees, spreads, convergence, capital cost})
+-
+c^-(\text{losses, adverse selection, margin, redemptions}).
+\]
+
+MFSM lesson:
+
+Quoted liquidity is not equivalent to durable risk-bearing capacity.
+
+---
+
+## 18H. Gilt crisis as interaction evidence
+
+### Bank of England — An anatomy of the 2022 gilt market crisis
+
+Source:
+https://www.bankofengland.co.uk/working-paper/2023/an-anatomy-of-the-2022-gilt-market-crisis
+
+Core evidence:
+
+Leveraged derivative/repo exposures, collateral demands, forced gilt sales, and market/intermediary capacity interacted during the episode.
+
+MFSM mapping:
+
+\[
+H \times R^-_t(h) \times W_t \times \Psi.
+\]
+
+MFSM lesson:
+
+Stress severity is better described by interaction among headroom, deadlines, absorptive capacity, and propagation than by the initial price move alone.
+
+---
+
+## 18I. Financing composition can deteriorate during favorable states
+
+Sources:
+- Minsky: https://www.levyinstitute.org/pubs/wp74.pdf
+- Federal Reserve credit-market sentiment paper: https://www.federalreserve.gov/econresdata/feds/2015/files/2015028pap.pdf
+
+Core insight:
+
+Favorable financing conditions can change the composition and quality of financing, refinancing dependence, or marginal borrowers before overt stress appears.
+
+MFSM lesson:
+
+Buffer state \(B_t\) should allow liability maturity/composition and borrower/issuer quality, not only aggregate leverage.
+
+---
+
+## 18J. Mechanism decomposition in squeeze-like episodes
+
+### SEC staff report on early 2021 equity/options conditions
+
+Source:
+https://www.sec.gov/files/staff-report-equity-options-market-struction-conditions-early-2021.pdf
+
+Core lesson:
+
+Potential fuel, realized covering flow, options hedging, margin/clearing demands, and retail/speculative demand must be separated rather than inferred from one popular narrative.
+
+MFSM implication:
+
+Short interest is potential \(R^+\), not proof that short-covering is the realized amplifier.
+
+---
+
 # Part VI — What MFSM should test
 
 ## 19. Hypothesis H1 — Capacity interaction
@@ -720,6 +961,114 @@ Evaluation should include:
 
 ---
 
+## 25A. Hypothesis H8 — Shock-conditioned path response and consequence
+
+For prespecified disturbance classes \(c\), instantiate concrete interventions \(\delta=(c,V,a,d,t_0,p,\nu)\) and horizons \(h\).
+
+> the same latent market state can have materially different path outcomes across intervention classes, amplitudes, and horizons.
+
+Let \(\mathcal I_t\) denote the information available at the prediction timestamp, including uncertainty about the latent state. Test whether functionals of
+
+\[
+\mathcal P_{t,h}^{\delta}
+=
+\mathcal L(
+\mathbf Z_{[t,t+h]}^{\delta}
+\mid
+\mathcal I_t
+)
+\]
+
+improve discrimination of outcomes after funding shocks, redemptions, margin changes, collateral haircuts, or other identified interventions.
+
+Candidate empirical targets include:
+
+- liquidation-threshold probability;
+- maximum adverse excursion;
+- cascade size;
+- recovery probability / time;
+- expected shortfall of a prespecified path loss.
+
+Any reported consequence must specify
+
+\[
+F_t(\delta,h;\ell,\rho).
+\]
+
+Where data allow, use disturbance-class and disturbance-amplitude holdouts in addition to date/episode holdouts.
+
+---
+
+## 25B. Hypothesis H9 — Constraint sensitivity
+
+Conditional on current headroom \(H_t\):
+
+> states in which buffers are more sensitive to price or collateral movements should exhibit more nonlinear deleveraging after comparable shocks.
+
+The local object is the Jacobian
+
+\[
+\mathbf\Chi_{B,t}(h)
+=
+D_{\mathbf z}
+\mathbb E[
+\mathbf B_{t+h}^{0}
+\mid
+\mathbf Z_t=\mathbf z,\mathcal I_t
+].
+\]
+
+For the intervention \(\delta\), the directional local response is
+
+\[
+\boldsymbol\chi_{B,t}^{\delta}(h)
+=
+\mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
+\]
+
+For finite shocks, especially near thresholds, test the finite-shock response
+
+\[
+\Delta\mathbf B_t^{\delta}(s)
+=
+\mathbb E[
+\mathbf B_{t+s}^{\delta}
+-
+\mathbf B_{t+s}^{0}
+\mid
+\mathcal I_t
+].
+\]
+
+---
+
+## 25C. Hypothesis H10 — Strategic complementarity
+
+Conditional on balance-sheet capacity:
+
+> run-like outcomes should be more likely or more severe when participant actions are strong strategic complements.
+
+Candidate settings include withdrawal, redemption, rollover, and collateral coordination problems.
+
+The challenge is identification: \(\Gamma_t\) is generally latent.
+
+---
+
+## 25D. Hypothesis H11 — Measurement robustness
+
+A candidate endogeneity / feedback state should survive plausible alternatives for:
+
+- kernel specification;
+- regime segmentation;
+- outlier treatment;
+- sampling frequency;
+- edge correction;
+- proxy construction.
+
+If an estimated "critical" state disappears under reasonable observation models, it should not be promoted as structural evidence.
+
+---
+
 # Part VII — Measurement map
 
 ## 26. \(A\): amplification / loop gain
@@ -768,9 +1117,9 @@ Low \(R^+\) primarily predicts loss of continuation, not necessarily severe fail
 
 ---
 
-## 28. \(H\): headroom
+## 28. \(H\): headroom, \(\mathbf\Chi_B\): local sensitivity, and \(\Delta\mathbf B^{\delta}\): finite-shock response
 
-Possible proxies:
+Possible headroom proxies:
 
 - margin distance;
 - liquidation distance;
@@ -780,23 +1129,61 @@ Possible proxies:
 - dealer inventory limits;
 - fund redemption buffer.
 
-Low \(H\) is specifically about **forced-action sensitivity**.
+Low \(H\) is specifically about **distance to forced action**.
+
+Separately estimate, where possible, the local buffer Jacobian
+
+\[
+\mathbf\Chi_{B,t}(h)
+=
+D_{\mathbf z}
+\mathbb E[
+\mathbf B_{t+h}^{0}
+\mid
+\mathbf Z_t=\mathbf z,\mathcal I_t
+],
+\]
+
+and the intervention-specific finite-shock response
+
+\[
+\Delta\mathbf B_t^{\delta}(s)
+=
+\mathbb E[
+\mathbf B_{t+s}^{\delta}
+-
+\mathbf B_{t+s}^{0}
+\mid
+\mathcal I_t
+].
+\]
+
+Candidate empirical designs include collateral-price shocks, margin schedule changes, or cross-sectional differences in collateralization.
 
 ---
 
 ## 29. \(R^-\): opposing absorptive capacity
 
+The preferred object is horizon-qualified:
+
+\[
+R^-_t(h)
+=
+\text{opposing capacity usable by horizon }h.
+\]
+
 Possible proxies:
 
-- order-book depth;
+- order-book depth by horizon;
 - dealer balance-sheet capacity;
 - market-maker inventory tolerance;
 - contrarian fund capital;
 - arbitrage balance sheet;
 - committed backstop liquidity;
-- stress-period replenishment rate.
+- stress-period replenishment rate;
+- measured arrival time of new risk-bearing capital.
 
-Gross trading volume is not sufficient.
+Gross trading volume is not sufficient. Eventual capital is not equivalent to capital available before a forced-action deadline.
 
 ---
 
@@ -844,6 +1231,20 @@ Candidate measurements:
 
 A thousand entities running the same reaction rule can have low \(D\).
 
+Because strategy success can attract capital, measure changes in \(D_t\) over time as well as its level. Candidate drivers include relative strategy performance, fund flows, benchmark migration, and risk-rule convergence.
+
+### 32.1 \(\Gamma\): strategic complementarity
+
+Candidate settings:
+
+- depositor/creditor withdrawal;
+- rollover refusal;
+- fund redemptions;
+- collateral hoarding;
+- dealer withdrawal.
+
+A useful empirical design must distinguish strategic response to others from common reaction to the same public information.
+
 ---
 
 ## 33. \(S^{ext}\) and \(S^{end}\)
@@ -864,6 +1265,31 @@ Potential endogenous components:
 - trend following.
 
 The decomposition must allow for anticipation.
+
+## 33.1 Observation model
+
+Measured state variables are proxies for latent structure.
+
+Use the conceptual observation equation
+
+\[
+\mathbf Y_t
+=
+g(\mathbf Z_t;\psi_t)
++
+\boldsymbol\eta_t.
+\]
+
+For every latent quantity, record:
+
+- proxy definition;
+- model/kernel choice;
+- timestamp availability;
+- expected bias;
+- regime sensitivity;
+- alternative proxy constructions.
+
+This is especially important for inferred endogeneity, crowding, network state, and criticality.
 
 ---
 
@@ -939,16 +1365,18 @@ But the framework must not relabel every surprise as “exogenous” after the f
 
 Before saying MFSM supplies market edge, require all of the following:
 
-1. **Prespecified variables and transformations.**
-2. **Out-of-sample testing.**
-3. **Comparison against strong finance baselines.**
-4. **Robustness across multiple assets or episodes.**
-5. **False-alarm accounting.**
-6. **No look-ahead data.**
-7. **Mechanism-consistent signs and interactions.**
-8. **Incremental decision value after transaction costs where trading is the application.**
-9. **Stability to reasonable alternative definitions.**
-10. **Failure analysis showing when and why the signal stops working.**
+1. **Prespecified latent-state variables, observed proxies, and transformations.**
+2. **Prespecified disturbance class and fully specified structural intervention, including amplitude and path.**
+3. **Prespecified path-level loss functional \(\ell\) and risk / severity functional \(\rho\).**
+4. **Out-of-sample testing.**
+5. **Comparison against strong finance baselines.**
+6. **Robustness across multiple assets or episodes.**
+7. **False-alarm accounting.**
+8. **No look-ahead data.**
+9. **Mechanism-consistent signs and interactions.**
+10. **Incremental decision value after transaction costs where trading is the application.**
+11. **Stability to reasonable alternative observation, kernel, and intervention specifications.**
+12. **Failure analysis showing when and why the signal stops working.**
 
 Without these, MFSM remains a research lens rather than demonstrated alpha.
 
@@ -1005,12 +1433,47 @@ Without these, MFSM remains a research lens rather than demonstrated alpha.
 
 16. McLeay, Radia, and Thomas. **Money Creation in the Modern Economy.** Bank of England, 2014.
 
+17. Diamond, Douglas W., and Philip H. Dybvig. **Bank Runs, Deposit Insurance, and Liquidity.** *Journal of Political Economy* 91(3), 1983, 401-419.
+    https://www.journals.uchicago.edu/doi/10.1086/261155
+
+18. Kiyotaki, Nobuhiro, and John Moore. **Credit Cycles.** 1997.
+    https://msuweb.montclair.edu/~lebelp/KyotakiMooreCreditCyclesJPE1997.pdf
+
+19. Darrell Duffie. **Presidential Address / Slow-Moving Capital.**
+    https://web.stanford.edu/~duffie/PresidentialAddressApril15NormalFormat.pdf
+
+20. Vladimir Filimonov and Didier Sornette. **Apparent criticality and Hawkes-model specification in financial markets.**
+    https://ideas.repec.org/a/taf/quantf/v15y2015i8p1293-1314.html
+
+21. Bank for International Settlements. **Crypto Carry.**
+    https://www.bis.org/publications/working-paper-1087-crypto-carry.pdf
+
+22. Jason Milionis et al. **Loss-Versus-Rebalancing.**
+    https://arxiv.org/pdf/2208.06046v2
+
+23. Bank of England. **An anatomy of the 2022 gilt market crisis.**
+    https://www.bankofengland.co.uk/working-paper/2023/an-anatomy-of-the-2022-gilt-market-crisis
+
+24. Baker, Malcolm, and Jeffrey Wurgler. **Market Timing and Capital Structure.**
+    https://pages.stern.nyu.edu/~jwurgler/papers/capstruct.pdf
+
+25. Hyman Minsky. **Financial instability / financing composition working paper.**
+    https://www.levyinstitute.org/pubs/wp74.pdf
+
+26. Hommes / in 't Veld, heterogeneous expectations and endogenous regime dynamics.
+    https://papers.tinbergen.nl/15088.pdf
+
+27. SEC. **Staff Report on Equity and Options Market Structure Conditions in Early 2021.**
+    https://www.sec.gov/files/staff-report-equity-options-market-struction-conditions-early-2021.pdf
+
+For the complete link-by-link audit that motivated the latest revisions, see `artifacts/source_review_extended_2026-09-22.md`.
+
 ---
 
 ## Final empirical invariant
 
 The finance evidence supports the following stance:
 
-> **MFSM should be judged by whether its state-dependent interactions improve real out-of-sample discrimination among continuation, quiet exhaustion, counterflow, threshold unwind, and propagation beyond established financial baselines.**
+> **MFSM should be judged by whether its latent-state estimates and state-dependent interactions improve real out-of-sample estimation of decision-relevant functionals of fully specified counterfactual path responses, while separating shock consequence from structural susceptibility and remaining robust to alternative measurement, kernel, and intervention specifications.**
 
 Until that test is passed, MFSM is a structured research program, not a validated trading system.

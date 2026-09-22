@@ -52,9 +52,9 @@ A mechanism can be stabilizing at one scale and destabilizing at another.
 
 ---
 
-## 3. Define the disturbance class
+## 3. Define the disturbance class, structural intervention, and horizon
 
-Specify what kind of disturbance the model is intended to diagnose.
+First define a human-readable disturbance class \(c\).
 
 Examples:
 
@@ -63,11 +63,50 @@ Examples:
 - margin increase;
 - volatility shock;
 - funding withdrawal;
+- collateral haircut;
+- rollover refusal;
 - supply shock;
-- policy shock;
-- liquidation cascade.
+- policy shock.
 
-Do not analyze “fragility” without specifying fragility to what.
+Then instantiate the class as a structural intervention
+
+\[
+\boxed{
+\delta
+=
+(c,V,a,d,t_0,p,\nu),
+}
+\]
+
+with:
+
+- \(V\): intervention target;
+- \(a\ge0\): amplitude;
+- \(d\): direction;
+- \(t_0\): onset;
+- \(p(s)\): temporal profile / duration;
+- \(\nu\): optional stochastic component;
+- \(h\): evaluation horizon.
+
+Do not use an endogenous outcome such as "bank run", "liquidation cascade", or "market crash" as though it were itself the intervention. A friendly label such as "coordination/run shock" is acceptable only if it is instantiated through an upstream variable such as withdrawal demand, rollover availability, or a common signal.
+
+The shock-conditioned consequence is
+
+\[
+F_t(\delta,h;\ell,\rho),
+\]
+
+not a context-free scalar.
+
+Where the research question is **structural susceptibility**, vary intervention amplitude within a fixed disturbance family:
+
+\[
+a
+\mapsto
+F_t(\delta(c,a),h;\ell,\rho).
+\]
+
+Do not compare fragility across systems without controlling the intervention definition and magnitude.
 
 ---
 
@@ -91,6 +130,67 @@ For each arrow record:
 | Falsifier | What would contradict the mechanism? |
 
 If an arrow cannot be completed, it should not enter the operational model.
+
+### 4.1 Separate latent state from measurement
+
+For each state variable distinguish:
+
+- latent structural quantity;
+- observed proxy;
+- measurement/kernel/model choice;
+- timestamp availability;
+- expected bias;
+- alternative proxy.
+
+Use the conceptual observation relation
+
+\[
+\mathbf Y_t=g(\mathbf Z_t;\psi_t)+\boldsymbol\eta_t.
+\]
+
+Do not silently treat a fitted endogeneity, crowding, liquidity, or criticality statistic as the latent state itself.
+
+### 4.2 Define the counterfactual path target
+
+Let \(\mathcal I_t\) denote the information genuinely available at the analysis timestamp. If the structural state is latent, \(\mathcal I_t\) implies a posterior over \(\mathbf Z_t\) rather than exact knowledge of it. For the fully specified intervention \(\delta\), the theoretical response object is
+
+\[
+\boxed{
+\mathcal P_{t,h}^{\delta}
+=
+\mathcal L(
+\mathbf Z_{[t,t+h]}^{\delta}
+\mid
+\mathcal I_t
+).
+}
+\]
+
+Also define the no-intervention baseline \(\mathcal P_{t,h}^{0}\).
+
+Do **not** require the empirical system to estimate the unrestricted path distribution nonparametrically. Instead prespecify the projections needed for the research or trading question, such as:
+
+- threshold-hit probability;
+- maximum adverse excursion;
+- cascade size;
+- tail loss / expected shortfall;
+- recovery probability or recovery time.
+
+The mean causal response is
+
+\[
+\mathbf m_t^{\delta}(s)
+=
+\mathbb E[
+\mathbf Z_{t+s}^{\delta}
+-
+\mathbf Z_{t+s}^{0}
+\mid
+\mathcal I_t
+].
+\]
+
+If the analysis uses the **distribution** of a pathwise counterfactual difference \(\mathbf Z^{\delta}-\mathbf Z^0\), state the structural coupling that makes those two potential paths jointly defined.
 
 ---
 
@@ -147,14 +247,49 @@ H
 \]
 
 \[
-R^-
+R^-_t(h)
 =
-\text{opposing absorptive capacity}.
+\text{opposing absorptive capacity usable by horizon }h.
 \]
 
-Do not use “liquidity” as a catch-all.
+Also record local **constraint sensitivity** separately from current headroom:
 
-Ask what is scarce, for whom, in what form, and by what deadline.
+\[
+\mathbf\Chi_{B,t}(h)
+=
+D_{\mathbf z}
+\mathbb E[
+\mathbf B_{t+h}^{0}
+\mid
+\mathbf Z_t=\mathbf z,\mathcal I_t
+].
+\]
+
+For the intervention \(\delta\), record the induced state direction \(\mathbf v_{\delta}\) and, where useful,
+
+\[
+\boldsymbol\chi_{B,t}^{\delta}(h)
+=
+\mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
+\]
+
+For finite interventions near thresholds, prefer
+
+\[
+\Delta\mathbf B_t^{\delta}(s)
+=
+\mathbb E[
+\mathbf B_{t+s}^{\delta}
+-
+\mathbf B_{t+s}^{0}
+\mid
+\mathcal I_t
+].
+\]
+
+Do not use "liquidity" as a catch-all.
+
+Ask what is scarce, for whom, in what form, by what deadline, and how quickly a market-state change alters future capacity.
 
 ---
 
@@ -192,7 +327,7 @@ Do not use raw return correlation as the causal network.
 
 ---
 
-## 9. Measure functional diversity
+## 9. Measure functional diversity and coordination
 
 Ask how participants respond to the **same identified shock**.
 
@@ -211,6 +346,18 @@ Measure or proxy differences in:
 - risk rule;
 - liability;
 - inventory tolerance.
+
+Treat \(D_t\) as dynamic. Ask whether relative strategy performance, imitation, benchmark migration, or capital flows are causing reaction functions to converge.
+
+Separately ask whether actions are strategically complementary:
+
+\[
+\Gamma_t
+\sim
+\frac{\partial a_i^*}{\partial \bar a_{-i}}.
+\]
+
+A common response to the same public information is not the same as strategic complementarity.
 
 ---
 
@@ -231,9 +378,9 @@ These belong in a hybrid / threshold model, not merely a smooth linear equation.
 
 ---
 
-## 11. Classify the candidate termination mechanism
+## 11. Classify the candidate termination mechanism and controller topology
 
-Use at least these categories:
+Use at least these termination categories:
 
 ### M1 — Fuel exhaustion
 
@@ -251,7 +398,18 @@ Additional stimulus has diminishing marginal effect.
 
 A constraint converts state deterioration into forced same-direction action.
 
-Do not merge these into one “exhaustion” label.
+Do not merge these into one "exhaustion" label.
+
+Also classify the topology of the opposing/control mechanism where relevant:
+
+- feed-forward opposition;
+- feedback;
+- integral feedback;
+- depletion;
+- saturation;
+- threshold switching.
+
+Do not call every delayed opposing force "negative feedback."
 
 ---
 
@@ -267,11 +425,29 @@ What is the observed directional state?
 
 How viable is the continuation-generating mechanism?
 
-### Failure Fragility \(F\)
+### Shock-conditioned consequence \(F_t(\delta,h;\ell,\rho)\)
 
-How severe could the response become if the regime is disturbed?
+For this fully specified intervention, what is the consequence under the chosen path-level loss functional \(\ell\) and risk / severity functional \(\rho\)?
 
-Do not infer \(F\) from \(T\).
+### Structural susceptibility
+
+How rapidly does consequence increase as intervention amplitude varies within a fixed disturbance family?
+
+Useful summaries include:
+
+\[
+a
+\mapsto
+F_t(\delta(c,a),h;\ell,\rho),
+\]
+
+\[
+\frac{\partial F_t}{\partial a},
+\]
+
+and a critical amplitude \(a_q^*\).
+
+Do not infer shock consequence or susceptibility from \(T\).
 
 ---
 
@@ -453,9 +629,13 @@ The valid form is:
 
 Before examining the test sample, specify:
 
-- variable definitions;
+- latent-state definitions and observed proxies;
+- disturbance class and fully specified intervention;
+- intervention amplitude / path;
+- path-level loss functional \(\ell\);
+- risk / severity functional \(\rho\);
 - transformations;
-- lag structure;
+- lag / kernel structure;
 - interaction terms;
 - event label;
 - forecast horizon;
@@ -616,9 +796,9 @@ What continuation capacity remains?
 
 How far are current participants from forced action?
 
-## \(R^-\)
+## \(R^-_t(h)\)
 
-Who can absorb the opposite flow?
+Who can absorb the opposite flow **by the relevant horizon**?
 
 ## Response-time structure
 
@@ -652,9 +832,43 @@ Descriptive directional state.
 
 Continuation mechanism.
 
-## Failure Fragility \(F\)
+## Structural intervention \(\delta\)
 
-Conditional failure severity.
+State the class, target, amplitude, direction, onset, temporal profile, stochastic component, and horizon.
+
+## Path-response targets
+
+Which projections of \(\mathcal P_{t,h}^{\delta}\) are being estimated?
+
+Examples: mean causal response, threshold-hit probability, maximum adverse excursion, cascade size, recovery probability, or tail loss.
+
+## Loss and severity definition
+
+What is the path-level loss / failure functional \(\ell\)? What is the risk / severity functional \(\rho\)?
+
+## Shock-conditioned consequence \(F_t(\delta,h;\ell,\rho)\)
+
+Consequence for the fully specified intervention.
+
+## Structural susceptibility
+
+What does the amplitude-response curve look like? If identified, report local slope or critical amplitude \(a_q^*\).
+
+## Shock-response path
+
+What is the expected sequence of state changes after \(\delta\)? What becomes reinforced, forced, delayed, or absorbed?
+
+## Constraint sensitivity and finite-shock buffer response
+
+Report the local Jacobian \(\mathbf\Chi_B\), any intervention-direction projection \(\boldsymbol\chi_B^{\delta}\), and the finite-shock response \(\Delta\mathbf B^{\delta}\) where relevant.
+
+## Strategic complementarity \(\Gamma\)
+
+Do participant actions become individually more attractive when others take the same action?
+
+## Observation model
+
+Which quantities are latent, which are proxies, and what specification choices could bias the estimate?
 
 ## Missing data
 
@@ -691,4 +905,4 @@ At that point, more theorizing reduces value.
 
 The model should evolve according to this rule:
 
-> **Every extension must make the framework more falsifiable, more measurable, or more causally precise. If it only makes the story richer, it should not enter the canonical model.**
+> **Every extension must make the framework more falsifiable, more measurable, or more causally precise. It should sharpen the state-to-response mapping for specified disturbances rather than merely enrich the narrative. If it only makes the story richer, it should not enter the canonical model.**
