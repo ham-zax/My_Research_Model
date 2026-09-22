@@ -2517,6 +2517,8 @@ The derivations above follow directly from the equations stated in this document
 - Mangan and Alon, feed-forward-loop network motifs: https://www.weizmann.ac.il/mcb/alon/sites/mcb.UriAlon/files/structure_and_function_of_the_feed-forward_loop_network_motif.pdf
 - Yi, Huang, Simon, and Doyle, integral feedback in bacterial chemotaxis: https://www.pnas.org/doi/pdf/10.1073/pnas.97.9.4649
 - Carlson and Doyle, Highly Optimized Tolerance: https://harvest.aps.org/v2/journals/articles/10.1103/PhysRevLett.84.2529/fulltext
+- Trefethen, Trefethen, Reddy, and Driscoll, “Hydrodynamic Stability Without Eigenvalues” (1993), for non-normal transient growth and pseudospectral motivation: https://doi.org/10.1126/science.261.5121.578
+- P. J. Schmid, “Nonmodal Stability Theory” (2007), for finite-time/nonmodal growth, numerical range, and numerical-abscissa diagnostics: https://doi.org/10.1146/annurev.fluid.38.050304.092139
 
 For finance-side evidence, measurement discipline, and the empirical motivation for \(R^-_t(h;\delta,\varepsilon,\varphi)\), \(\mathbf\Chi_B\), \(\Delta\mathbf B^{\delta}\), \(\Gamma_t\), the intervention/path-law layer, and the observation/identification layer, read Empirical_Finance_Foundations.md.
 

@@ -6,8 +6,9 @@ Role: record which ideas from the supplied operationalization draft were incorpo
 ## Source provenance
 
 - Conversation attachment filename: `Pasted markdown(20260922-170823).md`
-- Conversation-file creation timestamp: 2026-09-22T17:08:22Z
-- Author: unknown from the available conversation metadata
+- Upload timestamp exposed by the current conversation-file metadata: 2026-09-22T17:08:46.525Z
+- Uploaded by: user
+- Author: unknown; uploader identity does not establish document authorship
 - Original title: not available beyond the attachment filename
 - Repository retention: the original attachment is **not** copied into this repository; this audit preserves the incorporated claims, caveats, and rejection boundaries.
 

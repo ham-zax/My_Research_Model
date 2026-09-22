@@ -78,24 +78,56 @@ Do not pool incompatible venue fields merely because they have the same name.
 
 ## 4. Event definition
 
-Primary event:
+Let \(P_t^{spot}\) be the frozen independent BTC spot-composite price sampled on the experiment's canonical one-second grid. The composite's venue constituents, weighting rule, stale-price handling, and missing-data rule must be fixed in the raw-data schema before event extraction.
 
-> independent BTC spot composite falls at least 1.00% within five minutes.
-
-Define
+Define the five-minute point-to-point return
 
 \[
-t_0
+r_{5m}(t)
 =
-\text{first threshold crossing}.
+\frac{
+P_t^{spot}
+}{
+P_{t-300s}^{spot}
+}
+-1.
 \]
 
-To reduce pseudo-replication:
+A candidate trigger occurs when
 
-- prohibit a new event start for two hours after \(t_0\);
-- group nearby triggers into one shock episode.
+\[
+r_{5m}(t)
+\le
+-0.0100.
+\]
+
+Define \(t_0\) as the first eligible one-second timestamp satisfying
+
+\[
+r_{5m}(t_0)\le-0.0100,
+\qquad
+r_{5m}(t_0-1s)>-0.0100,
+\]
+
+with both grid values valid, subject to the episode lockout below.
+
+This definition is point-to-point over exactly 300 seconds. It is **not** a drawdown from the maximum inside the preceding five-minute window and not an arbitrary pairwise decline inside that window.
+
+### Episode lockout
+
+After an accepted event at \(t_0\), define the episode
+
+\[
+[t_0,t_0+2\text{ h}).
+\]
+
+Any additional 1% five-minute threshold crossing inside that interval belongs to the same episode and **cannot** start a new observation. The next eligible event is the first new threshold crossing at or after \(t_0+2\text{ h}\).
+
+If the spot composite lacks a valid price at either endpoint needed for \(r_{5m}(t)\), that timestamp is ineligible for event generation under the frozen data-quality rule.
 
 Do not define the trigger from the same perpetual contract whose post-event response is being traded.
+
+For the strict ETH confirmation, apply the **identical trigger formula, threshold, grid, lockout, and decision delay** using the frozen independent ETH spot composite. No ETH-specific threshold or timing retuning is permitted.
 
 ## 5. Decision timestamp
 
@@ -111,7 +143,7 @@ The prediction and any simulated trade occur at or after \(t_d\).
 
 This converts immediate post-trigger information into legitimate features rather than look-ahead.
 
-## 6. Primary target
+## 6. Primary downside-continuation target
 
 Let \(P_d\) be the independent BTC spot-composite price observed at the decision timestamp \(t_d\).
 
@@ -152,7 +184,23 @@ Y_h
 }
 \]
 
-Thus "additional decline" and "recovery" are both anchored to \(P_d\), not to \(P_{t_0}\) or to an ex-post extremum. If neither barrier is reached before \(t_d+h\), then \(Y_h=0\) and the path remains available to secondary time-to-event analyses.
+Thus "additional decline" and "recovery" are both anchored to \(P_d\), not to \(P_{t_0}\) or to an ex-post extremum. If neither barrier is reached before \(t_d+h\), then \(Y_h=0\).
+
+Interpret \(Y_h\) as **downside continuation before recovery versus not-downside-first**. It is not, by itself, a literal two-class label for "liquidation exhaustion" versus "continuing cascade," because the negative class includes both recovery-first paths and unresolved/sideways paths.
+
+Define the secondary competing-risk state
+
+\[
+C_h
+\in
+\{
+\text{downside-first},
+\text{recovery-first},
+\text{neither-by-}h
+\},
+\]
+
+using the same \(\tau_-\), \(\tau_+\), and horizon. Survival / competing-risk analyses should use \(C_h\) or the underlying passage times rather than silently treating every \(Y_h=0\) path as exhaustion.
 
 This is deliberately path-dependent.
 
@@ -212,14 +260,23 @@ Q^{liq}_{v,\mathrm{recent}}
 \text{venue-identified liquidation sell notional}
 \]
 
-over the prespecified strictly pre-decision window.
+over the frozen recent-flow window
+
+\[
+\boxed{
+w_{flow}=h_R=30\text{ seconds}
+}
+\]
+
+ending at \(t_d\), i.e. \((t_d-30s,t_d]\).
 
 Separately define
 
 \[
 Q^{aggr,exliq}_{v,\mathrm{recent}}
 =
-\text{aggressive sell notional excluding executions identified as liquidation flow where possible}.
+\text{aggressive sell notional in }(t_d-30s,t_d]
+\text{ excluding executions identified as liquidation flow where possible}.
 \]
 
 Where venue identifiers permit matching, executions already represented in the liquidation feed must be removed from \(Q^{aggr,exliq}\). If the venue feed cannot support reliable de-duplication, report \(Q^{liq}\) separately but flag \(Q^{aggr,exliq}\) as potentially contaminated. Even after removing identified liquidations, \(Q^{aggr,exliq}\) is **not assumed voluntary**; it may still contain unidentified forced, hedging, informed, or discretionary flow.
@@ -234,7 +291,7 @@ The primary mechanism-specific MFSM interaction is liquidation pressure relative
 Q^{liq}_{v,\mathrm{recent}}
 }{
 \widetilde R^-_{v,t_d}
-(h_R;\delta,\varepsilon_P,\varphi_{unif})
+(h_R;\varepsilon_P,\varphi_{unif})
 }
 }
 \]
@@ -249,7 +306,7 @@ The secondary generic sell-pressure interaction is
 Q^{aggr,exliq}_{v,\mathrm{recent}}
 }{
 \widetilde R^-_{v,t_d}
-(h_R;\delta,\varepsilon_P,\varphi_{unif})
+(h_R;\varepsilon_P,\varphi_{unif})
 }.
 }
 \]
@@ -262,13 +319,24 @@ Liquidation-feed and trade-feed semantics must be audited venue by venue.
 
 ### 8.2 Short-horizon opposing capacity
 
-The theoretical object is flow-profile-qualified:
+The canonical theoretical object is flow-profile-qualified:
 
 \[
-R^-_t(h;\delta,\varepsilon_P,\varphi),
+R^-_t(h;\delta,\varepsilon_P,\varphi).
 \]
 
-where \(\varepsilon_P\) is a maximum tolerated adverse price displacement and \(\varphi\) specifies how incoming sell flow arrives through the horizon.
+Experiment 001 does **not** identify a structural intervention \(\delta\). It conditions on an observed downside-trigger state. Therefore the empirical quantity below deliberately drops \(\delta\):
+
+\[
+\boxed{
+\widehat R^-_{v,t_d}
+(h_R;\varepsilon_P,\varphi)
+}
+\]
+
+is an **observed-state liquidity-capacity proxy motivated by the canonical \(R^-\)**, not an estimate of disturbance-conditioned causal capacity.
+
+Here \(\varepsilon_P\) is a maximum tolerated adverse price displacement and \(\varphi\) specifies how the standardized incoming sell flow arrives through the horizon.
 
 For Experiment 001, use a **primary microstructure tolerance**
 
@@ -304,7 +372,7 @@ For venue \(v\), define the observable proxy
 \[
 \boxed{
 \widehat R^-_{v,t_d}
-(h_R;\delta,\varepsilon_P,\varphi_{unif})
+(h_R;\varepsilon_P,\varphi_{unif})
 =
 D^{exec}_{v,t_d}(\varepsilon_P)
 +
@@ -335,12 +403,14 @@ ending at \(t_d\), and the minimum durability interval to
 
 Within \([t_d-w_{repl},t_d]\), track positive bid-depth deltas at fixed price levels that are inside the contemporaneous \(\varepsilon_P\) band.
 
-A positive depth delta contributes to **durable replenishment** only to the extent that the added quantity:
+A positive depth delta added at time \(t_{add}\) contributes to **durable replenishment** only if its qualifying evidence is fully observable by \(t_d\):
 
-1. remains resting at that same price level for at least \(\tau_{dwell}\); or
-2. is observably executed against incoming sell flow before cancellation.
+1. **dwell-qualified:** \(t_{add}+\tau_{dwell}\le t_d\) and the added quantity remains resting at that same price level through \(t_{add}+\tau_{dwell}\); or
+2. **execution-qualified:** the added quantity is observably executed against incoming sell flow at some \(t_{exec}\le t_d\) before cancellation.
 
-If the historical feed cannot distinguish execution from cancellation at the required granularity, use the conservative rule that only quantity still resting after \(\tau_{dwell}\) counts.
+Orders added too late to complete the dwell interval by \(t_d\) receive **no dwell credit**, unless they satisfy the execution-qualified rule by \(t_d\).
+
+If the historical feed cannot distinguish execution from cancellation at the required granularity, use the conservative dwell-only rule. Under no circumstance may post-\(t_d\) book state, executions, or cancellations be consulted when constructing \(\widehat q^{repl}_{v,t_d}\).
 
 Define
 
@@ -401,12 +471,12 @@ Then use
 \[
 \boxed{
 \widetilde R^-_{v,t_d}
-(h_R;\delta,\varepsilon_P,\varphi_{unif})
+(h_R;\varepsilon_P,\varphi_{unif})
 =
 \max
 \left[
 \widehat R^-_{v,t_d}
-(h_R;\delta,\varepsilon_P,\varphi_{unif}),
+(h_R;\varepsilon_P,\varphi_{unif}),
 R^{floor}_{v,t_0}
 \right].
 }
@@ -421,7 +491,7 @@ I^{lowcap}_{v,t_d}
 \mathbf 1
 \left\{
 \widehat R^-_{v,t_d}
-(h_R;\delta,\varepsilon_P,\varphi_{unif})
+(h_R;\varepsilon_P,\varphi_{unif})
 \le R^{floor}_{v,t_0}
 \right\}.
 }
@@ -568,20 +638,100 @@ Define a frozen primitive information panel
 X^{raw}_{[t_d-w,t_d]},
 \]
 
-with \(w=30\) minutes by default, containing the exact primitive BTC observations available by \(t_d\): prices/returns, raw trades and aggressor flags, liquidation messages and event identifiers where available, raw L2 order-book snapshots/deltas or the highest-fidelity historical book feed used to reconstruct fixed-price-level depth changes, OI, funding/basis state, mark/index state, venue-status fields, and any other primitive series required to construct an MFSM feature.
+with \(w=30\) minutes by default, containing the exact primitive observations available by \(t_d\): prices/returns, raw trades and aggressor flags, liquidation messages and event identifiers where available, raw L2 order-book snapshots/deltas or the highest-fidelity historical book feed used to reconstruct fixed-price-level depth changes, OI, funding/basis state, mark/index state, venue-status fields, and any other primitive series required to construct an MFSM feature.
 
-B4 must receive this **same primitive historical information**, not merely contemporaneous B3 snapshots. The fixed lag grid / window representation supplied to B4 must be prespecified before the final holdout. If an MFSM feature requires an additional primitive history, that history must also be made available to B4 before freeze.
+B4 must receive this **same primitive historical information**, not merely contemporaneous B3 snapshots. If an MFSM feature requires an additional primitive history, that history must also be available to B4 before freeze.
 
-A flexible nonlinear model on this same primitive information panel is mandatory.
+#### Shared neutral preprocessing layer
+
+To prevent MFSM from winning merely because a human supplied it a better event-stream representation, define one frozen neutral preprocessing map
+
+\[
+\boxed{
+U_{t_d}
+=
+U\!\left(
+X^{raw}_{[t_d-w,t_d]}
+\right)
+}
+\]
+
+that is supplied to **both** B4 and the MFSM feature model.
+
+The shared neutral layer must include, over the frozen windows
+
+\[
+\mathcal W
+=
+\{1s,5s,15s,30s,60s,5m\},
+\]
+
+where the underlying feed supports them:
+
+- liquidation notional / rate;
+- aggressive-buy and aggressive-sell notional / rate;
+- gross bid/ask add rate;
+- durable bid/ask add rate under the frozen dwell rule;
+- cancel rate;
+- observable execution rate;
+- current and lagged executable depth;
+- spread and ordinary book imbalance;
+- OI level and percentage/log change;
+- funding, basis, and mark/index divergence;
+- returns and realized-volatility summaries.
+
+These are **neutral summaries**, not MFSM interactions. For example, B4 receives durable replenishment rate itself, not only raw order-book deltas, because MFSM also uses that event-stream information.
+
+#### Frozen scale-normalization policy
+
+BTC-to-ETH confirmation must not be confounded by raw notional scale. Both models therefore receive the same causally available dimensionless / relative versions of scale-sensitive variables.
+
+Use only pre-trigger or decision-time denominators defined without holdout-distribution fitting:
+
+- executable depth: divide by \(D^{pre}_{v,t_0}(\varepsilon_P)\);
+- trade, liquidation, add, cancel, and execution notional: provide versions divided by \(D^{pre}_{v,t_0}(\varepsilon_P)\), and where available by pre-trigger OI;
+- OI: define
+  \[
+  OI^{pre}_{v,t_0}
+  =
+  \operatorname{median}_{s\in[t_0-30m,t_0)}
+  OI_{v,s},
+  \]
+  then provide percentage/log changes relative to \(OI^{pre}_{v,t_0}\) rather than relying on raw level alone;
+- spread, basis, funding, and mark/index divergence: represent in bps / dimensionless units;
+- returns and volatility: already dimensionless.
+
+If a required pre-trigger scale denominator is missing, nonpositive, or fails the frozen data-quality rule, omit that normalized feature for the event / venue rather than substituting a value learned from BTC or ETH distributions.
+
+For the **primary BTC-to-ETH confirmatory comparison**, define
+
+\[
+U^{norm}_{t_d}
+\]
+
+as the neutral preprocessing panel after the frozen causal scale normalizations above. Both B4 and the MFSM model must use this same normalized neutral representation as their shared base.
+
+Raw scale-sensitive values may be retained only for clearly labeled **within-BTC secondary diagnostics**. They are excluded from the primary cross-asset confirmatory models so MFSM cannot appear to transfer better merely because its ratios are dimensionless while B4 is exposed to BTC-scale notionals.
+
+The primary \(U^{norm}_{t_d}\) schema may contain only features whose field semantics and historical availability pass the frozen data-schema audit for both the BTC development universe and the ETH confirmatory universe. Venue/asset-specific extras may appear only in secondary within-BTC analyses.
+
+A flexible nonlinear learner receiving \(U^{norm}_{t_d}\) is the mandatory primary B4 comparator.
 
 ### MFSM feature model
 
-MFSM features must be deterministic, prespecified transformations of \(X^{raw}_{[t_d-w,t_d]}\): structural ratios, response-time features, replenishment measures, and interactions. MFSM receives no raw information that B4 cannot access.
+For the primary confirmatory test, MFSM receives the same \(U^{norm}_{t_d}\), then adds only deterministic, prespecified **theory-motivated combinations** of those shared components, such as:
+
+- \(\mathrm{LFP}=Q^{liq}/\widetilde R^-\);
+- \(\mathrm{SPP}=Q^{aggr,exliq}/\widetilde R^-\);
+- prespecified response-time ratios or interactions.
+
+MFSM receives no raw feed, event-stream summary, history window, timestamp, venue field, or normalization unavailable to B4.
 
 Model-selection parity is required:
 
 - identical outer train/test episodes;
 - identical timestamp cutoff;
+- identical neutral preprocessing \(U(\cdot)\) and identical normalized base \(U^{norm}_{t_d}\) for the primary BTC-to-ETH comparison;
 - comparable inner validation;
 - B4 hyperparameter-search budget no smaller than the MFSM feature model's tuning budget;
 - identical calibration and scoring procedures where applicable.

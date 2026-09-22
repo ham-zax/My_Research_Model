@@ -2,6 +2,35 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
+## 2026-09-23 - Experiment 001 preregistration completion pass
+
+This revision verifies commit `4623b4f` against its stated empirical contracts and tightens Experiment 001 without reopening the canonical MFSM architecture.
+
+### Timestamp and label integrity
+
+- Fixed a look-ahead edge case in the durable-replenishment estimator: dwell-qualified additions must complete the full dwell interval by \(t_d\), and execution-qualified additions must execute by \(t_d\). Post-decision book state is prohibited.
+- Defined the event trigger exactly as the first crossing of a 1% **point-to-point 300-second spot-composite return** on the canonical one-second grid.
+- Replaced the vague nearby-trigger rule with an exact two-hour episode lockout.
+- Renamed the primary binary endpoint as **downside continuation before recovery versus not-downside-first** and added an explicit three-state competing-risk endpoint so unresolved paths are not silently labeled exhaustion.
+
+### Observational typing
+
+- Retained the canonical causal object \(R^-_t(h;\delta,\varepsilon,\varphi)\), but removed \(\delta\) from the Experiment 001 empirical capacity proxy because the experiment conditions on an observed state rather than identifying a structural intervention.
+- Fixed the liquidation/aggressive-flow window to the same 30-second horizon used by the primary capacity proxy.
+
+### Baseline parity and transfer
+
+- Added a shared neutral preprocessing map \(U(X^{raw})\) supplied to both B4 and the MFSM feature model.
+- B4 now receives the same event-stream summaries used by MFSM, including durable replenishment, cancellation, execution, liquidation, and aggressive-flow rates across frozen windows.
+- Added a common causal scale-normalization policy so BTC-to-ETH confirmation is not confounded by raw notional/depth/OI scale.
+- MFSM may add only prespecified theory-motivated combinations of neutral shared features; it receives no representation unavailable to B4.
+
+### Provenance and source hygiene
+
+- Corrected the operationalization-audit upload timestamp against the conversation-file metadata.
+- Added primary/reference sources for non-normal transient growth, pseudospectral motivation, and numerical-abscissa/nonmodal analysis.
+- Updated the machine-readable proxy-bias contract to **sign with rationale**, preserving `ambiguous` as an allowed preregistered outcome.
+
 ## 2026-09-22 - Operationalization refinement: transient amplification, flow-conditioned capacity, and stress-bias discipline
 
 This revision follows a later operationalization pass over the conversation-supplied document `Pasted markdown(20260922-170823).md` and a subsequent staged review. It refines measurement and experiment contracts without adding new primitive MFSM state variables.

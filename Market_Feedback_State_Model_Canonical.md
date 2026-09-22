@@ -2539,7 +2539,7 @@ core_constraints:
   - allow_run_like_vulnerability_without_prior_trend
   - separate_true_observation_distribution_from_analyst_probabilistic_measurement_model
   - report_identification_status_and_observationally_equivalent_alternative
-  - record_proxy_failure_mode_and_stress_state_bias_direction
+  - record_proxy_failure_mode_and_stress_state_bias_sign_with_rationale
   - do_not_treat_CSD_as_universal_crash_warning
   - do_not_use_biological_analogy_as_predictive_evidence
   - do_not_create_scalar_universal_fragility_score
