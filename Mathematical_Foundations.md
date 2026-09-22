@@ -28,50 +28,36 @@ MFSM uses mathematics as a language for causal structure, not as decoration and 
 
 ## 1. Canonical mathematical object
 
-The mature MFSM is represented conceptually as
+The mature MFSM requires one **closed augmented dynamic state**:
 
 \[
-\mathcal{M}_t
+\boxed{
+\mathcal M_t
 =
-\left\{
-\mathbf Z_t,
-J_t,
-K_t,
-W_t,
-B_t,
-Q_t,
-\mathcal C_{I,t},
-M_t^{term},
-\Sigma_t,
-\mathcal O_t
-\right\}.
+\{\mathbf Z_t;\mathcal G,\mathcal O\}.
+}
 \]
 
 Interpretation:
 
-- \(\mathbf Z_t\): latent structural market state;
-- \(J_t\): local state-dependent response matrix or Jacobian;
-- \(K_t\): delay / memory / response-time kernel;
-- \(W_t\): economic propagation network;
-- \(B_t\): usable capacities, buffers, and nonlinear thresholds;
-- \(Q_t\): signal-source, expectation, and coordination state;
-- \(\mathcal C_{I,t}\): controller / opposing-mechanism topology;
-- \(M_t^{term}\): candidate termination mechanism;
-- \(\Sigma_t\): stochastic disturbance structure;
-- \(\mathcal O_t\): observation / measurement model.
+- \(\mathbf Z_t\): the minimal closed latent state required to determine future dynamics;
+- \(\mathcal G\): the fixed structural form, including transition equations / kernels, mappings from state to delay-memory and propagation operators, controller architecture, exogenous disturbance law, and parameterization;
+- \(\mathcal O\): the true observation mechanism.
 
-Observed data \(\mathbf Y_t\) need not equal \(\mathbf Z_t\).
+Buffers \(B_t\), expectation / coordination state \(Q_t\), control states, discrete hybrid modes, and any endogenously evolving coefficients/topology are components or measurable projections of \(\mathbf Z_t\). A time-varying object outside \(\mathbf Z_t\) is permitted only when it is predetermined or exogenous with an explicit law in \(\mathcal G\). Thus \(K_t\), \(W_t\), or \(\Sigma_t\) must be functions of the closed state, fixed/predetermined inputs, or governed by explicit exogenous laws. The local Jacobian \(J_t\) is derived from linearizing \(\mathcal G\); the termination label \(M_t^{term}\) is a derived prospective classification, not primitive state.
+
+Observed data \(\mathbf Y_t\) need not equal \(\mathbf Z_t\), and an analyst's fitted measurement model need not equal the true observation mechanism.
 
 Useful derived diagnostics include
 
 \[
 A,\quad
-R^+,\quad
+\{R_k^+\}_k,\quad
 H,\quad
-R^-_t(h),\quad
+R^-_t(h;\delta),\quad
 \mathbf\Chi_B,\quad
 \Delta\mathbf B^{\delta},\quad
-I,\quad
+N,\quad
 \Theta,\quad
 \Phi,\quad
 C,\quad
@@ -82,7 +68,7 @@ S^{end},\quad
 L.
 \]
 
-These are not assumed to enter a universal additive score.
+These are not assumed to enter a universal additive score. \(C\) must be derived from a specified propagation operator rather than treated as a free primitive, \(\Theta\) is a summary of response-time structure rather than a substitute for \(K\), and \(L\) is optional derived threshold exposure rather than an independent state variable.
 
 ---
 
@@ -471,25 +457,25 @@ a x-b y,
 \]
 
 \[
-T\dot y
+\tau_y\dot y
 =
 x-y,
 \qquad
-T>0.
+\tau_y>0.
 \]
 
 Interpretation:
 
 - \(x\): active market or feedback state;
 - \(y\): lagging inhibitory / control state;
-- \(T\): adjustment timescale.
+- \(\tau_y\): adjustment timescale.
 
 The system matrix is
 
 \[
 \begin{pmatrix}
 a & -b\\
-1/T & -1/T
+1/\tau_y & -1/\tau_y
 \end{pmatrix}.
 \]
 
@@ -501,9 +487,9 @@ The characteristic polynomial is
 
 \[
 \boxed{
-T\lambda^2
+\tau_y\lambda^2
 +
-(1-aT)\lambda
+(1-a\tau_y)\lambda
 +
 (b-a)
 =
@@ -518,15 +504,15 @@ The eigenvalues are
 \lambda_\pm
 =
 \frac{
-aT-1
+a\tau_y-1
 \pm
-\sqrt{(1-aT)^2-4T(b-a)}
+\sqrt{(1-a\tau_y)^2-4\tau_y(b-a)}
 }
-{2T}.
+{2\tau_y}.
 }
 \]
 
-For \(T>0\), the Routh-Hurwitz conditions give asymptotic stability exactly when
+For \(\tau_y>0\), the Routh-Hurwitz conditions give asymptotic stability exactly when
 
 \[
 \boxed{
@@ -538,14 +524,14 @@ and
 
 \[
 \boxed{
-aT<1.
+a\tau_y<1.
 }
 \]
 
 For \(a>0\), the candidate oscillatory boundary is
 
 \[
-T=\frac1a.
+\tau_y=\frac1a.
 \]
 
 At that boundary,
@@ -573,7 +559,7 @@ so the oscillation frequency is
 The first-order lag equation
 
 \[
-T\dot y=x-y
+\tau_y\dot y=x-y
 \]
 
 has the consistent-history solution
@@ -583,7 +569,7 @@ has the consistent-history solution
 y(t)
 =
 \int_0^\infty
-T^{-1}e^{-s/T}x(t-s)\,ds.
+\tau_y^{-1}e^{-s/\tau_y}x(t-s)\,ds.
 }
 \]
 
@@ -591,9 +577,9 @@ Hence the kernel is
 
 \[
 \boxed{
-K_T(s)
+K_{\tau_y}(s)
 =
-T^{-1}e^{-s/T},
+\tau_y^{-1}e^{-s/\tau_y},
 \qquad
 s\ge0.
 }
@@ -602,13 +588,13 @@ s\ge0.
 It satisfies
 
 \[
-\int_0^\infty K_T(s)\,ds=1
+\int_0^\infty K_{\tau_y}(s)\,ds=1
 \]
 
 and has mean delay
 
 \[
-\int_0^\infty sK_T(s)\,ds=T.
+\int_0^\infty sK_{\tau_y}(s)\,ds=\tau_y.
 \]
 
 This turns the lagged control state into an exponentially weighted memory of past activity.
@@ -617,16 +603,18 @@ This turns the lagged control state into an exponentially weighted memory of pas
 
 ## 13. Fixed delay and distributed delay are not equivalent
 
-A fixed delay of length \(T\) corresponds formally to
+Let the common mean response time be \(\bar\tau\).
+
+A fixed delay corresponds formally to
 
 \[
-K(s)=\delta(s-T).
+K(s)=\delta(s-\bar\tau).
 \]
 
 An exponential memory with the same mean is
 
 \[
-K(s)=T^{-1}e^{-s/T}.
+K(s)=\bar\tau^{-1}e^{-s/\bar\tau}.
 \]
 
 These kernels have different stability properties.
@@ -638,13 +626,13 @@ When \(a=0\):
 \[
 \dot x(t)
 =
--bx(t-T)
+-bx(t-\bar\tau)
 \]
 
 loses stability when
 
 \[
-bT>\frac{\pi}{2}.
+b\bar\tau>\frac{\pi}{2}.
 \]
 
 ### Exponential-memory lag
@@ -652,10 +640,10 @@ bT>\frac{\pi}{2}.
 \[
 \dot x=-by,
 \qquad
-T\dot y=x-y
+\bar\tau\dot y=x-y
 \]
 
-is asymptotically stable for every finite \(T\) when \(b>0\).
+is asymptotically stable for every finite \(\bar\tau\) when \(b>0\).
 
 Therefore
 
@@ -763,14 +751,14 @@ A useful conceptual quantity is
 \boxed{
 \Theta
 =
-\frac{\tau_I}{\tau_A},
+\frac{\tau_N}{\tau_A},
 }
 \]
 
 where
 
 - \(\tau_A\): characteristic timescale of amplification;
-- \(\tau_I\): characteristic timescale of opposing response.
+- \(\tau_N\): characteristic timescale of opposing response.
 
 Large \(\Theta\) means the reinforcing mechanism can act through many cycles before the counterforce becomes effective.
 
@@ -830,11 +818,13 @@ dZ_t
 =
 -\kappa Z_t\,dt
 +
-\sigma\,dW_t,
+\sigma\,d\beta_t,
 \qquad
-\kappa>0.
+\kappa>0,
 }
 \]
+
+where \(\beta_t\) is standard Brownian motion.
 
 For the stationary process,
 
@@ -928,15 +918,19 @@ Critical slowing down is an optional candidate diagnostic, not a privileged core
 
 ## 19. Three distinct capacities
 
-MFSM separates
+MFSM separates three economic categories, but the continuation side is mechanism-specific.
+
+For each reinforcing mechanism \(k\),
 
 \[
 \boxed{
-R^+
+R_{k,t}^+
 =
-\text{remaining same-direction continuation capacity},
+\text{remaining same-direction continuation capacity of mechanism }k.
 }
 \]
+
+Headroom is
 
 \[
 \boxed{
@@ -946,7 +940,7 @@ H
 }
 \]
 
-and
+and opposing capacity is
 
 \[
 \boxed{
@@ -958,11 +952,11 @@ R^-
 
 Their depletion has different implications:
 
-- \(R^+\downarrow\): continuation may weaken;
+- \(R_{k,t}^+\downarrow\): mechanism \(k\)'s contribution to continuation may weaken;
 - \(H\downarrow\): forced-action thresholds approach;
 - \(R^-\downarrow\): an unwind can move prices more violently.
 
-They must not be collapsed into a single “liquidity” or “cash” variable.
+Distinct \(R_k^+\) channels must not be summed into one market-wide scalar without a prespecified aggregation rule. None of these categories should be collapsed into a single “liquidity” or “cash” variable.
 
 ---
 
@@ -988,7 +982,7 @@ where
 The state \(\mathbf r_t\) can include
 
 \[
-(R^+,H,R^-).
+(\{R_k^+\}_k,H,R^-).
 \]
 
 ---
@@ -1032,31 +1026,34 @@ Interpretation:
 
 This is a concrete finance-specific form of timescale mismatch.
 
-### 21.1 Horizon-dependent opposing capacity
+### 21.1 Horizon- and disturbance-dependent opposing capacity
 
-A single \(R^-_t\) is insufficient when stabilizing capital arrives at different speeds.
+A single \(R^-_t\) is insufficient when stabilizing capital arrives at different speeds or when willingness to absorb depends on the type of shock.
 
 Define
 
 \[
 \boxed{
-R^-_t(h)
+R^-_t(h;\delta)
 =
-\text{opposing risk-bearing capacity that can become effective by horizon }h.
+\text{opposing risk-bearing capacity that can become effective by horizon }h
+\text{ under }\delta.
 }
 \]
 
-Then generally
+When the intervention is fixed by design, \(R^-_t(h)\) is acceptable shorthand.
+
+For a fixed intervention one may often expect
 
 \[
-R^-_t(h_1)\le R^-_t(h_2)
+R^-_t(h_1;\delta)\le R^-_t(h_2;\delta)
 \qquad
-\text{for }h_1<h_2
+\text{for }h_1<h_2,
 \]
 
-when capacity only accumulates with time, although withdrawals or state changes can violate simple monotonicity in live markets.
+when capacity only accumulates with time, although withdrawals, changing toxicity, or state changes can violate simple monotonicity.
 
-The relevant mismatch is not "eventual buyers exist." It is whether enough \(R^-_t(h)\) becomes usable before the forced-action horizon.
+The relevant mismatch is not "eventual buyers exist." It is whether enough \(R^-_t(h;\delta)\) becomes usable before the forced-action horizon.
 
 ### 21.2 Constraint sensitivity and finite-shock buffer response
 
@@ -1088,27 +1085,39 @@ D_{\mathbf z}
 }
 \]
 
-For a small structural intervention \(\delta\), let \(\mathbf v_{\delta}\) denote the local state-space direction induced by that intervention. The directional buffer response is
+\(\mathbf\Chi_{B,t}(h)\) is specifically an **initial-state sensitivity**.
+
+If a small intervention acts solely through an instantaneous displacement of the initial state, define
 
 \[
-\boxed{
+\mathbf v_{\delta}
+=
+D_{\delta}\mathbf Z_t[\dot\delta].
+\]
+
+Then the chain rule gives
+
+\[
 \boldsymbol\chi_{B,t}^{\delta}(h)
 =
 \mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
-}
 \]
 
-A scalar projection requires an explicit weighting vector \(\mathbf w_B\):
+For a general intervention on a parameter, constraint, transition kernel, or temporal forcing, the appropriate local object is the direct intervention derivative
 
 \[
-\chi_{B,t}^{\delta,w}(h)
-=
-\mathbf w_B^{\top}
-\mathbf\Chi_{B,t}(h)
-\mathbf v_{\delta}.
+D_{\delta}
+\,
+\mathbb E[
+\mathbf B_{t+h}^{\delta}
+\mid
+\mathcal I_t
+][\dot\delta].
 \]
 
-For a finite intervention, especially near a threshold or regime switch, the derivative is only a local approximation. Define instead
+Only when the intervention factors entirely through an initial-state displacement does that derivative reduce to \(\mathbf\Chi_B\mathbf v_{\delta}\).
+
+For a finite intervention, especially near a threshold or regime switch, local derivatives are only approximations. Define instead
 
 \[
 \boxed{
@@ -1125,15 +1134,7 @@ For a finite intervention, especially near a threshold or regime switch, the der
 }
 \]
 
-Then, only for sufficiently small interventions in a smooth regime,
-
-\[
-\Delta\mathbf B_t^{\delta}(h)
-\approx
-\mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
-\]
-
-Two systems with identical current \(H_t\) can therefore have different fragility because their future buffers respond differently to the same state perturbation.
+Two systems with identical current \(H_t\) can therefore have different shock responses because their future buffers respond differently to the same state perturbation or structural intervention.
 
 This is the mathematical slot for collateral feedback such as price \(\rightarrow\) borrowing capacity \(\rightarrow\) demand.
 
@@ -1141,83 +1142,111 @@ This is the mathematical slot for collateral feedback such as price \(\rightarro
 
 # Part VIII — General stochastic MFSM template
 
-## 22. Market-state dynamics
+## 22. Closed market-state dynamics
 
-A general continuous-time latent-state representation is
+A general continuous-time representation uses a **closed augmented state**:
 
 \[
 \boxed{
 d\mathbf Z_t
 =
-\mathbf f(
+\mathbf f_{\mathcal G}
+\left(
 \mathbf Z_t,
-\mathbf r_t,
-\mathbf u_t;
-\theta_t
-)\,dt
+\mathbb E_t[\mathbf Z_{t+h_e}]
+\right)dt
 +
-\Sigma(\mathbf Z_t,t)\,d\mathbf W_t.
+\Sigma(\mathbf Z_t,t)d\boldsymbol\beta_t,
 }
 \]
 
-Here:
+where \(\boldsymbol\beta_t\) is Brownian motion and \(h_e\) is an expectation horizon.
 
-- \(\mathbf Z_t\): latent structural market state;
-- \(\mathbf r_t\): capacities and buffers;
-- \(\mathbf u_t\): control / counterflow states;
-- \(\theta_t\): structural parameters;
-- \(\Sigma\): state-dependent stochastic disturbance loading.
+Capacities \(\mathbf r_t\), control / counterflow states \(\mathbf u_t\), coordination states, and discrete hybrid modes that evolve independently are coordinates of \(\mathbf Z_t\). If an application writes separate evolution equations for them, those equations are part of the structural transition law \(\mathcal G\).
 
-### 22.1 Latent state and observation model
+### 22.1 True observation mechanism and analyst measurement model
 
 The structural state should not be identified with its proxy.
 
-Write
+Conceptually, the true data-generating observation mechanism is the conditional law
 
 \[
 \boxed{
-\mathbf Y_t
-=
-g(\mathbf Z_t;\psi_t)
-+
-\boldsymbol\eta_t,
+p_*(\mathbf Y_t\mid\mathbf Z_t).
 }
 \]
 
-where:
+An additive-noise representation
 
-- \(\mathbf Z_t\) is the latent structural state;
-- \(\mathbf Y_t\) is observed data;
-- \(g\) is the measurement map;
-- \(\psi_t\) contains model/specification choices;
-- \(\boldsymbol\eta_t\) is measurement noise.
+\[
+\mathbf Y_t
+=
+g_*(\mathbf Z_t)
++
+\boldsymbol\eta_t
+\]
 
-This is essential when estimating endogeneity, branching ratios, headroom, crowding, or network state. Misspecified kernels, regime mixtures, edge effects, or nonstationarity can produce apparent criticality even when the latent process differs from the estimate.
+is only one special case.
 
-### 22.2 Structural interventions and counterfactual path laws
+The analyst does not know \(p_*\) exactly and instead uses one or more candidate probabilistic measurement models
 
-A disturbance class \(c\) is not yet a mathematical intervention. Represent a concrete intervention schematically as
+\[
+\boxed{
+p_m(
+\mathbf Y_t
+\mid
+\mathbf Z_t;
+\psi^{(m)}
+).
+}
+\]
+
+A structural conclusion should therefore state whether it is robust across a **prespecified finite set** of reasonable measurement specifications. This is essential when estimating endogeneity, branching ratios, headroom, crowding, or network state. Misspecified kernels, regime mixtures, edge effects, nonstationarity, or proxy error can produce apparent structure that is not present in the latent system.
+
+### 22.2 Structural intervention operator and counterfactual path laws
+
+A disturbance class \(c\) is not yet a mathematical intervention. The tuple
 
 \[
 \boxed{
 \delta
 =
-(c,V,a,d,t_0,p,\nu),
+(c,V,a,d,t_0,p,\nu)
 }
 \]
 
-where:
+is a required **descriptor**, where \(V\) is the target, \(a\ge0\) the amplitude, \(d\) the direction, \(t_0\) the onset, \(p(s)\) the time profile, and \(\nu\) any stochastic component.
 
-- \(V\): intervened structural variable or mechanism;
-- \(a\ge0\): amplitude;
-- \(d\): direction;
-- \(t_0\): onset;
-- \(p(s)\): time profile / duration;
-- \(\nu\): optional stochastic component.
+Let the pre-intervention latent-state law be
 
-The intervention should act on a causally upstream structural variable. Endogenous outcomes such as a run, cascade, or liquidation wave should be modeled as responses, not inserted directly into \(do(\cdot)\).
+\[
+\mu_t
+=
+\mathcal L(
+\mathbf Z_t
+\mid
+\mathcal I_{t^-}
+).
+\]
 
-Let \(\mathbf Z^{\delta}\) denote the potential state path under intervention \(\delta\), and \(\mathbf Z^0\) the no-intervention baseline under the same structural model.
+The mathematical intervention acts on the full counterfactual specification:
+
+\[
+\boxed{
+\mathfrak I_{\delta}:
+(\mu_t,\mathcal G)
+\longmapsto
+(\mu_t^{\delta},\mathcal G^{\delta}).
+}
+\]
+
+A pure state-setting / jump intervention may change \(\mu_t\) while leaving \(\mathcal G\) fixed. A structural intervention changes the transition system. A hybrid intervention may change both.
+
+For each application, state the exact initial-state law, equation, transition kernel, parameter, constraint, jump rule, or forcing term modified; the amplitude units; the law of \(\nu\); its coupling to baseline exogenous noise; and the timing convention.
+
+The intervention should act on a causally upstream structural variable. Endogenous outcomes such as a run, cascade, or liquidation wave are responses, not interventions.
+
+Let \(\mathbf Z^{\delta}\) denote the potential closed-state path generated by \((\mu_t^{\delta},\mathcal G^{\delta})\), and \(\mathbf Z^0\) the no-intervention baseline generated by \((\mu_t,\mathcal G)\).
 
 Let \(\mathcal I_t\) denote the information available at time \(t\). If \(\mathbf Z_t\) is latent, conditioning on \(\mathcal I_t\) integrates over state-estimation uncertainty rather than assuming \(\mathbf Z_t\) is observed exactly. Define the theoretical primitive
 
@@ -1272,21 +1301,23 @@ The full path law is a theoretical object. Empirical work may target only decisi
 
 ## 23. Delayed control and expectations
 
-A lagged control state can be represented as
+If \(\mathbf u_t\) is a control / counterflow coordinate of the closed state, a lagged response equation can be represented as
 
 \[
 \boxed{
-T\dot{\mathbf u}_t
+\tau_u\dot{\mathbf u}_t
 =
 \mathbf h\left(
 \int_0^\infty
 K(s)\mathbf Z_{t-s}\,ds,
-\mathbb E_t[\mathbf Z_{t+H}]
+\mathbb E_t[\mathbf Z_{t+h_e}]
 \right)
 -
-\mathbf u_t.
+\mathbf u_t,
 }
 \]
+
+where \(\tau_u>0\) is the control-adjustment timescale and \(h_e\) is an expectation horizon.
 
 This distinguishes:
 
@@ -1301,7 +1332,7 @@ from
 2. forward-looking expectations,
 
 \[
-\mathbb E_t[\mathbf Z_{t+H}].
+\mathbb E_t[\mathbf Z_{t+h_e}].
 \]
 
 The expectation term is structurally important in finance because agents can:
@@ -1529,22 +1560,26 @@ This is often more faithful than forcing all behavior into one smooth differenti
 
 ## 30. Fuel exhaustion
 
+Fuel exhaustion is mechanism-specific. For one or more previously active reinforcing channels,
+
 \[
-R^+\to0.
+R_{k,t}^+\to0
 \]
 
-The reinforcing side loses incremental capacity.
+or becomes too small to sustain its prior contribution.
+
+The reinforcing side loses incremental capacity through those channels.
 
 Expected consequence: weakening continuation or stall.
 
-Fuel exhaustion does not by itself imply violent reversal.
+Exhaustion of one channel does not imply that every continuation mechanism is exhausted, and fuel exhaustion does not by itself imply violent reversal.
 
 ---
 
 ## 31. Delayed counterflow
 
 \[
-I_t\uparrow
+N_t\uparrow
 \]
 
 after a lag.
@@ -1770,7 +1805,7 @@ MFSM should retain the topology of the opposing mechanism, not only its scalar m
 
 \[
 \boxed{
-\mathcal C_I
+\mathcal C_N
 \in
 \{
 \text{feed-forward},
@@ -1853,10 +1888,10 @@ Conceptually,
 U
 =
 U(
-R^+,
+\{R_k^+\}_k,
 S^{ext},
 A,
-I,
+N,
 K,
 \text{replenishment},
 \text{impact}
@@ -1873,23 +1908,23 @@ No canonical scalar formula is currently justified.
 
 The path law \(\mathcal P_{t,h}^{\delta}\) is the theoretical response object. Practical questions are posed through functionals of that law.
 
-### 40.1 Path-level loss functional
+### 40.1 Absolute and incremental path losses
 
-Let
+An **absolute stressed loss** has type
 
 \[
-\ell:
+\ell_{\mathrm{abs}}:
 \mathbf Z_{[t,t+h]}
 \longrightarrow
-\mathbb R
+\overline{\mathbb R},
 \]
 
-map a state path into a loss, damage, or failure statistic.
+and maps the intervention path into a loss, damage, or failure statistic.
 
-Examples:
+Examples include
 
 \[
-\ell
+\ell_{\mathrm{abs}}
 =
 \mathbf 1
 \{
@@ -1898,42 +1933,46 @@ Examples:
 \]
 
 \[
-\ell
+\ell_{\mathrm{abs}}
 =
 \max_{0\le s\le h}
 \mathrm{Drawdown}(\mathbf Z_{t+s}),
 \]
 
-or
+or cascade size.
+
+An **incremental causal path loss** instead has type
 
 \[
-\ell
-=
-S_{\mathrm{cascade}}.
+\ell_{\Delta}:
+(\mathbf Z^{\delta}_{[t,t+h]},\mathbf Z^0_{[t,t+h]})
+\longrightarrow
+\overline{\mathbb R}.
 \]
 
-The loss can be **absolute**, depending only on the intervention path, or **incremental**, depending on both \(\mathbf Z^{\delta}\) and \(\mathbf Z^0\). Incremental pathwise quantities require an explicit joint coupling of those potential paths.
+Its distribution is not determined by the two marginal path laws alone; a joint structural coupling of \(\mathbf Z^{\delta}\) and \(\mathbf Z^0\) must be stated explicitly.
+
+All loss functionals used inside a severity object must be oriented so that **larger means worse**. Resilience quantities such as probability of recovery should either be reported separately or converted to a loss orientation such as probability of failure to recover.
 
 ### 40.2 Risk / severity functional
 
-Let \(\rho\) summarize uncertainty in the path loss. Examples include:
+Let \(\rho\) summarize uncertainty in a **loss-oriented scalar**. Examples include:
 
 - expectation;
-- probability of threshold crossing;
+- probability that loss exceeds a threshold;
 - quantile;
 - Value-at-Risk;
-- expected shortfall;
-- probability of recovery by a specified deadline.
+- expected shortfall.
 
-Define the shock-conditioned consequence
+Define the absolute stressed consequence
 
 \[
 \boxed{
-F_t(\delta,h;\ell,\rho)
+F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)
 =
 \rho_{\mathcal P_{t,h}^{\delta}}
 \left[
-\ell
+\ell_{\mathrm{abs}}
 \left(
 \mathbf Z_{[t,t+h]}^{\delta}
 \right)
@@ -1941,13 +1980,26 @@ F_t(\delta,h;\ell,\rho)
 }
 \]
 
-This is not a universal fragility scalar. It is conditional on:
+An incremental causal consequence may be defined only after specifying a joint coupling \(\Pi_{t,h}^{\delta,0}\) of the two potential paths:
 
-- the current information/state;
-- the fully specified intervention \(\delta\);
-- the horizon \(h\);
-- the loss definition \(\ell\);
-- the severity functional \(\rho\).
+\[
+\boxed{
+F_t^{\Delta}
+=
+\rho_{\Pi_{t,h}^{\delta,0}}
+\left[
+\ell_{\Delta}
+\left(
+\mathbf Z^{\delta}_{[t,t+h]},
+\mathbf Z^{0}_{[t,t+h]}
+\right)
+\right].
+}
+\]
+
+This is not a universal fragility scalar. It is conditional on the current information/state, the structural intervention operator, the horizon, the loss definition, the severity functional, and—when incremental pathwise effects are used—the coupling assumption.
+
+When later sections write \(F_t\) without a superscript, they mean the absolute stressed consequence unless explicitly stated otherwise.
 
 ### 40.3 Derived response statistics
 
@@ -2001,7 +2053,7 @@ Because some paths may not recover within the horizon, \(\Pr(\tau_R\le h)\) or t
 
 A system can have a large consequence only because the imposed intervention is large. Structural susceptibility instead asks how rapidly consequence rises as intervention amplitude increases.
 
-For disturbance class \(c\), define an intervention family \(\delta(c,a)\), where \(a\ge0\) is amplitude. The susceptibility profile is
+For disturbance class \(c\), define an intervention family \(\delta(c,a)\), where \(a\ge0\) is amplitude in **prespecified economic units**. The susceptibility profile is
 
 \[
 \boxed{
@@ -2009,14 +2061,22 @@ For disturbance class \(c\), define an intervention family \(\delta(c,a)\), wher
 :
 a
 \longmapsto
-F_t(\delta(c,a),h;\ell,\rho).
+F_t^{\mathrm{abs}}(\delta(c,a),h;\ell_{\mathrm{abs}},\rho).
 }
 \]
 
-A local susceptibility measure is
+Because slopes are coordinate-dependent, cross-system comparisons require the same amplitude convention or a prespecified dimensionless normalization
 
 \[
-\frac{\partial F_t}{\partial a},
+\tilde a
+=
+\frac{a}{a_{\mathrm{ref}}(c)}.
+\]
+
+A comparable local susceptibility measure is then
+
+\[
+\frac{\partial F_t}{\partial \tilde a},
 \]
 
 when the derivative exists.
@@ -2057,7 +2117,7 @@ Choose the smallest economically meaningful latent structural state
 \mathbf Z_t.
 \]
 
-Specify the corresponding observation model \(\mathbf Y_t=g(\mathbf Z_t;\psi_t)+\boldsymbol\eta_t\). Do not add state variables merely because data are available.
+Specify the closed augmented state and distinguish the unknown true observation mechanism \(\mathbf Y_t=g_*(\mathbf Z_t)+\boldsymbol\eta_t\) from the analyst's candidate measurement models \(g^{(m)}(\cdot;\psi^{(m)})\). Do not add state variables merely because data are available.
 
 ---
 
@@ -2080,10 +2140,10 @@ For every proposed arrow, state:
 Estimate or proxy
 
 \[
-R^+,\quad H,\quad R^-.
+\{R^+_{k,t}\}_{k\in\mathcal K},\quad H,\quad R^-_t(h;\delta).
 \]
 
-Do not call them all “liquidity.”
+Do not call them all “liquidity,” and do not treat realized absorption as identical to prospective capacity.
 
 ---
 
@@ -2146,15 +2206,15 @@ Model or estimate \(\Sigma_t\) where possible.
 
 ---
 
-## 49. Classify termination mechanism
+## 49. Derive termination mechanism prospectively
 
-Distinguish
+Using only information available before the realized transition, distinguish or assign probabilities over
 
 \[
 M_1,\ M_2,\ M_3,\ M_4.
 \]
 
-Do not label every loss of continuation “exhaustion.”
+Do not label every loss of continuation “exhaustion,” and do not treat a hindsight label as a primitive state variable.
 
 ---
 
@@ -2195,8 +2255,8 @@ Do not infer automatically that:
 6. **Diminishing price response means a market top.**  
    The stimulus must be independently identified.
 
-7. **Low \(R^+\) means crash risk.**  
-   It may imply only a stall.
+7. **Low capacity in one \(R_{k,t}^+\) channel means crash risk.**
+   It may imply only weakening or exhaustion of that continuation mechanism.
 
 8. **Low \(H\) and low \(R^-\) are equivalent.**  
    They correspond to different mechanisms.
@@ -2281,7 +2341,7 @@ before or during transitions?
 How should
 
 \[
-\mathbb E_t[\mathbf Z_{t+H}]
+\mathbb E_t[\mathbf Z_{t+h_e}]
 \]
 
 enter without making the model observationally unidentifiable?
@@ -2296,7 +2356,7 @@ Can the model estimate decision-relevant functionals of
 \mathcal P_{t,h}^{\delta}
 \]
 
-for fully specified structural interventions rather than fitting one generic "fragility" state?
+for intervention operators with prespecified descriptors, amplitude units, and paths rather than fitting one generic "fragility" state?
 
 Priority intervention families include:
 
@@ -2346,7 +2406,7 @@ The derivations above follow directly from the equations stated in this document
 - Yi, Huang, Simon, and Doyle, integral feedback in bacterial chemotaxis: https://www.pnas.org/doi/pdf/10.1073/pnas.97.9.4649
 - Carlson and Doyle, Highly Optimized Tolerance: https://harvest.aps.org/v2/journals/articles/10.1103/PhysRevLett.84.2529/fulltext
 
-For finance-side evidence, measurement discipline, and the empirical motivation for \(R^-_t(h)\), \(\mathbf\Chi_B\), \(\Delta\mathbf B^{\delta}\), \(\Gamma_t\), the intervention/path-law layer, and the observation model, read Empirical_Finance_Foundations.md.
+For finance-side evidence, measurement discipline, and the empirical motivation for \(R^-_t(h;\delta)\), \(\mathbf\Chi_B\), \(\Delta\mathbf B^{\delta}\), \(\Gamma_t\), the intervention/path-law layer, and the observation/identification layer, read Empirical_Finance_Foundations.md.
 
 ---
 

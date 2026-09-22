@@ -1,0 +1,25 @@
+status: pending
+model:
+  release_tag: mfsm-v1.0
+  resolved_commit: null
+experiment:
+  spec_tag: e001-v1.0
+  resolved_commit: null
+  spec_file: experiments/Experiment_001_Crypto_Liquidation_Response.md
+schemas:
+  raw_data: null
+  feature: null
+  label: E001-label-v1
+freeze:
+  timestamp_utc: null
+  operator: null
+  notes: >
+    Populate this manifest only after the frozen model/spec commits and annotated
+    Git tags exist. Do not modify the tagged model/spec commits merely to embed
+    their own hashes. This manifest may be committed in a later administrative
+    commit or archived with the research run.
+holdout:
+  development_market: BTC
+  confirmatory_market: ETH
+  eth_opened_after_freeze: false
+  first_eth_access_timestamp_utc: null

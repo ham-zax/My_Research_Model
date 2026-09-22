@@ -100,7 +100,7 @@ MFSM mapping:
 - \(A\): endogenous amplification;
 - \(H\): financing and margin headroom;
 - \(R^-\): liquidity-supplying balance-sheet capacity;
-- \(I\): stabilizing capital that can eventually enter;
+- \(N\): stabilizing / opposing capital that can eventually enter;
 - \(K\): timing of funding and liquidity response.
 
 Important qualification:
@@ -156,7 +156,7 @@ P\uparrow
 \text{new exposure}\uparrow
 \]
 
-can occur before fragility rises.
+can occur before the consequence of a specified adverse disturbance rises.
 
 ### MFSM lesson
 
@@ -358,7 +358,7 @@ MFSM mapping:
 
 - \(T\): trend strength;
 - \(U\): strategy sustainability;
-- \(F\): conditional failure fragility.
+- \(F^{\mathrm{abs}}\): absolute stressed consequence for a specified intervention and loss definition.
 
 Critical counterexample:
 
@@ -368,7 +368,7 @@ A crash in a momentum strategy can occur while aggregate conditions improve.
 
 ### MFSM lesson
 
-Trend strength, sustainability, and failure fragility must remain separate.
+Trend strength, sustainability, stressed consequence, and structural susceptibility must remain separate.
 
 ---
 
@@ -596,7 +596,7 @@ Diamond and Dybvig (1983), *Journal of Political Economy* 91(3), pp. 401-419, mo
 
 Core mechanism:
 
-A participant's optimal action can depend on expected actions of others. This creates multiple-equilibrium / coordination fragility that does not require a preceding price trend.
+A participant's optimal action can depend on expected actions of others. This creates multiple-equilibrium / coordination vulnerability that does not require a preceding price trend.
 
 MFSM mapping:
 
@@ -616,7 +616,7 @@ is an MFSM abstraction; it is not presented as a formula taken from Diamond-Dybv
 
 MFSM lesson:
 
-Do not require visible momentum before diagnosing run-like fragility.
+Do not require visible momentum before diagnosing run-like coordination vulnerability.
 
 ---
 
@@ -658,9 +658,10 @@ Potential stabilizing capital can arrive gradually after a shock because capital
 MFSM mapping:
 
 \[
-R^-_t(h)
+R^-_t(h;\delta)
 =
-\text{opposing capacity able to act by horizon }h.
+\text{opposing capacity able to act by horizon }h
+\text{ under the specified disturbance.}
 \]
 
 MFSM lesson:
@@ -683,8 +684,12 @@ Estimated branching / endogeneity measures can be distorted by kernel misspecifi
 MFSM mapping:
 
 \[
-\mathbf Y_t=g(\mathbf Z_t;\psi_t)+\boldsymbol\eta_t.
+p_*(\mathbf Y_t\mid\mathbf Z_t),
+\qquad
+p_m(\mathbf Y_t\mid\mathbf Z_t;\psi^{(m)}).
 \]
+
+An additive-noise equation is one special case; the analyst model must include the relevant measurement-noise law.
 
 MFSM lesson:
 
@@ -781,7 +786,7 @@ Leveraged derivative/repo exposures, collateral demands, forced gilt sales, and 
 MFSM mapping:
 
 \[
-H \times R^-_t(h) \times W_t \times \Psi.
+H \times R^-_t(h;\delta) \times W_t \times \Psi.
 \]
 
 MFSM lesson:
@@ -948,7 +953,10 @@ A prespecified MFSM implementation must improve genuine out-of-sample performanc
 - credit gaps;
 - debt-service ratios;
 - liquidity;
-- standard network measures.
+- standard network measures;
+- and, critically, a **flexible nonlinear model using the same primitive information set, including the same prespecified historical windows/lags**, from which MFSM features are engineered.
+
+The flexible baseline must receive every primitive history used to construct an MFSM feature, with a model-selection/tuning budget no smaller than the MFSM model's. If MFSM interactions beat a linear baseline but a generic nonlinear model on the same primitive information recovers the same performance, MFSM may still be useful feature engineering, but it has not demonstrated incremental structural information.
 
 Evaluation should include:
 
@@ -963,7 +971,7 @@ Evaluation should include:
 
 ## 25A. Hypothesis H8 — Shock-conditioned path response and consequence
 
-For prespecified disturbance classes \(c\), instantiate concrete interventions \(\delta=(c,V,a,d,t_0,p,\nu)\) and horizons \(h\).
+For prespecified disturbance classes \(c\), define the descriptor \(\delta=(c,V,a,d,t_0,p,\nu)\), the corresponding full intervention operator \(\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta})\), and horizons \(h\).
 
 > the same latent market state can have materially different path outcomes across intervention classes, amplitudes, and horizons.
 
@@ -989,13 +997,15 @@ Candidate empirical targets include:
 - recovery probability / time;
 - expected shortfall of a prespecified path loss.
 
-Any reported consequence must specify
+Any reported absolute stressed consequence must specify
 
 \[
-F_t(\delta,h;\ell,\rho).
+F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho).
 \]
 
-Where data allow, use disturbance-class and disturbance-amplitude holdouts in addition to date/episode holdouts.
+If the target is incremental causal harm, the design must additionally specify the two-path loss and the counterfactual coupling or partial-identification assumptions. Loss orientation must be fixed so that larger values mean worse outcomes.
+
+Where data allow, use disturbance-class and disturbance-amplitude holdouts in addition to date/episode holdouts. Cross-system susceptibility comparisons must use the same amplitude convention or a prespecified normalization.
 
 ---
 
@@ -1018,15 +1028,15 @@ D_{\mathbf z}
 ].
 \]
 
-For the intervention \(\delta\), the directional local response is
+\(\mathbf\Chi_{B,t}(h)\) is an initial-state sensitivity. The projection
 
 \[
-\boldsymbol\chi_{B,t}^{\delta}(h)
-=
-\mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
+\mathbf\Chi_{B,t}(h)\mathbf v_{\delta}
 \]
 
-For finite shocks, especially near thresholds, test the finite-shock response
+is valid only when the intervention acts through an instantaneous initial-state displacement. For parameter, rule, kernel, constraint, or temporal-forcing interventions, estimate the direct intervention derivative where identified, or move directly to the finite-shock response.
+
+For finite shocks, especially near thresholds, test
 
 \[
 \Delta\mathbf B_t^{\delta}(s)
@@ -1086,7 +1096,7 @@ Candidate empirical objects:
 A conceptual local loop gain is
 
 \[
-\mathcal G_t(h)
+\Lambda_t(h)
 =
 \left(
 \frac{\partial Q^{endo}_{t+h}}
@@ -1102,18 +1112,18 @@ Identification is difficult because information, prices, and flow are simultaneo
 
 ---
 
-## 27. \(R^+\): remaining continuation capacity
+## 27. \(\{R_k^+\}_k\): mechanism-specific remaining continuation capacity
 
-Possible proxies depend on the asset:
+\(R^+\) is a category, not a canonical aggregate scalar. Candidate mechanism-specific proxies include:
 
-- uncommitted fund flows;
-- remaining short interest in a squeeze;
-- available directional risk budget;
-- untapped leverage;
-- new-account or new-capital inflow;
-- issuance-adjusted demand.
+- \(R^+_{\mathrm{fund\ flow}}\): uncommitted fund-flow capacity;
+- \(R^+_{\mathrm{short\ cover}}\): remaining short exposure capable of generating buy-to-cover demand;
+- \(R^+_{\mathrm{risk\ budget}}\): available directional risk budget;
+- \(R^+_{\mathrm{leverage}}\): untapped leverage / balance-sheet capacity;
+- \(R^+_{\mathrm{new\ capital}}\): new-account or new-capital inflow capacity;
+- mechanism-specific demand net of relevant issuance or supply.
 
-Low \(R^+\) primarily predicts loss of continuation, not necessarily severe failure.
+Low \(R_k^+\) primarily predicts weakening of mechanism \(k\)'s contribution to continuation, not necessarily severe failure. Do not sum these channels without an economically justified, prespecified aggregation rule.
 
 ---
 
@@ -1164,13 +1174,16 @@ Candidate empirical designs include collateral-price shocks, margin schedule cha
 
 ## 29. \(R^-\): opposing absorptive capacity
 
-The preferred object is horizon-qualified:
+The preferred object is horizon- and disturbance-qualified:
 
 \[
-R^-_t(h)
+R^-_t(h;\delta)
 =
-\text{opposing capacity usable by horizon }h.
+\text{opposing capacity usable by horizon }h
+\text{ under the specified intervention.}
 \]
+
+When the intervention is fixed by design, \(R^-_t(h)\) is acceptable shorthand.
 
 Possible proxies:
 
@@ -1183,7 +1196,7 @@ Possible proxies:
 - stress-period replenishment rate;
 - measured arrival time of new risk-bearing capital.
 
-Gross trading volume is not sufficient. Eventual capital is not equivalent to capital available before a forced-action deadline.
+Gross trading volume is not sufficient. Eventual capital is not equivalent to capital available before a forced-action deadline. Realized absorption under a known shock is easier to estimate than total **prospective** \(R^-_t(h;\delta)\), which is often only partially identified.
 
 ---
 
@@ -1266,19 +1279,30 @@ Potential endogenous components:
 
 The decomposition must allow for anticipation.
 
-## 33.1 Observation model
+## 33.1 Observation mechanism, measurement model, and identification status
 
 Measured state variables are proxies for latent structure.
 
-Use the conceptual observation equation
+Conceptually distinguish the unknown true observation distribution
 
 \[
-\mathbf Y_t
-=
-g(\mathbf Z_t;\psi_t)
-+
-\boldsymbol\eta_t.
+p_*(\mathbf Y_t\mid\mathbf Z_t)
 \]
+
+from the analyst's candidate probabilistic measurement model
+
+\[
+\boxed{
+p_m(
+\mathbf Y_t
+\mid
+\mathbf Z_t;
+\psi^{(m)}
+).
+}
+\]
+
+If an additive-noise representation is used, the law of the measurement noise is part of the specification.
 
 For every latent quantity, record:
 
@@ -1287,9 +1311,12 @@ For every latent quantity, record:
 - timestamp availability;
 - expected bias;
 - regime sensitivity;
-- alternative proxy constructions.
+- alternative proxy constructions;
+- identification status: point-identified / partially identified / structurally identified / unidentified;
+- closest plausible observationally equivalent data-generating process;
+- negative control or mechanism-discriminating test where available.
 
-This is especially important for inferred endogeneity, crowding, network state, and criticality.
+Important structural claims should survive a prespecified finite set of reasonable measurement models. This is especially important for inferred endogeneity, crowding, strategic complementarity, network state, and criticality.
 
 ---
 
@@ -1366,17 +1393,18 @@ But the framework must not relabel every surprise as “exogenous” after the f
 Before saying MFSM supplies market edge, require all of the following:
 
 1. **Prespecified latent-state variables, observed proxies, and transformations.**
-2. **Prespecified disturbance class and fully specified structural intervention, including amplitude and path.**
-3. **Prespecified path-level loss functional \(\ell\) and risk / severity functional \(\rho\).**
+2. **Prespecified disturbance class, intervention descriptor, structural intervention operator, amplitude units, and path.**
+3. **Prespecified loss orientation, absolute one-path loss \(\ell_{\mathrm{abs}}\), and risk / severity functional \(\rho\); explicit two-path loss and coupling assumptions if incremental causal harm is reported.**
 4. **Out-of-sample testing.**
-5. **Comparison against strong finance baselines.**
-6. **Robustness across multiple assets or episodes.**
+5. **Comparison against strong finance baselines and a flexible nonlinear baseline using the same raw information set.**
+6. **Robustness across multiple assets, episodes, or venues.**
 7. **False-alarm accounting.**
 8. **No look-ahead data.**
 9. **Mechanism-consistent signs and interactions.**
 10. **Incremental decision value after transaction costs where trading is the application.**
-11. **Stability to reasonable alternative observation, kernel, and intervention specifications.**
-12. **Failure analysis showing when and why the signal stops working.**
+11. **Stability to a prespecified finite set of reasonable observation, kernel, and intervention specifications.**
+12. **Explicit identification status for important latent quantities and a plausible observationally equivalent alternative explanation.**
+13. **Failure analysis showing when and why the signal stops working.**
 
 Without these, MFSM remains a research lens rather than demonstrated alpha.
 
@@ -1474,6 +1502,6 @@ For the complete link-by-link audit that motivated the latest revisions, see `ar
 
 The finance evidence supports the following stance:
 
-> **MFSM should be judged by whether its latent-state estimates and state-dependent interactions improve real out-of-sample estimation of decision-relevant functionals of fully specified counterfactual path responses, while separating shock consequence from structural susceptibility and remaining robust to alternative measurement, kernel, and intervention specifications.**
+> **MFSM should be judged by whether its prespecified latent-state estimates and state-dependent interactions improve real out-of-sample estimation of decision-relevant functionals of structurally defined intervention responses beyond strong finance baselines and a flexible same-information-set model, while separating absolute stressed consequence from incremental causal consequence and structural susceptibility, and while remaining robust to prespecified measurement, kernel, and intervention alternatives.**
 
 Until that test is passed, MFSM is a structured research program, not a validated trading system.

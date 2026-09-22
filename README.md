@@ -28,6 +28,15 @@ Its invariant question is:
 - [artifacts/source_review_extended_2026-09-22.md](./artifacts/source_review_extended_2026-09-22.md)
   Source-by-source audit of the extended finance/control literature that motivated the shock-conditioned response, strategic coordination, constraint-sensitivity, and observation-model revisions.
 
+- [artifacts/independent_review_synthesis_2026-09-22.md](./artifacts/independent_review_synthesis_2026-09-22.md)
+  Convergence report from the five independent mathematical, causal-identification, empirical-finance, crypto-quant, and adversarial reviews that motivated the theory-freeze cleanup.
+
+- [experiments/Experiment_001_Crypto_Liquidation_Response.md](./experiments/Experiment_001_Crypto_Liquidation_Response.md)
+  First prespecified empirical program: test whether a narrow MFSM state can distinguish forced-liquidation exhaustion from a continuing BTC deleveraging cascade, with ETH as a strict frozen confirmatory holdout.
+
+- [experiments/Experiment_001_Freeze_Manifest.yaml](./experiments/Experiment_001_Freeze_Manifest.yaml)
+  Administrative freeze manifest for the canonical model tag/commit, experiment-spec version/commit, data-feature-label schema versions, freeze timestamp, and first ETH access record.
+
 ## Epistemic status
 
 MFSM is **not a validated trading system** and is **not a universal fragility score**.
@@ -48,17 +57,19 @@ Only level 4 would justify treating a component as demonstrated predictive edge.
 3. Use the empirical foundations to distinguish finance-supported mechanisms from analogy-derived hypotheses.
 4. Follow the research protocol before applying or extending the model.
 5. Do not collapse the model into a scalar score without new evidence.
-6. Keep **Trend Strength (T)** and **Trend Sustainability (U)** separate from **shock-conditioned consequence** \(F_t(\delta,h;\ell,\rho)\) and from structural susceptibility across disturbance amplitude.
-7. Distinguish a disturbance class from a fully specified structural intervention \(\delta\); do not treat an endogenous outcome such as a run or cascade as the intervention itself.
-8. Keep **remaining trend fuel (R+)**, **headroom (H)**, and **opposing absorptive capacity (R-)** separate; horizon-qualify \(R^-_t(h)\) when timing matters.
-9. Distinguish current headroom from the local constraint-sensitivity Jacobian \(\mathbf\Chi_B\) and from the finite-shock buffer response \(\Delta\mathbf B^{\delta}\).
+6. Keep **Trend Strength (T)** and **Trend Sustainability (U)** separate from **absolute stressed consequence** \(F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)\), incremental causal consequence, and structural susceptibility.
+7. Distinguish a disturbance class, the descriptor \(\delta=(c,V,a,d,t_0,p,\nu)\), and the full intervention operator \(\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta})\); do not treat an endogenous outcome such as a run or cascade as the intervention itself.
+8. Treat **remaining continuation capacity** as a mechanism-indexed family \(\{R_{k,t}^+\}_k\), not one market-wide scalar; keep it separate from **headroom (H)** and **opposing absorptive capacity (R-)**; use \(R^-_t(h;\delta)\) when timing or shock type matters.
+9. Distinguish current headroom from the local initial-state buffer Jacobian \(\mathbf\Chi_B\), direct intervention sensitivity, and finite-shock buffer response \(\Delta\mathbf B^{\delta}\).
 10. Treat delay as a response-time structure or memory kernel when possible, not automatically as one fixed scalar.
-11. Separate latent structural state from observed proxies and record measurement-model choices.
-12. Allow strategic complementarity / coordination fragility even when no prior trend exists.
-13. Treat the conditional counterfactual path law \(\mathcal P_{t,h}^{\delta}\) as the theoretical response object; estimate only decision-relevant projections when practical.
-14. Always state the system boundary, structural intervention, horizon, path-level loss functional, severity functional, measurable proxy, main confounders, and falsifier.
-15. Compare any proposed signal against strong finance-specific baselines out of sample.
-16. If a natural analogy cannot be mapped to an independently meaningful financial mechanism, discard it.
+11. Require a **closed augmented latent state**: every independently evolving buffer, control state, coordination state, or hybrid regime needed for prediction must be inside \(\mathbf Z_t\) or explicitly incorporated into its transition law.
+12. Separate the true observation mechanism from the analyst's measurement model; record identification status and plausible observationally equivalent alternatives.
+13. Allow strategic complementarity / coordination vulnerability even when no prior trend exists.
+14. Treat the conditional counterfactual path law \(\mathcal P_{t,h}^{\delta}\) as the theoretical response object; estimate only decision-relevant projections when practical.
+15. Always state the system boundary, intervention operator, amplitude units, horizon, loss orientation, severity functional, measurable proxy, main confounders, falsifier, and identification status.
+16. Compare any proposed signal against strong finance-specific baselines **and a flexible nonlinear model using the same raw information set** out of sample.
+17. If a natural analogy cannot be mapped to an independently meaningful financial mechanism, discard it.
+18. Until the current empirical program is tested, do not add new canonical state variables without a demonstrated theoretical necessity or empirical evidence.
 
 ## Current modeling direction
 
@@ -66,23 +77,33 @@ The mature MFSM object is conceptually
 
 $$
 \mathcal{M}_t =
-\{\mathbf{Z}_t,J_t,K_t,W_t,B_t,Q_t,\mathcal C_{I,t},M_t^{term},\Sigma_t,\mathcal O_t\}.
+\{\mathbf{Z}_t;\mathcal G,\mathcal O\}.
 $$
 
 where:
 
-- $\mathbf{Z}_t$: latent structural market state;
-- $J_t$: local state-dependent response matrix;
-- $K_t$: delay and memory kernels;
-- $W_t$: economic propagation topology;
-- $B_t$: usable buffers, capacities, and thresholds;
-- $Q_t$: signal-source, expectation, and coordination state;
-- $\mathcal C_{I,t}$: opposing/control topology;
-- $M_t^{term}$: candidate termination mechanism;
-- $\Sigma_t$: disturbance structure;
-- $\mathcal O_t$: observation / measurement process.
+- $\mathbf{Z}_t$: **closed augmented latent dynamic state**;
+- $\mathcal G$: fixed structural form plus any explicit exogenous laws;
+- $\mathcal O$: true observation mechanism.
 
-For a fully specified structural intervention \(\delta\), the theoretical response object is the conditional counterfactual path law
+Any endogenously or stochastically evolving topology, kernel, coefficient, buffer, coordination state, or hybrid regime required for prediction belongs inside $\mathbf Z_t$ unless it is a predetermined input or has an explicit exogenous law in $\mathcal G$. The local Jacobian $J_t$ and termination classification $M_t^{term}$ are derived objects.
+
+A disturbance descriptor \(\delta=(c,V,a,d,t_0,p,\nu)\) must be paired with a structural intervention operator on the full counterfactual specification:
+
+$$
+\mu_t
+=
+\mathcal L(\mathbf Z_t\mid\mathcal I_{t^-}),
+\qquad
+\mathfrak I_{\delta}:
+(\mu_t,\mathcal G)
+\mapsto
+(\mu_t^{\delta},\mathcal G^{\delta}).
+$$
+
+This permits pure state-setting interventions, pure structural interventions, and hybrids.
+
+Given that operator, the theoretical response object is the conditional counterfactual path law
 
 $$
 \mathcal P_{t,h}^{\delta}
@@ -108,7 +129,7 @@ $$
 ]
 $$
 
-is one projection of that law. Shock-conditioned consequence is defined through a path-level loss functional \(\ell\) and risk / severity functional \(\rho\), while structural susceptibility studies how consequence changes as disturbance amplitude varies.
+is one projection of that law. Absolute stressed consequence is defined through a loss-oriented path functional \(\ell_{\mathrm{abs}}\) and risk/severity functional \(\rho\). Incremental causal consequence requires a two-path loss and explicit counterfactual coupling. Structural susceptibility studies how stressed consequence changes as a **standardized** disturbance amplitude varies.
 
 The model should eventually be judged by whether these state descriptions improve out-of-sample discrimination among:
 
@@ -121,6 +142,10 @@ The model should eventually be judged by whether these state descriptions improv
 - cross-asset propagation;
 
 beyond ordinary momentum, volatility, leverage, valuation, liquidity, credit, and network baselines, while remaining robust to alternative measurement specifications.
+
+## Current research phase
+
+The conceptual architecture is now in **pre-freeze / empirical-testing preparation mode**. Freeze sequence: (1) commit the current cleanup, (2) create immutable annotated tags such as `mfsm-v1.0` and `e001-v1.0`, and then (3) populate the Experiment 001 freeze manifest with the resolved commit SHAs, schema versions, freeze timestamp, and holdout-access record. Confirmatory work begins only after that manifest is complete. After the freeze, progress should come primarily from falsifiable implementations rather than additional conceptual variables.
 
 ## Change discipline
 

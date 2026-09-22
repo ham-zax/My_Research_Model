@@ -2,6 +2,89 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
+## 2026-09-22 - Five-review convergence cleanup and theory freeze
+
+This revision incorporates the convergent findings of independent mathematical, causal-identification, empirical-finance, adversarial, and crypto-implementation reviews. It is intentionally a **contraction / typing pass**, not a conceptual expansion.
+
+### State architecture
+
+- Replaced the loose top-level collection of partially overlapping state objects with a requirement for one **closed augmented latent state** \(\mathbf Z_t\).
+- Defined \(\mathcal G\) as the fixed structural transition form and added a universal closure rule: any future-relevant time-varying kernel, network, disturbance parameter, coefficient, buffer, coordination state, control state, or hybrid mode must be inside \(\mathbf Z_t\), be predetermined, or have an explicit exogenous law.
+- Clarified that buffers \(B_t\), expectation/coordination state \(Q_t\), control states, hybrid modes, and endogenously evolving topology/coefficients are components or measurable projections of \(\mathbf Z_t\) when they evolve dynamically.
+- Reclassified \(J_t\) as a derived local Jacobian and \(M_t^{term}\) as a derived prospective mechanism classification rather than a primitive state variable.
+
+### Intervention contract
+
+- Reclassified \(\delta=(c,V,a,d,t_0,p,\nu)\) as a required **human-readable intervention descriptor**, not the mathematical intervention itself.
+- Added the full intervention operator
+  \[
+  \mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta}),
+  \]
+  so pure state-setting/jump interventions, pure structural interventions, and hybrids are all typed explicitly.
+- Applications must now state whether the initial-state law, a structural rule/equation/kernel/parameter/constraint/forcing term, or both are modified, plus amplitude units, stochastic law/coupling, and timing convention.
+- Added amplitude-normalization discipline for cross-system susceptibility comparisons.
+
+### Consequence and susceptibility typing
+
+- Split absolute stressed consequence from incremental causal consequence:
+  - \(F_t^{abs}\): one-path stressed risk under \(\mathcal P^{\delta}\);
+  - incremental causal consequence: requires a two-path loss and explicit counterfactual coupling.
+- Required all losses used inside severity objects to be oriented so **larger means worse**.
+- Required recovery-style quantities to be reported separately or converted to loss orientation.
+- Clarified that susceptibility slopes are coordinate-dependent unless amplitude units or normalization are fixed.
+
+### Capacity and constraint cleanup
+
+- Recast continuation capacity as a mechanism-indexed family \(\{R_{k,t}^+\}_k\); \(R^+\) is now a category label rather than a default market-wide scalar.
+- Upgraded opposing absorptive capacity to the stronger form \(R^-_t(h;\delta)\) when shock type affects willingness or financing.
+- Clarified that \(\mathbf\Chi_B\) is an **initial-state** sensitivity.
+- Restricted \(\mathbf\Chi_B\mathbf v_{\delta}\) to interventions that act solely through an initial-state displacement.
+- General structural interventions require a direct intervention derivative or the finite response \(\Delta\mathbf B^{\delta}\).
+
+### Measurement and identification
+
+- Split the conceptual true observation distribution \(p_*(Y\mid Z)\) from the analyst's candidate probabilistic measurement model \(p_m(Y\mid Z;\psi^{(m)})\).
+- Added mandatory identification labels: point-identified / partially identified / structurally identified / unidentified.
+- Added a requirement to record a plausible observationally equivalent alternative data-generating process.
+- Replaced open-ended measurement robustness with a **prespecified finite set** of alternative measurement specifications.
+
+### Derived diagnostics and redundancy control
+
+- Clarified that \(C\) must be derived through a prespecified functional of the propagation operator/state/law rather than treated as a free primitive; operational analysis should prefer the actual network/operator diagnostics.
+- Clarified that \(\Theta\) summarizes response-time structure and is not a substitute for \(K\).
+- Recast \(L\) as an optional derived threshold-concentration statistic; the primitive objects are the actual switching surfaces and distances.
+- Added a theory-freeze rule: no new canonical state variable until the current empirical program is tested, unless a demonstrated contradiction cannot be represented by the existing architecture.
+
+### Empirical standard
+
+- Added a mandatory **flexible nonlinear baseline using the same raw information set**. MFSM does not demonstrate incremental structural information merely by beating a weaker linear baseline.
+- Strengthened the minimum edge standard to require explicit identification status, loss orientation, intervention operator, amplitude units, finite measurement-model alternatives, and transaction-cost-aware out-of-sample value where trading is the application.
+
+### Symbol cleanup
+
+- Renamed endogenous counterflow from \(I_t\) to \(N_t\) and controller topology from \(\mathcal C_I\) to \(\mathcal C_N\) so counterforce notation cannot be confused with the information set \(\mathcal I_t\).
+- Renamed lag/control timescale symbols that conflicted with Trend Strength \(T\).
+- Renamed the expectation horizon so it no longer conflicts with headroom \(H\).
+- Renamed Brownian noise so it no longer collides with economic network \(W_t\).
+
+### Experiment 001 preregistration tightening
+
+- Added an exact first-passage definition for the primary downside-before-recovery label, anchored to the decision-time spot composite.
+- Enforced a strict ETH holdout: no ETH inspection, plotting, feature selection, tuning, or propagation analysis before frozen confirmatory evaluation.
+- Defined a primitive historical information panel shared by B4 and MFSM so response-time features cannot give MFSM a richer raw information set.
+- Required comparable model-selection/tuning budgets for B4 and the MFSM feature model.
+- Added a freeze/reproducibility manifest requiring immutable model/spec tags, resolved commit SHAs, data/feature/label schema versions, freeze timestamp, and first ETH-access record before confirmatory use. The manifest is populated after the frozen tags exist so the tagged commits do not attempt to embed their own hashes.
+
+### Research phase
+
+The conceptual architecture is now in **pre-freeze / empirical-testing preparation mode**. Freeze sequence: commit the cleanup, create immutable model/spec tags, then populate the Experiment 001 freeze manifest with the resolved SHAs and schema metadata. Confirmatory work starts only after the manifest is complete. Thereafter, progress should primarily come from falsifiable experiments and simplification, not from adding new conceptual variables.
+
+Added supporting artifacts:
+
+- `artifacts/independent_review_synthesis_2026-09-22.md` — synthesis of the five independent reviews and their convergent corrections.
+- `experiments/Experiment_001_Crypto_Liquidation_Response.md` — prespecified first crypto experiment on liquidation exhaustion versus continuing deleveraging.
+- `experiments/Experiment_001_Freeze_Manifest.yaml` — post-tag administrative record for frozen model/spec tags, resolved commits, schema versions, freeze timestamp, and first ETH-holdout access.
+
 ## 2026-09-22 - Counterfactual path-law and susceptibility refinement
 
 This revision supersedes the earlier terminal-mean shock-response formulation while preserving it as historical context below.
@@ -84,7 +167,7 @@ This revision supersedes the earlier terminal-mean shock-response formulation wh
 - Added constraint sensitivity \(\chi_{B,t}\), distinct from current headroom \(H_t\).
 - Added strategic complementarity / coordination state \(\Gamma_t\), allowing run-like fragility without a preceding trend.
 - Made functional diversity \(D_t\) explicitly dynamic.
-- Added controller topology \(\mathcal C_I\) so feed-forward opposition, delayed feedback, integral feedback, depletion, saturation, and thresholds are not conflated.
+- Added controller topology (now denoted \(\mathcal C_N\)) so feed-forward opposition, delayed feedback, integral feedback, depletion, saturation, and thresholds are not conflated.
 
 ### Mathematical foundations
 

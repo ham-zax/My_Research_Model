@@ -46,7 +46,7 @@ State explicitly:
 - funding system;
 - derivative layer;
 - market-making layer;
-- whether the question concerns continuation, fragility, propagation, or all three.
+- whether the question concerns continuation, shock-conditioned consequence, structural susceptibility, propagation, or a subset of these.
 
 A mechanism can be stabilizing at one scale and destabilizing at another.
 
@@ -68,13 +68,13 @@ Examples:
 - supply shock;
 - policy shock.
 
-Then instantiate the class as a structural intervention
+Then define the human-readable intervention descriptor
 
 \[
 \boxed{
 \delta
 =
-(c,V,a,d,t_0,p,\nu),
+(c,V,a,d,t_0,p,\nu)
 }
 \]
 
@@ -88,25 +88,55 @@ with:
 - \(\nu\): optional stochastic component;
 - \(h\): evaluation horizon.
 
-Do not use an endogenous outcome such as "bank run", "liquidation cascade", or "market crash" as though it were itself the intervention. A friendly label such as "coordination/run shock" is acceptable only if it is instantiated through an upstream variable such as withdrawal demand, rollover availability, or a common signal.
-
-The shock-conditioned consequence is
+The tuple is **not yet the mathematical intervention**. Define the pre-intervention latent-state law
 
 \[
-F_t(\delta,h;\ell,\rho),
+\mu_t
+=
+\mathcal L(
+\mathbf Z_t
+\mid
+\mathcal I_{t^-}
+)
+\]
+
+and the structural intervention operator on the full counterfactual specification
+
+\[
+\boxed{
+\mathfrak I_{\delta}:
+(\mu_t,\mathcal G)
+\mapsto
+(\mu_t^{\delta},\mathcal G^{\delta}).
+}
+\]
+
+Record whether the intervention changes:
+
+- the initial / jump state law \(\mu_t\);
+- an equation / transition kernel / parameter / constraint / jump rule / forcing term in \(\mathcal G\);
+- or both.
+
+Also record:
+
+- amplitude units and whether the change is additive, multiplicative, percentage-point, or otherwise;
+- law of \(\nu\), if stochastic;
+- coupling of \(\nu\) to baseline exogenous shocks;
+- timing convention and pre-intervention information set.
+
+Do not use an endogenous outcome such as "bank run", "liquidation cascade", or "market crash" as though it were itself the intervention. A friendly label such as "coordination/run shock" is acceptable only if it is instantiated through an upstream variable such as withdrawal demand, rollover availability, or a common signal.
+
+The default absolute stressed consequence is
+
+\[
+F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho),
 \]
 
 not a context-free scalar.
 
-Where the research question is **structural susceptibility**, vary intervention amplitude within a fixed disturbance family:
+Where the research question is **structural susceptibility**, vary intervention amplitude within a fixed disturbance family. Define canonical economic units for \(a\). If cross-system comparison is required, prespecify a dimensionless normalization such as \(\tilde a=a/a_{\mathrm{ref}}(c)\).
 
-\[
-a
-\mapsto
-F_t(\delta(c,a),h;\ell,\rho).
-\]
-
-Do not compare fragility across systems without controlling the intervention definition and magnitude.
+Do not compare susceptibility slopes across systems under different amplitude conventions.
 
 ---
 
@@ -131,28 +161,47 @@ For each arrow record:
 
 If an arrow cannot be completed, it should not enter the operational model.
 
-### 4.1 Separate latent state from measurement
+### 4.1 Separate latent state, observation mechanism, and analyst model
 
 For each state variable distinguish:
 
 - latent structural quantity;
 - observed proxy;
-- measurement/kernel/model choice;
+- candidate measurement/kernel/model choice;
 - timestamp availability;
 - expected bias;
-- alternative proxy.
+- alternative proxy;
+- identification status: point-identified / partially identified / structurally identified / unidentified;
+- closest plausible observationally equivalent data-generating process.
 
-Use the conceptual observation relation
+Conceptually distinguish the true observation mechanism
 
 \[
-\mathbf Y_t=g(\mathbf Z_t;\psi_t)+\boldsymbol\eta_t.
+p_*(\mathbf Y_t\mid\mathbf Z_t)
 \]
 
-Do not silently treat a fitted endogeneity, crowding, liquidity, or criticality statistic as the latent state itself.
+from the analyst's candidate probabilistic measurement model
+
+\[
+\boxed{
+p_m(
+\mathbf Y_t
+\mid
+\mathbf Z_t;
+\psi^{(m)}
+).
+}
+\]
+
+An additive-noise equation may be used as a special case, but the noise law must be part of the measurement specification.
+
+For important latent quantities, prespecify a finite set of reasonable measurement alternatives and state which conclusions must survive them.
+
+Do not silently treat a fitted endogeneity, crowding, liquidity, strategic-complementarity, or criticality statistic as the latent state itself.
 
 ### 4.2 Define the counterfactual path target
 
-Let \(\mathcal I_t\) denote the information genuinely available at the analysis timestamp. If the structural state is latent, \(\mathcal I_t\) implies a posterior over \(\mathbf Z_t\) rather than exact knowledge of it. For the fully specified intervention \(\delta\), the theoretical response object is
+Let \(\mathcal I_t\) denote the information genuinely available at the analysis timestamp. If the structural state is latent, \(\mathcal I_t\) implies a posterior over \(\mathbf Z_t\) rather than exact knowledge of it. For the specified intervention operator \(\mathfrak I_{\delta}\), the theoretical response object is
 
 \[
 \boxed{
@@ -230,15 +279,17 @@ If the causal return-to-flow or flow-to-return link is absent, observed momentum
 
 ---
 
-## 6. Separate the three capacity states
+## 6. Separate the capacity categories
 
-Always distinguish:
+Always distinguish the **family** of mechanism-specific continuation capacities
 
 \[
-R^+
-=
-\text{remaining continuation capacity},
+\boxed{
+\{R_{k,t}^+\}_k
+}
 \]
+
+where each \(k\) is a separately identified reinforcing mechanism. \(R^+\) is a category label, not a default market-wide scalar.
 
 \[
 H
@@ -247,12 +298,15 @@ H
 \]
 
 \[
-R^-_t(h)
+R^-_t(h;\delta)
 =
-\text{opposing absorptive capacity usable by horizon }h.
+\text{opposing absorptive capacity usable by horizon }h
+\text{ under the specified intervention.}
 \]
 
-Also record local **constraint sensitivity** separately from current headroom:
+When the intervention is already fixed by design, \(R^-_t(h)\) may be used as shorthand.
+
+Also record local **initial-state constraint sensitivity** separately from current headroom:
 
 \[
 \mathbf\Chi_{B,t}(h)
@@ -265,13 +319,13 @@ D_{\mathbf z}
 ].
 \]
 
-For the intervention \(\delta\), record the induced state direction \(\mathbf v_{\delta}\) and, where useful,
+Only if the intervention acts solely through an instantaneous initial-state displacement should one use
 
 \[
-\boldsymbol\chi_{B,t}^{\delta}(h)
-=
 \mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
 \]
+
+For a parameter, rule, kernel, constraint, or temporal forcing intervention, use the direct intervention derivative \(D_{\delta}\mathbb E[\mathbf B_{t+h}^{\delta}]\) or the finite response.
 
 For finite interventions near thresholds, prefer
 
@@ -380,6 +434,8 @@ These belong in a hybrid / threshold model, not merely a smooth linear equation.
 
 ## 11. Classify the candidate termination mechanism and controller topology
 
+Treat \(M_t^{term}\) as a **derived prospective output**, not a primitive state variable. The classification must be based on information available before the realized termination path; a label assigned only afterward is explanatory annotation.
+
 Use at least these termination categories:
 
 ### M1 — Fuel exhaustion
@@ -425,27 +481,17 @@ What is the observed directional state?
 
 How viable is the continuation-generating mechanism?
 
-### Shock-conditioned consequence \(F_t(\delta,h;\ell,\rho)\)
+### Absolute stressed consequence \(F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)\)
 
-For this fully specified intervention, what is the consequence under the chosen path-level loss functional \(\ell\) and risk / severity functional \(\rho\)?
+For this structural intervention, what is the consequence under a **loss-oriented** path functional \(\ell_{\mathrm{abs}}\) and severity functional \(\rho\)?
+
+If the research question is the incremental causal harm of the intervention, define a separate two-path loss \(\ell_{\Delta}(\mathbf Z^{\delta},\mathbf Z^0)\) and state the joint counterfactual coupling required to identify its distribution.
 
 ### Structural susceptibility
 
-How rapidly does consequence increase as intervention amplitude varies within a fixed disturbance family?
+How rapidly does absolute stressed consequence increase as intervention amplitude varies within a fixed disturbance family?
 
-Useful summaries include:
-
-\[
-a
-\mapsto
-F_t(\delta(c,a),h;\ell,\rho),
-\]
-
-\[
-\frac{\partial F_t}{\partial a},
-\]
-
-and a critical amplitude \(a_q^*\).
+Use the same amplitude units across systems, or compare with respect to a prespecified normalized amplitude \(\tilde a\). Do not compare raw slopes \(\partial F/\partial a\) across incompatible amplitude parameterizations.
 
 Do not infer shock consequence or susceptibility from \(T\).
 
@@ -462,6 +508,13 @@ Ask:
 If not, do not add it.
 
 Avoid synonym proliferation.
+
+**Theory-freeze rule:** while the current empirical program remains untested, do not add a new canonical state variable merely because it is interesting. A new canonical variable requires either:
+
+1. a demonstrated contradiction that the existing architecture cannot represent; or
+2. empirical evidence from a prespecified test showing a missing mechanism or interaction.
+
+Prefer simplifying or deriving existing quantities over expanding the state vocabulary.
 
 ---
 
@@ -630,9 +683,11 @@ The valid form is:
 Before examining the test sample, specify:
 
 - latent-state definitions and observed proxies;
-- disturbance class and fully specified intervention;
-- intervention amplitude / path;
-- path-level loss functional \(\ell\);
+- disturbance class and descriptor;
+- the full intervention operator \(\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta})\);
+- intervention amplitude units / path;
+- loss orientation and absolute one-path loss functional \(\ell_{\mathrm{abs}}\);
+- any two-path incremental loss and counterfactual coupling assumption;
 - risk / severity functional \(\rho\);
 - transformations;
 - lag / kernel structure;
@@ -640,6 +695,8 @@ Before examining the test sample, specify:
 - event label;
 - forecast horizon;
 - benchmark;
+- primitive information set available to every compared model;
+- model-selection / tuning budget;
 - evaluation metric.
 
 ---
@@ -684,7 +741,10 @@ At minimum compare against relevant combinations of:
 - market depth;
 - credit growth;
 - debt-service burden;
-- standard network concentration measures.
+- standard network concentration measures;
+- a flexible nonlinear model using the **same primitive information set**.
+
+If the candidate model receives deterministic features computed from a richer history, later timestamp, extra venue/feed, or cleaner field, that underlying primitive information must also be available to the nonlinear baseline. Use comparable inner-validation and tuning budgets.
 
 ---
 
@@ -751,6 +811,19 @@ For every material model change record:
 
 Do not silently redefine variables after empirical failure.
 
+### 31.1 Freeze / release procedure
+
+A theory-freeze policy is not itself a reproducible release. Before a confirmatory experiment begins:
+
+1. commit the canonical model and experiment specification;
+2. create immutable annotated Git tags for the frozen references, e.g. `mfsm-v1.0` and `e001-v1.0`;
+3. record the resolved commit SHAs in a separate freeze manifest **after** the tags exist;
+4. record data-schema, feature-schema, label-schema, and freeze timestamp;
+5. record the first-access timestamp for any strict holdout;
+6. do not amend the tagged commits to insert their own hashes.
+
+A material post-freeze change requires a new version/tag and changelog entry.
+
 ---
 
 ## 32. Rejected ideas should remain visible
@@ -788,17 +861,17 @@ What information or fundamental shock originates outside the feedback loop?
 
 What state change creates additional same-direction action?
 
-## \(R^+\)
+## \(\{R_k^+\}_k\)
 
-What continuation capacity remains?
+Which specific continuation mechanisms remain active, and how much capacity remains in each? Do not aggregate them unless the aggregation rule is prespecified.
 
 ## \(H\)
 
 How far are current participants from forced action?
 
-## \(R^-_t(h)\)
+## \(R^-_t(h;\delta)\)
 
-Who can absorb the opposite flow **by the relevant horizon**?
+Who can absorb the opposite flow **under this disturbance and by the relevant horizon**?
 
 ## Response-time structure
 
@@ -812,17 +885,17 @@ How can stress propagate?
 
 How differently do participants react?
 
-## Thresholds \(L\)
+## Threshold geometry / optional \(L\)
 
-What constraints cause discontinuous behavior?
+What constraints cause discontinuous behavior? If \(L\) is used, what prespecified threshold-distance summary does it represent beyond \(H\) and \(\Chi_B\)?
 
 ## Signal-source balance
 
 What is external versus endogenous confirmation?
 
-## Termination mechanism
+## Derived termination mechanism
 
-Which of M1–M4 is plausible?
+Which of M1–M4 is prospectively plausible from pre-outcome information?
 
 ## Trend Strength \(T\)
 
@@ -832,9 +905,9 @@ Descriptive directional state.
 
 Continuation mechanism.
 
-## Structural intervention \(\delta\)
+## Structural intervention
 
-State the class, target, amplitude, direction, onset, temporal profile, stochastic component, and horizon.
+State the descriptor \(\delta\), amplitude units, and the operator \(\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta})\), including any initial-state-law change, exact structural rule modified, stochastic-law/coupling assumptions, timing, and horizon.
 
 ## Path-response targets
 
@@ -844,15 +917,15 @@ Examples: mean causal response, threshold-hit probability, maximum adverse excur
 
 ## Loss and severity definition
 
-What is the path-level loss / failure functional \(\ell\)? What is the risk / severity functional \(\rho\)?
+What is the loss-oriented one-path functional \(\ell_{\mathrm{abs}}\)? What is the risk / severity functional \(\rho\)? If incremental causal harm is used, what two-path loss and counterfactual coupling are assumed?
 
-## Shock-conditioned consequence \(F_t(\delta,h;\ell,\rho)\)
+## Absolute stressed consequence \(F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)\)
 
-Consequence for the fully specified intervention.
+Consequence for the specified intervention operator.
 
 ## Structural susceptibility
 
-What does the amplitude-response curve look like? If identified, report local slope or critical amplitude \(a_q^*\).
+What does the standardized amplitude-response curve look like? State the amplitude units or normalization. If identified, report normalized local slope or critical amplitude \(a_q^*\).
 
 ## Shock-response path
 
@@ -860,7 +933,7 @@ What is the expected sequence of state changes after \(\delta\)? What becomes re
 
 ## Constraint sensitivity and finite-shock buffer response
 
-Report the local Jacobian \(\mathbf\Chi_B\), any intervention-direction projection \(\boldsymbol\chi_B^{\delta}\), and the finite-shock response \(\Delta\mathbf B^{\delta}\) where relevant.
+Report the local initial-state Jacobian \(\mathbf\Chi_B\), any valid initial-state projection, the direct intervention derivative for non-state interventions where identified, and the finite-shock response \(\Delta\mathbf B^{\delta}\) where relevant.
 
 ## Strategic complementarity \(\Gamma\)
 

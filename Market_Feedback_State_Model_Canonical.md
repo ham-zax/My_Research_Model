@@ -24,7 +24,7 @@ Its central proposition is:
 
 > A market state is not merely a collection of prices and positions. It is a response-generating architecture. As the state evolves, it changes leverage, collateral, risk budgets, liquidity, positioning, incentives, participant synchronization, network exposure, expectations, the availability of stabilizing capital, and the timing or topology of counterforces. Those changes alter how the market will respond to the next disturbance.
 
-A directional trend is one important way this state transformation can occur, but it is not required. Bank-run-like coordination, funding stress, or threshold fragility can exist even without a preceding trend.
+A directional trend is one important way this state transformation can occur, but it is not required. Bank-run-like coordination, funding stress, or threshold-sensitive vulnerability can exist even without a preceding trend.
 
 The model therefore does not begin with the question:
 
@@ -120,7 +120,7 @@ Possible empirical components include:
 - cross-sectional participation;
 - acceleration.
 
-T is descriptive. High T does not imply sustainability and does not imply fragility.
+T is descriptive. High T does not imply sustainability, high stressed consequence, or high structural susceptibility.
 
 ### 3.2 Trend Sustainability: U
 
@@ -134,7 +134,7 @@ U depends on factors such as:
 
 - replenishment of same-direction capacity;
 - continuing external confirmation;
-- remaining trend fuel;
+- mechanism-specific remaining continuation capacity;
 - response of opposing supply;
 - price impact of new flows;
 - changes in financing conditions;
@@ -142,15 +142,15 @@ U depends on factors such as:
 
 A strong trend can have low U.
 
-### 3.3 Shock-conditioned failure consequence: F
+### 3.3 Shock-conditioned consequence
 
-MFSM does not attach one context-free fragility number to a market. It first asks what happens under a **fully specified intervention** and what form of damage matters.
+MFSM does not attach one context-free fragility number to a market. It first asks what happens under a **specified structural intervention operator** and what form of damage matters.
 
-Let \(\delta\) denote a concrete structural intervention, \(h\) the horizon, \(\ell\) a path-level loss or failure functional, and \(\rho\) a risk / severity functional. The shock-conditioned consequence is
+Let \(\delta\) be the human-readable intervention descriptor, \(\mathfrak I_{\delta}\) the corresponding intervention operator on the structural system, \(h\) the horizon, \(\ell_{\mathrm{abs}}\) a one-path **loss-oriented** functional, and \(\rho\) a risk / severity functional. The canonical absolute stressed consequence is
 
 \[
 \boxed{
-F_t(\delta,h;\ell,\rho)
+F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)
 =
 \rho_{\mathcal P_{t,h}^{\delta}}
 \left[
@@ -158,6 +158,8 @@ F_t(\delta,h;\ell,\rho)
 \right].
 }
 \]
+
+The loss orientation must be fixed so that larger values mean worse outcomes. For example, use probability of **failure to recover** rather than probability of recovery if the quantity is to be interpreted as severity.
 
 Examples include:
 
@@ -167,7 +169,9 @@ Examples include:
 - expected shortfall of path loss;
 - probability that liquidity fails to recover by horizon \(h\).
 
-This matters because the same structural state can be robust to one intervention and vulnerable to another, and because two users may care about different failure functionals.
+If the research question is the **incremental causal consequence of the intervention**, the loss must depend on both potential paths, for example \(\ell_{\Delta}(\mathbf Z^{\delta},\mathbf Z^0)\). A distribution of such pathwise causal losses requires an explicit joint coupling of the two potential paths; it cannot be recovered from \(\mathcal P^{\delta}\) alone.
+
+This matters because the same structural state can be robust to one intervention and vulnerable to another, because absolute stressed risk is not the same as causal incremental harm, and because two users may care about different failure functionals.
 
 For trend applications, one can still observe
 
@@ -179,7 +183,7 @@ while the consequences of a specified adverse intervention rise sharply.
 
 ### 3.4 Structural susceptibility
 
-Shock consequence and structural fragility are not identical. A large intervention can produce a large loss even in a comparatively resilient system.
+Shock consequence and structural susceptibility are not identical. A large intervention can produce a large loss even in a comparatively resilient system.
 
 For a disturbance class \(c\), define an intervention family \(\delta(c,a)\) indexed by amplitude \(a\). The susceptibility profile is the response curve
 
@@ -187,17 +191,27 @@ For a disturbance class \(c\), define an intervention family \(\delta(c,a)\) ind
 \boxed{
 a
 \longmapsto
-F_t(\delta(c,a),h;\ell,\rho).
+F_t^{\mathrm{abs}}(\delta(c,a),h;\ell_{\mathrm{abs}},\rho).
 }
 \]
 
-Useful derived diagnostics include a local slope
+The numerical slope depends on how amplitude is parameterized. Therefore each disturbance family must define canonical economic units. Cross-system comparisons should use the **same units and intervention semantics**, or a prespecified dimensionless normalization such as
 
 \[
-\frac{\partial F_t}{\partial a},
+\tilde a
+=
+\frac{a}{a_{\mathrm{ref}}(c)}.
 \]
 
-and a critical disturbance amplitude
+Only then is a derivative such as
+
+\[
+\frac{\partial F_t}{\partial \tilde a}
+\]
+
+meaningfully comparable.
+
+A critical disturbance amplitude can be defined as
 
 \[
 \boxed{
@@ -217,54 +231,115 @@ a:
 }
 \]
 
-A system that fails after a very small disturbance can therefore be structurally more susceptible than one that suffers a larger absolute loss only after a much larger intervention. MFSM should report shock-conditioned consequence and susceptibility separately.
+A system that fails after a very small standardized disturbance can therefore be structurally more susceptible than one that suffers a larger absolute loss only after a much larger intervention. MFSM should report shock-conditioned consequence and susceptibility separately.
 
 ---
 
 ## 4. Canonical model objects
 
-The mature representation is not a seven-factor checklist. The current canonical model distinguishes the latent system from its measurements:
+The mature representation is not a seven-factor checklist. The central requirement is that the dynamic state be **closed**.
 
 \[
 \boxed{
 \mathcal M_t
 =
-\{\mathbf Z_t,J_t,K_t,W_t,B_t,Q_t,\mathcal C_{I,t},M_t^{term},\Sigma_t,\mathcal O_t\}
+\{\mathbf Z_t;\mathcal G,\mathcal O\}
 }
 \]
 
 where:
 
-- \(\mathbf Z_t\) = latent structural market state;
-- \(J_t\) = local state-dependent response matrix / Jacobian;
-- \(K_t\) = delay and memory kernels;
-- \(W_t\) = economic propagation network;
-- \(B_t\) = usable buffers, capacities, and thresholds;
-- \(Q_t\) = signal-source, expectation, and coordination state;
-- \(\mathcal C_{I,t}\) = topology of opposing / control mechanisms;
-- \(M_t^{term}\) = candidate regime-termination mechanism;
-- \(\Sigma_t\) = stochastic disturbance structure;
-- \(\mathcal O_t\) = observation / measurement process mapping latent state into measured data.
+- \(\mathbf Z_t\) = the **closed augmented latent state** containing every endogenous or stochastic time-varying coordinate required to determine future dynamics under the model;
+- \(\mathcal G\) = the fixed structural form: transition equations / kernels, mappings from state to delay-memory and propagation operators, controller architecture, disturbance law, and parameterization;
+- \(\mathcal O\) = the true observation mechanism linking latent state to recorded data.
 
-Observed data are therefore not identified with the state itself:
+Closure rule: any object written with a time index—such as \(K_t\), \(W_t\), \(\Sigma_t\), a time-varying coefficient, funding regime, or controller state—must satisfy exactly one of the following:
+
+1. it is a deterministic / predetermined input known at the decision time;
+2. it is exogenous with an explicit law included in \(\mathcal G\); or
+3. its future-relevant coordinates are components of \(\mathbf Z_t\).
+
+Thus, when delay kernels or network topology evolve endogenously, write them as mappings such as \(K(\mathbf Z_t)\) and \(W(\mathbf Z_t)\), or include the state variables that determine them inside \(\mathbf Z_t\). They may not remain free time-varying objects outside the closed state.
+
+Named objects such as buffers \(B_t\), expectation / coordination state \(Q_t\), capacities, discrete threshold modes, and control states are therefore either **components or measurable projections of \(\mathbf Z_t\)**. The local Jacobian \(J_t\) is derived from a local linearization of \(\mathcal G\); \(M_t^{term}\) is a derived prospective classification, not a primitive state variable.
+
+The true observation relation can be written conceptually as a conditional law
 
 \[
-\mathbf Y_t = g(\mathbf Z_t;\psi_t)+\boldsymbol\eta_t.
+\boxed{
+p_*(\mathbf Y_t\mid\mathbf Z_t).
+}
 \]
 
-MFSM then distinguishes a disturbance **class** from a concrete structural intervention. A class such as "funding withdrawal" is not yet an intervention. A concrete intervention can be represented schematically as
+An additive-noise special case is
+
+\[
+\mathbf Y_t
+=
+g_*(\mathbf Z_t)
++
+\boldsymbol\eta_t.
+\]
+
+An analyst does not know \(p_*\) exactly. Each empirical implementation therefore supplies one or more candidate probabilistic measurement models
+
+\[
+\boxed{
+p_m(
+\mathbf Y_t
+\mid
+\mathbf Z_t;
+\psi^{(m)}
+),
+}
+\]
+
+or an equivalent explicitly stated noise model. The implementation must report which conclusions survive the prespecified alternatives \(m\). A fitted proxy or conditional mean is not automatically the latent state.
+
+MFSM distinguishes a disturbance **class** from a structural intervention. The tuple
 
 \[
 \boxed{
 \delta
 =
-(c,V,a,d,t_0,p,\nu),
+(c,V,a,d,t_0,p,\nu)
 }
 \]
 
-where \(c\) is the disturbance class, \(V\) the structural target, \(a\ge0\) the amplitude, \(d\) the direction, \(t_0\) the onset, \(p(s)\) the temporal profile, and \(\nu\) any stochastic component. Endogenous outcomes such as "bank run" or "liquidation cascade" should not themselves be inserted into \(do(\cdot)\); the intervention must act on a causally upstream variable.
+is a required human-readable **descriptor**: class, structural target, amplitude, direction, onset, temporal profile, and any stochastic component. It is not, by itself, the mathematical intervention.
 
-Let \(\mathcal I_t\) denote the information genuinely available at time \(t\). When \(\mathbf Z_t\) is latent, conditioning on \(\mathcal I_t\) integrates over state-estimation uncertainty rather than pretending the exact latent state is observed. Given \(\mathcal I_t\), the fundamental response object is the **conditional counterfactual path law**
+Let
+
+\[
+\mu_t
+=
+\mathcal L(
+\mathbf Z_t
+\mid
+\mathcal I_{t^-}
+)
+\]
+
+denote the pre-intervention latent-state law. The application must define an intervention operator on the **full counterfactual specification**,
+
+\[
+\boxed{
+\mathfrak I_{\delta}:
+(\mu_t,\mathcal G)
+\longmapsto
+(\mu_t^{\delta},\mathcal G^{\delta}).
+}
+\]
+
+This contract supports:
+
+- **state-setting / jump interventions**, which change \(\mu_t\) or the realized initial condition while leaving the structural form fixed;
+- **structural interventions**, which change an equation, transition kernel, parameter, constraint, or forcing term in \(\mathcal G\);
+- **hybrid interventions**, which change both.
+
+Each application must state exactly what changes, the units and amplitude convention, the law of any stochastic component, and its coupling to baseline exogenous shocks. Endogenous outcomes such as "bank run" or "liquidation cascade" are responses, not interventions.
+
+Let \(\mathcal I_t\) denote the information genuinely available at the decision time; if the intervention begins exactly at \(t\), use the pre-intervention information set \(\mathcal I_{t^-}\). When \(\mathbf Z_t\) is latent, conditioning on \(\mathcal I_t\) integrates over state-estimation uncertainty rather than pretending the exact latent state is observed. Given \((\mu_t,\mathcal G)\) and the intervention \(\mathfrak I_\delta\), the fundamental response object is the **conditional counterfactual path law**
 
 \[
 \boxed{
@@ -281,7 +356,7 @@ Let \(\mathcal I_t\) denote the information genuinely available at time \(t\). W
 
 The no-intervention baseline is \(\mathcal P_{t,h}^{0}\).
 
-The previous terminal-expectation response is retained only as a derived mean causal response:
+The mean causal response is only a derived projection:
 
 \[
 \boxed{
@@ -298,15 +373,13 @@ The previous terminal-expectation response is retained only as a derived mean ca
 }
 \]
 
-This counterfactual difference removes ordinary drift that would occur even without the intervention. In practice, an empirical implementation need not estimate the unrestricted path law; it can target decision-relevant functionals such as threshold probabilities, maximum stress, tail loss, cascade size, or recovery time.
-
-Several earlier scalar variables remain useful as derived diagnostics, but they are not all primitive state variables.
+In practice, an empirical implementation need not estimate the unrestricted path law; it should target decision-relevant projections such as threshold probabilities, maximum stress, tail loss, cascade size, or recovery time.
 
 ---
 
-## 5. \(\mathbf Z_t\): latent structural market state
+## 5. \(\mathbf Z_t\): closed augmented latent state
 
-\(\mathbf Z_t\) contains the economically meaningful state variables required for the application. It should not be overstuffed by default. Observed proxies belong to \(\mathbf Y_t\) and need not equal the latent state exactly.
+\(\mathbf Z_t\) contains the minimal economically meaningful **dynamic state required to close the model**. It should not be overstuffed by default, but every independently evolving buffer, control state, coordination state, or discrete regime required to determine the future must either be inside \(\mathbf Z_t\) or have an explicit evolution equation that is incorporated into the augmented state. Observed proxies belong to \(\mathbf Y_t\) and need not equal the latent state exactly.
 
 Candidate components include:
 
@@ -364,7 +437,7 @@ It should not be estimated as momentum alone.
 
 A conceptual loop-gain decomposition is:
 
-G_t(h) = (partial Q_endo(t+h) / partial r_t) * (partial r_(t+h) / partial Q_endo(t+h)).
+Lambda_t(h) = (partial Q_endo(t+h) / partial r_t) * (partial r_(t+h) / partial Q_endo(t+h)).
 
 The first factor asks how strongly a return generates future endogenous same-direction flow.
 
@@ -395,23 +468,31 @@ One of the most important discoveries in the model is that generic "resource" or
 
 At minimum, three economically distinct capacities must be separated.
 
-### 7.1 R_plus: remaining trend fuel
+### 7.1 \(R_k^+\): mechanism-specific remaining continuation capacity
 
-R_plus = capacity still available to reinforce the existing direction.
+\(R^+\) is a **category**, not one universal market-wide scalar. For each identified continuation mechanism \(k\), define
 
-Examples:
+\[
+\boxed{
+R_{k,t}^+
+=
+\text{capacity still available for mechanism }k
+\text{ to reinforce the current direction.}
+}
+\]
 
-- undeployed risk capital;
-- potential new inflows;
-- unused directional risk budget;
-- leverage capacity;
+Examples of distinct mechanisms include:
+
+- undeployed directional risk capital;
+- potential new fund inflows;
+- unused leverage / balance-sheet capacity;
 - remaining short exposure capable of generating buy-to-cover demand;
 - uncommitted marginal participants;
 - capital that can still rotate into the asset.
 
-A decline in R_plus can be stabilizing because it deprives the trend of further fuel.
+These quantities should remain mechanism-indexed unless a specific aggregation rule is economically justified and prespecified. A decline in a relevant \(R_{k,t}^+\) can be stabilizing because it deprives that reinforcing mechanism of further fuel.
 
-R_plus approaching zero predicts possible exhaustion, not necessarily a crash.
+Exhaustion of one \(R_k^+\) predicts possible weakening of that mechanism, not necessarily exhaustion of every continuation channel and not necessarily a crash.
 
 ### 7.2 H: financing, collateral, and risk headroom
 
@@ -427,7 +508,7 @@ Examples:
 - mandate or risk-limit headroom;
 - available eligible collateral before a deadline.
 
-A decline in H is categorically different from a decline in R_plus.
+A decline in \(H\) is categorically different from a decline in any mechanism-specific \(R_{k,t}^+\).
 
 Low H means a small adverse move can transform voluntary actors into forced actors.
 
@@ -435,15 +516,18 @@ Low H means a small adverse move can transform voluntary actors into forced acto
 
 R_minus = capacity available to take the opposite side of an unwind.
 
-The stronger canonical form is horizon-qualified:
+The stronger canonical form is horizon-qualified and, when the disturbance changes willingness or financing conditions, disturbance-conditioned:
 
 \[
 \boxed{
-R^-_t(h)
+R^-_t(h;\delta)
 =
-\text{opposing capacity that can actually act by horizon }h.
+\text{opposing capacity that can actually act by horizon }h
+\text{ under intervention }\delta.
 }
 \]
+
+When a disturbance family and amplitude are already fixed by the research design, \(R^-_t(h)\) is acceptable shorthand.
 
 Examples:
 
@@ -455,9 +539,9 @@ Examples:
 - available financing for stabilizing traders;
 - investors with mandate and horizon to absorb distressed flow.
 
-This distinction matters because a market can have abundant eventual buyers but almost no capital able to act before a margin or redemption deadline.
+This distinction matters because a market can have abundant eventual buyers but almost no capital able to act before a margin or redemption deadline, and because the same nominal flow may attract liquidity under a routine rebalance but repel it under a suspected information or collateral shock.
 
-Low short-horizon \(R^-_t(h)\) means the market may have difficulty absorbing forced flow even if longer-horizon fundamental value appears attractive.
+Low short-horizon \(R^-_t(h;\delta)\) means the market may have difficulty absorbing forced flow even if longer-horizon fundamental value appears attractive.
 
 ### 7.4 Effective capacity is time-dependent
 
@@ -496,27 +580,31 @@ D_{\mathbf z}
 }
 \]
 
-For a small intervention whose induced local state direction is \(\mathbf v_{\delta}\),
+This Jacobian is specifically an **initial-state sensitivity**. For a small intervention that acts solely through an instantaneous displacement of the initial state, with induced direction \(\mathbf v_{\delta}=D_{\delta}\mathbf Z_t[\dot\delta]\), the chain rule gives
 
 \[
-\boxed{
 \boldsymbol\chi_{B,t}^{\delta}(h)
 =
 \mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
-}
 \]
 
-If a single scalar is required, it must use an explicit buffer weighting \(\mathbf w_B\):
+That projection is **not valid for a general intervention** on a parameter, margin rule, transition kernel, constraint, or temporal forcing. For a general local intervention use the direct intervention derivative
 
 \[
-\chi_{B,t}^{\delta,w}(h)
-=
-\mathbf w_B^{\top}
-\mathbf\Chi_{B,t}(h)
-\mathbf v_{\delta}.
+D_{\delta}
+\,
+\mathbb E[
+\mathbf B_{t+h}^{\delta}
+\mid
+\mathcal I_t
+][\dot\delta],
 \]
 
-For finite interventions, especially near thresholds, the derivative can be misleading. The preferred object is then the finite-shock buffer response
+with the derivative taken in the appropriate parameter or function space.
+
+If a single scalar is required, the buffer weighting and intervention direction must both be explicit.
+
+For finite interventions, especially near thresholds, local derivatives can be misleading. The preferred object is then the finite-shock buffer response
 
 \[
 \boxed{
@@ -561,12 +649,12 @@ The lesson is not that this threshold applies to markets. The lesson is that del
 
 The useful diagnostic is:
 
-Theta = tau_I / tau_A,
+Theta = tau_N / tau_A,
 
 where:
 
 - tau_A = characteristic amplification timescale;
-- tau_I = characteristic inhibitory or counter-response timescale.
+- tau_N = characteristic inhibitory or counter-response timescale.
 
 Interpretation:
 
@@ -578,7 +666,7 @@ A large Theta can arise because:
 - amplification becomes faster;
 - both occur simultaneously.
 
-The third possibility is especially important in electronic markets: the stabilizing mechanism need not get slower for the system to become more fragile if the reinforcing loop accelerates.
+The third possibility is especially important in electronic markets: the stabilizing mechanism need not get slower for the system to become more vulnerable to a specified disturbance if the reinforcing loop accelerates.
 
 ### 8.2 Gain-delay product Phi
 
@@ -617,11 +705,25 @@ The shape of K(s) can therefore matter as much as its mean.
 
 Raw correlation is not the same as causal connectivity.
 
-The model defines:
+The primitive object is \(W_t\), an exposure or transmission operator.
 
-C_t = effective propagation potential through economically operative links.
+A scalar \(C_t\) may be used only as a **derived application-specific summary**. If retained, the application must define an explicit functional such as
 
-The primitive object is W_t, an exposure or transmission matrix.
+\[
+\boxed{
+C_t
+=
+f_C(
+W_t,
+\mathbf Z_t,
+\text{propagation law},
+\delta,
+h
+).
+}
+\]
+
+There is no canonical free-standing connectivity scalar. Operational analysis should prefer the actual propagation operator, exposure weights, dominant modes, or other mechanism-specific diagnostics.
 
 Relevant links include:
 
@@ -644,9 +746,13 @@ More connectivity is not always destabilizing.
 
 Denser networks can diversify or absorb small shocks while transmitting sufficiently large shocks more widely.
 
-Therefore:
+Therefore, even for a fixed prespecified definition of \(C_t\),
 
-C up does not imply F up unconditionally.
+\[
+C_t\uparrow
+\]
+
+does not imply higher stressed consequence unconditionally.
 
 Shock magnitude, loss-absorption capacity, recovery assumptions, and network structure matter jointly.
 
@@ -753,7 +859,7 @@ Persistent order flow, persistent information, and permanent price impact are no
 
 ### 11.4 Strategic complementarity and coordination state
 
-Some fragility is generated not by price-to-flow feedback but by the fact that one participant's optimal action depends on expected actions of others.
+Some run-like vulnerability is generated not by price-to-flow feedback but by the fact that one participant's optimal action depends on expected actions of others.
 
 Represent this conceptually by:
 
@@ -769,15 +875,15 @@ where \(a_i^*\) is participant \(i\)'s optimal action and \(\bar a_{-i}\) summar
 
 High positive \(\Gamma_t\) means behavior is strategically complementary: others withdrawing, selling, redeeming, or refusing rollover can make the same action individually rational for another participant.
 
-This allows MFSM to represent run-like coordination fragility even when no preceding price trend exists.
+This allows MFSM to represent run-like coordination vulnerability even when no preceding price trend exists.
 
 ---
 
-## 12. L_t: nonlinear threshold exposure
+## 12. Threshold geometry and optional derived exposure \(L_t\)
 
 Many market processes are not smooth.
 
-A small price move can have little effect until a threshold is crossed, after which behavior changes discontinuously.
+A small state change can have little effect until a switching surface is crossed, after which behavior changes discontinuously.
 
 Examples:
 
@@ -791,19 +897,31 @@ Examples:
 - market-maker inventory limits;
 - volatility-control rebalancing thresholds.
 
-L_t summarizes the degree to which modest changes can trigger discrete balance-sheet or behavioral responses.
+The primitive objects are the **actual threshold surfaces and distances to them**, represented inside \(B_t\) / \(H_t\) and the hybrid transition rules. \(L_t\) is only an optional **derived summary** of system-wide threshold concentration or convexity; it is not an independent primitive state variable.
+
+For example, if \(d_j(\mathbf Z_t)\) is signed distance to switching surface \(j\), an application may define a prespecified near-threshold exposure statistic such as
+
+\[
+L_t(\varepsilon)
+=
+\sum_j
+w_j
+\mathbf 1\{0<d_j(\mathbf Z_t)\le\varepsilon\}.
+\]
+
+Other definitions are possible, but they must be fixed before testing. Do not add \(L_t\) if it merely repackages the same information already contained in \(H_t\), \(\mathbf\Chi_B\), and the threshold map.
 
 The essential architecture is:
 
-price move -> threshold crossing -> forced action -> additional price move.
+state move -> threshold crossing -> forced action -> additional state move.
 
-This is one of the main mechanisms by which a smooth trend becomes a cascade.
+This is one of the main mechanisms by which a smooth process becomes a cascade.
 
 ---
 
-## 13. I_t: endogenous counterflow and antagonism
+## 13. \(N_t\): endogenous counterflow and antagonism
 
-I_t represents forces that oppose the current reinforcing process.
+\(N_t\) represents forces that oppose the current reinforcing process. The symbol \(N_t\) is used to avoid collision with the information set \(\mathcal I_t\).
 
 Possible examples:
 
@@ -835,9 +953,11 @@ How is the move transforming the full state from which future amplification, res
 
 ---
 
-## 14. Termination mechanism M_term
+## 14. Derived termination mechanism \(M^{term}\)
 
-A major improvement in the framework is to classify how a feedback regime is likely to end.
+\(M_t^{term}\) is a **derived prospective classification or posterior over mechanisms**, not a primitive component of the latent state.
+
+A major use of the framework is to classify how a feedback regime is likely to end from information available **before** the outcome. If the mechanism label is assigned only after seeing the realized path, it is explanatory annotation rather than a predictive state variable.
 
 Identical-looking price charts can conceal different causal termination modes.
 
@@ -845,9 +965,9 @@ At least four mechanisms must remain distinct.
 
 ### 14.1 M1: fuel exhaustion
 
-R_plus approaches zero.
+The relevant mechanism-specific continuation capacities \(R_{k,t}^+\) become exhausted or insufficient.
 
-The reinforcing side can no longer add enough new demand or supply to maintain the trend.
+The reinforcing side can no longer add enough new demand or supply through the mechanisms that had been sustaining the trend.
 
 Typical consequence:
 
@@ -860,7 +980,7 @@ Fuel exhaustion does not imply catastrophic failure.
 
 ### 14.2 M2: delayed counterflow
 
-I_t becomes large enough to oppose the trend.
+\(N_t\) becomes large enough to oppose the trend.
 
 Examples:
 
@@ -924,7 +1044,7 @@ Typical pattern:
 
 - T high;
 - external confirmation strong;
-- R_plus replenishing;
+- the relevant \(R_{k,t}^+\) channels replenishing;
 - H high;
 - R_minus deep;
 - functional diversity adequate;
@@ -940,7 +1060,7 @@ The trend is strong and the process sustaining it is still structurally resilien
 Typical pattern:
 
 - T remains high;
-- R_plus falls;
+- one or more previously active \(R_{k,t}^+\) channels fall;
 - H remains healthy;
 - R_minus remains adequate;
 - no large forced-action thresholds nearby.
@@ -965,9 +1085,9 @@ Typical pattern:
 
 Interpretation:
 
-The trend can continue aggressively while failure fragility rises.
+The trend can continue aggressively while the consequence of a **specified adverse intervention** rises and/or the susceptibility curve steepens.
 
-This is a central MFSM state because strong price action and high fragility can coexist.
+This is a central MFSM state because strong price action can coexist with high shock-conditioned consequence or high structural susceptibility. Context-free "fragility is high" language should be avoided.
 
 ### 15.4 Forced unwind
 
@@ -1031,7 +1151,7 @@ Reasons:
 1. several variables are non-monotonic;
 2. interaction effects are likely stronger than additive effects;
 3. the same connectivity can stabilize small shocks and amplify large ones;
-4. low R_plus can reduce continuation without increasing crash severity;
+4. low capacity in a relevant \(R_{k,t}^+\) channel can reduce continuation without increasing crash severity;
 5. low H and low R_minus have different implications;
 6. delay interacts with gain rather than operating independently;
 7. thresholds create discontinuities;
@@ -1041,7 +1161,7 @@ Reasons:
 
 The first empirical goal is not to optimize a score. It is to estimate whether theoretically predicted interactions exist.
 
-A further reason a scalar score is inadequate is that robustness is disturbance-specific. A system can be highly robust to one shock direction and highly fragile to another.
+A further reason a scalar score is inadequate is that robustness is disturbance-specific. A system can be highly robust to one shock direction and highly vulnerable to another.
 
 ### 17.1 Counterfactual path law and response functionals
 
@@ -1096,16 +1216,18 @@ which is only one summary of the path law.
 
 A distribution of pathwise individual counterfactual differences \(\mathbf Z^{\delta}-\mathbf Z^0\) requires a structural coupling of the two potential paths, not merely their marginal laws. MFSM should state that coupling when such distributional differences are used.
 
-Shock-conditioned consequence is then defined through a path-level loss functional \(\ell\) and a risk / severity functional \(\rho\):
+Absolute stressed consequence is then defined through a loss-oriented path functional and a risk / severity functional:
 
 \[
-F_t(\delta,h;\ell,\rho)
+F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)
 =
 \rho_{\mathcal P_{t,h}^{\delta}}
 \left[
-\ell(\mathbf Z_{[t,t+h]}^{\delta})
+\ell_{\mathrm{abs}}(\mathbf Z_{[t,t+h]}^{\delta})
 \right].
 \]
+
+Incremental causal consequence requires a two-path loss and an explicit joint counterfactual coupling.
 
 Identification remains a separate problem. Estimation requires an explicit structural model, natural experiment, instrument, simulation calibrated to defensible mechanisms, or another justified design.
 
@@ -1115,54 +1237,59 @@ Identification remains a separate problem. Estimation requires an explicit struc
 
 This section is intentionally a compact bridge. Exact derivations, assumptions, stability boundaries, distributed-memory results, non-normal transient amplification, stochastic recovery mathematics, threshold/hybrid dynamics, and Physarum adaptive-network equations are preserved in `Mathematical_Foundations.md`.
 
-A general continuous-time conceptual representation is:
+A general continuous-time conceptual representation uses the **closed augmented state** \(\mathbf Z_t\):
 
-### 18.1 Market activity
+### 18.1 Closed state dynamics
 
-d x_t = f(x_t, r_t, u_t, E_t[x_(t+H)]; theta_t) dt + Sigma(x_t,t) dW_t.
+\[
+d\mathbf Z_t
+=
+\mathbf f_{\mathcal G}
+\left(
+\mathbf Z_t,
+\mathbb E_t[\mathbf Z_{t+h_e}]
+\right)dt
++
+\Sigma(\mathbf Z_t,t)d\boldsymbol\beta_t,
+\]
 
-Here:
+where \(\boldsymbol\beta_t\) is Brownian motion and \(h_e\) is an expectation horizon.
 
-- x_t = interacting market activities and state;
-- r_t = capacities and buffers;
-- u_t = control / opposing responses;
-- E_t[x_(t+H)] = expectations about future states;
-- theta_t = structural parameters;
-- Sigma = state-dependent noise.
+Capacities, buffers, control states, and discrete regimes that evolve independently are coordinates of \(\mathbf Z_t\), not hidden side states.
 
-### 18.2 Capacity dynamics
+### 18.2 Capacity components
 
-r_dot_t = s(r_t) - c(x_t, r_t).
+If \(\mathbf r_t\) denotes the capacity coordinates of \(\mathbf Z_t\), an application may write
 
-This separates replenishment from consumption.
+\[
+\dot{\mathbf r}_t
+=
+\mathbf s(\mathbf r_t)
+-
+\mathbf c(\mathbf Z_t,\mathbf r_t),
+\]
 
-Relevant components of r_t include:
-
-- R_plus;
-- H;
-- R_minus.
+to separate replenishment from consumption. Relevant projections include mechanism-specific \(R^+\), headroom \(H\), and disturbance-conditioned \(R^-_t(h;\delta)\).
 
 ### 18.3 Delayed response
 
-u_t = h( integral_0^infinity K(s) x_(t-s) ds, E_t[x_(t+H)] ) - adjustment term.
+If \(\mathbf u_t\) is a control / counterflow coordinate inside \(\mathbf Z_t\), its dynamics may depend on
 
-This representation allows:
+\[
+\int_0^\infty K(s)\mathbf Z_{t-s}\,ds
+\quad\text{and}\quad
+\mathbb E_t[\mathbf Z_{t+h_e}],
+\]
 
-- fixed delays;
-- distributed delays;
-- decaying memory;
-- anticipation;
-- policy or strategic response.
+allowing fixed delays, distributed memory, anticipation, policy response, and strategic response.
 
 ### 18.4 Network propagation
 
-Delta x_(t+1) = F(Delta x_t) + W_t G(Delta x_t),
-
-with threshold functions for forced actions where appropriate.
+A specified propagation law may use \(W_t\), but \(W_t\) is not itself a generic risk score. If the network evolves endogenously in a way required to predict the future, its evolving coordinates must be included in \(\mathbf Z_t\) or given an explicit law that closes the augmented state.
 
 ### 18.5 Local analysis
 
-Linearize the augmented system around the current state.
+Linearize the closed augmented system around the current state.
 
 Then determine whether the dominant mode implies:
 
@@ -1431,7 +1558,7 @@ higher reversal probability after endogenous reinforcement stops.
 
 ### H6. Saturation distinction
 
-Repeated independent positive information shocks may show diminishing conditional price response in states of extreme positioning or low remaining trend fuel.
+Repeated independent positive information shocks may show diminishing conditional price response in states of extreme positioning or depleted mechanism-specific continuation capacity.
 
 This must control for:
 
@@ -1537,25 +1664,32 @@ Specify:
 
 First specify the disturbance class \(c\), such as funding withdrawal, margin increase, redemption, collateral haircut, volatility shock, supply shock, or policy shock.
 
-Then instantiate it as a structural intervention:
+Then define the descriptor
 
 \[
-\delta=(c,V,a,d,t_0,p,\nu).
+\delta=(c,V,a,d,t_0,p,\nu)
+\]
+
+and the structural intervention operator
+
+\[
+\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta}).
 \]
 
 Record:
 
 - intervention target \(V\);
-- amplitude \(a\);
+- exact structural rule modified;
+- amplitude \(a\) and units / normalization;
 - direction \(d\);
 - onset \(t_0\);
 - temporal profile / duration \(p(s)\);
-- stochastic component \(\nu\), if any;
+- stochastic component \(\nu\), if any, and its law/coupling;
 - horizon \(h\).
 
-A label such as "coordination run" can remain a friendly class name, but the mathematical intervention must act on a causally upstream variable such as withdrawal demand, rollover availability, or a common signal. Do not intervene on the endogenous outcome itself.
+A label such as "coordination run" can remain a friendly class name, but the intervention must act on a causally upstream variable such as withdrawal demand, rollover availability, or a common signal. Do not intervene on the endogenous outcome itself.
 
-Do not analyze structural susceptibility without specifying what disturbance family is being varied.
+Do not analyze structural susceptibility without specifying the disturbance family and amplitude convention being varied.
 
 ### Step 3: Identify external drivers
 
@@ -1573,13 +1707,15 @@ return -> inflow -> market impact -> return.
 
 Do not call momentum itself a feedback mechanism without identifying the behavior that closes the loop.
 
-### Step 5: Estimate or proxy remaining trend fuel R_plus
+### Step 5: Estimate or proxy mechanism-specific continuation capacity \(R_{k,t}^+\)
 
-Who can still add in the same direction?
+Which identified mechanism \(k\) can still add same-direction pressure?
 
-What constraints their capacity?
+What constrains that mechanism's capacity?
 
-Is capacity replenishing or being consumed?
+Is that capacity replenishing or being consumed?
+
+Do not aggregate distinct continuation channels into one \(R^+\) scalar unless the aggregation rule is prespecified and economically justified.
 
 ### Step 6: Estimate headroom \(H\), local constraint sensitivity, and finite-shock buffer response
 
@@ -1598,15 +1734,13 @@ D_{\mathbf z}
 ].
 \]
 
-For the specified intervention, identify its induced state direction \(\mathbf v_{\delta}\) and, where useful, the projection
+If the specified intervention acts **only through an instantaneous initial-state displacement**, identify \(\mathbf v_{\delta}\) and use the projection
 
 \[
-\boldsymbol\chi_{B,t}^{\delta}(h)
-=
 \mathbf\Chi_{B,t}(h)\mathbf v_{\delta}.
 \]
 
-For finite shocks, especially near thresholds, prefer
+For interventions on parameters, rules, constraints, kernels, or temporal forcings, use the direct intervention derivative where justified. For finite shocks, especially near thresholds, prefer
 
 \[
 \Delta\mathbf B_t^{\delta}(s)
@@ -1629,11 +1763,11 @@ Identify:
 - funding deadlines;
 - mandate constraints.
 
-### Step 7: Estimate opposing capacity \(R^-_t(h)\)
+### Step 7: Estimate opposing capacity \(R^-_t(h;\delta)\)
 
-Who can take the other side under stress **by the relevant horizon**?
+Who can take the other side under **this specified disturbance** by the relevant horizon?
 
-Distinguish quoted liquidity from committed risk-bearing capacity, and eventual capital from capital that can arrive before forced-action deadlines.
+Distinguish quoted liquidity from committed risk-bearing capacity, eventual capital from capital that can arrive before forced-action deadlines, and realized absorption from prospective willingness to absorb.
 
 ### Step 8: Identify opposing mechanisms and controller topology
 
@@ -1652,7 +1786,7 @@ Examples:
 Classify the topology where possible:
 
 \[
-\mathcal C_I
+\mathcal C_N
 \in
 \{
 \text{feed-forward},
@@ -1672,7 +1806,7 @@ How fast can constraints, buffers, and opposing capital respond?
 
 Is the response a fixed delay, a broad distribution, or immediate state-dependent action?
 
-### Step 10: Map W and C
+### Step 10: Map \(W\) and derive \(C\) only from a specified propagation law
 
 What links transmit disturbances?
 
@@ -1684,6 +1818,8 @@ Examples:
 - derivatives;
 - benchmarks;
 - shared market makers.
+
+Do not treat \(C\) as an independent primitive or substitute raw correlation for \(W\).
 
 ### Step 11: Estimate functional diversity \(D\) and strategic complementarity \(\Gamma\)
 
@@ -1699,13 +1835,15 @@ Do participant actions become more individually attractive when others take the 
 \frac{\partial a_i^*}{\partial \bar a_{-i}}.
 \]
 
-### Step 12: Estimate threshold exposure L
+### Step 12: Map threshold geometry; derive \(L\) only if useful
 
 Which state changes can force discrete behavior?
 
-### Step 13: Classify likely termination mechanism M_term
+Record the switching surfaces and distances first. Use \(L\) only as a prespecified summary that adds information beyond \(H\), \(\mathbf\Chi_B\), and the threshold map.
 
-Choose among:
+### Step 13: Derive the prospective termination mechanism \(M^{term}\)
+
+Using only information available before the realized path, classify or assign probabilities among:
 
 - fuel exhaustion;
 - delayed counterflow;
@@ -1713,9 +1851,9 @@ Choose among:
 - threshold unwind;
 - or explicitly state that no dominant termination mechanism is identified.
 
-### Step 14: Define the path-level loss and severity functional
+### Step 14: Define loss orientation and severity functional
 
-Specify what failure or damage means through \(\ell\), for example:
+Specify the absolute stressed loss \(\ell_{\mathrm{abs}}\) so that **larger means worse**, for example:
 
 - maximum drawdown;
 - liquidation-threshold crossing;
@@ -1724,23 +1862,25 @@ Specify what failure or damage means through \(\ell\), for example:
 - stablecoin depeg;
 - failure to recover by horizon \(h\).
 
-Then specify how uncertainty is summarized through \(\rho\), such as expectation, probability, quantile, or expected shortfall.
+Then specify how uncertainty is summarized through \(\rho\), such as expectation, exceedance probability, quantile, or expected shortfall.
+
+If incremental causal harm is required, define a separate two-path loss \(\ell_{\Delta}(\mathbf Z^{\delta},\mathbf Z^0)\) and state the counterfactual coupling.
 
 ### Step 15: Report consequence and structural susceptibility separately
 
 For trend applications, report \(T\) and \(U\) separately.
 
-Report the shock-conditioned consequence
+Report the absolute stressed consequence
 
 \[
-F_t(\delta,h;\ell,\rho)
+F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)
 \]
 
-for the fully specified intervention.
+for the specified intervention operator.
 
-Then, where the task is structural fragility rather than scenario consequence, vary disturbance amplitude \(a\) within the class \(c\) and report a susceptibility profile, local slope, or critical amplitude \(a_q^*\).
+Then, where the task is structural susceptibility rather than scenario consequence, vary disturbance amplitude within the class \(c\) using fixed economic units or a prespecified normalization \(\tilde a\), and report the response curve, normalized local slope, or critical amplitude \(a_q^*\).
 
-Never convert "strong" directly into "safe", and never compare two fragility values produced by materially different shock magnitudes as if the underlying systems had equal susceptibility.
+Never convert "strong" directly into "safe", and never compare susceptibility slopes produced under incompatible shock parameterizations.
 
 ### Step 16: State missing information, measurement assumptions, and falsifiers
 
@@ -1779,39 +1919,42 @@ When another LLM applies this model, it should return something structurally sim
 - Estimated strength / uncertainty:
 
 ### Capacities
-- \(R^+\):
+- mechanism-specific \(R^+\):
 - \(H\):
-- local \(\mathbf\Chi_B\):
-- intervention projection \(\boldsymbol\chi_B^{\delta}\):
+- local initial-state \(\mathbf\Chi_B\):
+- direct intervention sensitivity, if identified:
 - finite-shock \(\Delta\mathbf B^{\delta}\):
-- \(R^-_t(h)\):
+- \(R^-_t(h;\delta)\):
 
 ### Counterforces and timing
-- \(I\):
-- controller topology \(\mathcal C_I\):
+- \(N\): endogenous counterflow / antagonism
+- controller topology \(\mathcal C_N\):
 - \(K(s)\) or qualitative delay distribution:
 - \(\Theta\) / \(\Phi\) interpretation:
 
 ### Network
-- W channels:
-- C / propagation potential:
+- \(W\) channels:
+- specified propagation law:
+- derived \(C\) / propagation potential:
 
 ### Functional diversity and coordination
 - \(D_t\):
 - Is \(D_t\) rising or falling?
 - Strategic complementarity \(\Gamma_t\):
 
-### Threshold exposure
-- L:
+### Threshold geometry
+- switching surfaces / distances:
+- optional derived \(L\), if nonredundant:
 
 ### Signal-source balance
 - S_ext:
 - S_end:
 - Qualitative E = S_end / S_ext:
 
-### Termination mechanism
-- Most plausible M_term:
+### Derived termination mechanism
+- Prospective \(M^{term}\) probabilities / classification:
 - Alternatives:
+- Information timestamp used:
 
 ### Path-response targets
 - Mean causal response \(\mathbf m_t^{\delta}(s)\):
@@ -1821,14 +1964,17 @@ When another LLM applies this model, it should return something structurally sim
 - Recovery probability / recovery-time functional:
 
 ### Loss and severity definition
-- Path loss / failure functional \(\ell\):
+- Absolute loss-oriented path functional \(\ell_{\mathrm{abs}}\):
 - Risk / severity functional \(\rho\):
+- Incremental two-path loss \(\ell_{\Delta}\), if used:
+- Counterfactual coupling assumption, if used:
 
 ### State outputs
 - \(T\): trend strength, if a trend is present
 - \(U\): trend sustainability, if a trend is present
-- \(F_t(\delta,h;\ell,\rho)\): shock-conditioned consequence
-- Susceptibility profile \(a\mapsto F_t(\delta(c,a),h;\ell,\rho)\), if required
+- \(F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)\): absolute stressed consequence
+- Incremental causal consequence, if identified:
+- Susceptibility profile versus standardized amplitude \(\tilde a\), if required
 - Critical amplitude \(a_q^*\), if identified
 
 ### Shock-response path
@@ -1837,9 +1983,12 @@ When another LLM applies this model, it should return something structurally sim
 - What can absorb the shock before horizon \(h\)?
 - Where can it propagate?
 
-### Observation model
+### Observation and identification
 - Latent quantities:
 - Observed proxies:
+- Candidate measurement model(s):
+- Identification status:
+- Closest observationally equivalent alternative:
 - Kernel / measurement assumptions:
 - Main measurement risks:
 
@@ -1928,7 +2077,7 @@ This makes finance different from many physical systems.
 
 The most important variables are often not directly observable:
 
-- remaining trend fuel;
+- mechanism-specific remaining continuation capacity;
 - true collateral headroom;
 - counterparty constraints;
 - functional reaction rules;
@@ -1960,7 +2109,7 @@ Examples:
 
 ### 28.6 Exogenous shocks
 
-No endogenous fragility framework can predict genuinely unpredictable external jumps.
+No endogenous vulnerability framework can predict genuinely unpredictable external jumps.
 
 The model should separate vulnerability from trigger prediction.
 
@@ -1996,17 +2145,18 @@ For example, average collateral headroom can look healthy while a systemically i
 
 MFSM should be considered practically useful only if a prespecified implementation can do at least one of the following out of sample:
 
-1. discriminate materially different path responses to prespecified structural interventions using calibrated functionals of \(\mathcal P_{t,h}^{\delta}\);
-2. estimate shock-conditioned consequence \(F_t(\delta,h;\ell,\rho)\) with useful calibration for prespecified loss and severity definitions;
-3. distinguish structural susceptibility across otherwise comparable states through amplitude-response curves or critical disturbance amplitudes;
+1. discriminate materially different path responses to prespecified structural intervention operators using calibrated functionals of \(\mathcal P_{t,h}^{\delta}\);
+2. estimate absolute stressed consequence \(F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)\) with useful calibration for prespecified loss and severity definitions;
+3. distinguish structural susceptibility across otherwise comparable states through standardized amplitude-response curves or critical disturbance amplitudes;
 4. distinguish continuation from quiet exhaustion better than ordinary momentum and valuation measures;
 5. identify when similarly strong trends have materially different intervention-conditioned outcomes;
 6. improve prediction of forced-liquidation or fire-sale episodes using headroom, local constraint sensitivity, finite-shock buffer response, and capacity interactions;
 7. identify propagation risk beyond raw correlation using exposure topology;
 8. separate flow-driven temporary price pressure from information-driven permanent repricing;
-9. identify run-like or coordination fragility not captured by trend variables alone;
+9. identify run-like or coordination vulnerability not captured by trend variables alone;
 10. improve calibration of transition hazards without unacceptable false-alarm rates;
-11. remain materially robust to reasonable alternative measurement models, kernels, proxy definitions, and intervention specifications.
+11. remain materially robust to a **prespecified finite set** of reasonable alternative measurement models, kernels, proxy definitions, and intervention specifications;
+12. add information beyond a flexible nonlinear baseline using the same raw information set.
 
 The framework does not need to predict exact tops to be useful.
 
@@ -2023,7 +2173,7 @@ The framework should be downgraded if, after careful implementation:
 - latent-state proxies prove too noisy to identify the intended mechanisms;
 - the same outcomes are explained equally well by simpler models;
 - regime labels require hindsight to work;
-- the framework repeatedly classifies healthy markets as fragile without decision value;
+- the framework repeatedly predicts high stressed consequence or susceptibility for healthy states without decision value;
 - purported feedback loops disappear under causal identification;
 - cross-domain concepts fail to produce any measurable variable or testable financial implication.
 
@@ -2037,7 +2187,7 @@ The current highest-value research directions are:
 
 ### Priority 1: Counterfactual path-response estimation
 
-Estimate decision-relevant functionals of \(\mathcal P_{t,h}^{\delta}\) for fully specified interventions rather than relying on terminal expected-state response alone.
+Estimate decision-relevant functionals of \(\mathcal P_{t,h}^{\delta}\) for prespecified intervention operators rather than relying on terminal expected-state response alone.
 
 Priority targets include threshold-hit probability, maximum adverse excursion, cascade size, tail loss, and recovery probability.
 
@@ -2046,7 +2196,7 @@ Priority targets include threshold-hit probability, maximum adverse excursion, c
 Estimate amplitude-response curves
 
 \[
-a\mapsto F_t(\delta(c,a),h;\ell,\rho)
+\tilde a\mapsto F_t^{\mathrm{abs}}(\delta(c,\tilde a),h;\ell_{\mathrm{abs}},\rho)
 \]
 
 and critical disturbance amplitudes where possible. Test whether these susceptibility measures add information beyond consequence under one arbitrarily chosen shock.
@@ -2055,9 +2205,9 @@ and critical disturbance amplitudes where possible. Test whether these susceptib
 
 Test whether strong same-direction feedback becomes especially dangerous when current headroom is low **and/or** a small state change rapidly destroys future headroom. Compare local \(\mathbf\Chi_{B,t}\) with finite-shock \(\Delta\mathbf B_t^{\delta}\).
 
-### Priority 4: Horizon-dependent opposing capacity
+### Priority 4: Horizon- and disturbance-dependent opposing capacity
 
-Estimate \(R^-_t(h)\): who can actually absorb forced flow by the relevant deadline, not merely who may eventually find the asset attractive.
+Estimate \(R^-_t(h;\delta)\): who can actually absorb forced flow under the specified disturbance by the relevant deadline, not merely who may eventually find the asset attractive.
 
 ### Priority 5: Delay and deadline mismatch
 
@@ -2095,21 +2245,21 @@ When loading this file, treat the following as authoritative for the current ver
 
 1. MFSM is a market-state and feedback-dynamics framework, not a directional trading rule.
 2. The central object is the evolving **structural response architecture**, not price alone and not trend alone.
-3. Trend Strength \(T\) and Trend Sustainability \(U\) are trend-specific outputs. Shock-conditioned consequence is \(F_t(\delta,h;\ell,\rho)\); structural susceptibility is a response profile across disturbance amplitude, not the same object.
-4. Distinguish a disturbance class from a fully specified structural intervention. Do not place an endogenous outcome such as a run or cascade directly inside \(do(\cdot)\).
+3. Trend Strength \(T\) and Trend Sustainability \(U\) are trend-specific outputs. Absolute stressed consequence is \(F_t^{\mathrm{abs}}(\delta,h;\ell_{\mathrm{abs}},\rho)\); incremental causal consequence requires a two-path loss and coupling assumption; structural susceptibility is a response profile across disturbance amplitude.
+4. Distinguish a disturbance class, the descriptor \(\delta=(c,V,a,d,t_0,p,\nu)\), and the full intervention operator \(\mathfrak I_{\delta}:(\mu_t,\mathcal G)\mapsto(\mu_t^{\delta},\mathcal G^{\delta})\). Do not place an endogenous outcome such as a run or cascade directly inside \(do(\cdot)\).
 5. The fundamental theoretical response object is the conditional counterfactual path law \(\mathcal P_{t,h}^{\delta}\). Mean response is only one projection of that law.
-6. \(R^+\), \(H\), and \(R^-\) must never be collapsed into a generic resource variable without explicit justification.
-7. Opposing absorptive capacity should be horizon-qualified as \(R^-_t(h)\) when mobilization time matters.
-8. Current headroom, the local constraint-sensitivity Jacobian \(\mathbf\Chi_{B,t}\), and the finite-shock buffer response \(\Delta\mathbf B_t^{\delta}\) are distinct.
+6. The mechanism-indexed family \(\{R_{k,t}^+\}_k\), \(H\), and \(R^-\) must never be collapsed into a generic resource variable without explicit justification; \(R^+\) alone is only a category label.
+7. Opposing absorptive capacity should be horizon- and disturbance-qualified as \(R^-_t(h;\delta)\) when timing or shock type matters.
+8. Current headroom, the local initial-state constraint-sensitivity Jacobian \(\mathbf\Chi_{B,t}\), the direct intervention derivative, and the finite-shock buffer response \(\Delta\mathbf B_t^{\delta}\) are distinct.
 9. Delay must be interpreted jointly with gain and response timescale; prefer a kernel or distribution when data allow.
 10. Connectivity is not monotonically destabilizing; use explicit propagation mechanisms.
 11. Functional diversity means diversity of reaction functions, not participant count, and \(D_t\) can evolve endogenously through strategy performance and capital flows.
 12. Separate external confirmation from endogenous market-generated reinforcement.
-13. Allow strategic complementarity / coordination fragility through \(Q_t\) or \(\Gamma_t\); run-like fragility need not be preceded by a trend.
-14. Distinguish fuel exhaustion, delayed counterflow, gain saturation, and threshold unwind as different termination mechanisms.
+13. Allow strategic complementarity / coordination vulnerability through \(Q_t\) or \(\Gamma_t\); run-like vulnerability need not be preceded by a trend.
+14. Distinguish fuel exhaustion, delayed counterflow, gain saturation, and threshold unwind as different termination mechanisms; \(M_t^{term}\) is a derived prospective classification, not a primitive state variable.
 15. Distinguish controller topology: feed-forward opposition, feedback, integral control, depletion, saturation, and threshold switching are not interchangeable.
-16. Treat measured indicators as observations of latent state, not as the state itself; explicitly model or discuss measurement error and identification.
-17. Do not build a scalar universal fragility score. A loss functional, severity functional, intervention, and horizon must be specified.
+16. Treat measured indicators as observations of latent state, not as the state itself; distinguish the true observation mechanism from the analyst's candidate measurement model and state identification status.
+17. Do not build a scalar universal fragility score. Losses used in severity objects must be loss-oriented, and absolute stressed consequence must be separated from incremental causal consequence.
 18. Biological and physical analogies generate hypotheses; they do not validate financial predictions.
 19. Any extension must specify mechanism, mapping, measurement, falsifier, and incremental value.
 20. Prefer out-of-sample state and path-response diagnosis over retrospective crash storytelling.
@@ -2120,7 +2270,7 @@ When loading this file, treat the following as authoritative for the current ver
 
 The entire framework can be compressed to the following:
 
-> A financial market is a state-dependent response system. Its current structural state determines how new disturbances are amplified, damped, delayed, transmitted, or converted into forced behavior. Price trends are one state-transforming process among several: coordination runs, collateral feedback, funding stress, strategy imitation, and network spillovers can also rewrite the response law. MFSM therefore evaluates a fully specified structural intervention through a conditional counterfactual path law, derives decision-relevant path functionals from that law, defines shock consequence only after specifying a loss functional and severity functional, and treats structural susceptibility as the change in consequence as intervention amplitude varies. The relevant state includes same-direction capacity, financing and collateral headroom, horizon-dependent opposing absorptive capacity, local and finite-shock buffer response, delayed or distributed counterforces, participant reaction diversity, strategic complementarity, network propagation, threshold exposure, and the balance between external information and endogenous reinforcement. The same market can be robust to one disturbance and fragile to another.
+> A financial market is a state-dependent response system. Its current **closed augmented state** determines how new disturbances are amplified, damped, delayed, transmitted, or converted into forced behavior. Price trends are one state-transforming process among several: coordination runs, collateral feedback, funding stress, strategy imitation, and network spillovers can also rewrite the response law. MFSM therefore requires a structural intervention operator, evaluates that intervention through a conditional counterfactual path law, derives decision-relevant path functionals from that law, separates absolute stressed consequence from incremental causal consequence, and treats structural susceptibility as the change in loss-oriented consequence as a standardized intervention amplitude varies. The relevant state includes same-direction capacity, financing and collateral headroom, horizon- and disturbance-dependent opposing absorptive capacity, local and finite-shock buffer response, delayed or distributed counterforces, participant reaction diversity, strategic complementarity, network propagation, and threshold geometry. The same market can be robust to one disturbance and vulnerable to another.
 
 The deepest operating question is:
 
@@ -2200,27 +2350,31 @@ model:
 outputs:
   T: trend_strength_when_a_trend_is_present
   U: trend_sustainability_when_a_trend_is_present
-  F: shock_conditioned_consequence_F_t_delta_h_loss_risk
-  susceptibility_profile: consequence_as_function_of_intervention_amplitude
-  critical_amplitude: minimum_amplitude_reaching_prespecified_failure_probability
+  F_abs: absolute_stressed_consequence
+  F_delta: incremental_causal_consequence_only_with_explicit_counterfactual_coupling
+  susceptibility_profile: loss_oriented_consequence_as_function_of_standardized_intervention_amplitude
+  critical_amplitude: minimum_standardized_amplitude_reaching_prespecified_failure_probability
+  M_term: derived_prospective_termination_mechanism_classification
 
 primitive_objects:
-  Z_t: latent_structural_market_state
-  J_t: state_dependent_response_matrix
-  K_t: delay_and_memory_kernel
-  W_t: economic_propagation_network
-  B_t: capacities_buffers_and_thresholds
-  Q_t: signal_expectation_and_coordination_state
+  Z_t: closed_augmented_latent_dynamic_state
+  G: fixed_structural_form_and_explicit_exogenous_laws
+  O_true: true_observation_distribution
+  measurement_models: prespecified_candidate_probabilistic_measurement_models
+
+structural_operators:
+  J_t: derived_local_response_jacobian
+  K_t: delay_and_memory_operator
+  W_t: economic_propagation_operator
   controller_topology: opposing_mechanism_topology
-  Sigma_t: disturbance_structure
-  O_t: observation_and_measurement_process
+  Sigma_t: disturbance_loading
 
 capacity_components:
-  R_plus: remaining_same_direction_fuel
+  R_plus_k: family_of_mechanism_specific_remaining_same_direction_capacities
   H: financing_collateral_and_risk_headroom
-  R_minus_h: opposing_absorptive_capacity_available_by_horizon
-  Chi_B: local_buffer_sensitivity_jacobian
-  chi_B_delta: intervention_direction_projection_of_local_buffer_sensitivity
+  R_minus_h_delta: opposing_absorptive_capacity_available_by_horizon_under_intervention
+  Chi_B: local_initial_state_buffer_sensitivity_jacobian
+  intervention_buffer_derivative: direct_local_derivative_with_respect_to_general_intervention
   Delta_B_delta: finite_shock_buffer_response
 
 coordination_and_behavior:
@@ -2231,11 +2385,11 @@ coordination_and_behavior:
 
 derived_diagnostics:
   A: endogenous_loop_gain
-  Theta: inhibitory_timescale_over_amplification_timescale
+  Theta: summary_of_response_timescale_structure_not_substitute_for_K
   Phi: gain_delay_interaction
-  C: effective_propagation_potential
-  E: endogenous_to_external_confirmation_ratio
-  L: nonlinear_threshold_exposure
+  C: derived_effective_propagation_potential_from_specified_W_and_propagation_law
+  E: conceptual_endogenous_to_external_confirmation_ratio_not_literal_default_estimator
+  L: optional_derived_threshold_concentration_summary_not_primitive_state
 
 termination_mechanisms:
   - fuel_exhaustion
@@ -2252,29 +2406,36 @@ controller_topologies:
   - threshold_switching
 
 response_objects:
-  intervention: fully_specified_structural_intervention_delta
+  intervention_descriptor: delta_c_V_a_d_t0_p_nu
+  intervention_operator: I_delta_maps_mu_and_G_to_counterfactual_mu_and_G
   path_law: conditional_counterfactual_path_law_P_delta
   baseline_path_law: no_intervention_path_law_P_zero
   mean_response: counterfactual_mean_difference_m_delta
-  loss_functional: path_level_damage_definition_ell
-  severity_functional: risk_summary_rho
+  absolute_loss_functional: one_path_loss_larger_is_worse
+  incremental_loss_functional: two_path_loss_requires_joint_counterfactual_coupling
+  severity_functional: risk_summary_of_loss_oriented_scalar
 
 core_constraints:
-  - do_not_collapse_R_plus_H_R_minus
-  - make_R_minus_horizon_qualified_when_timing_matters
-  - distinguish_headroom_from_local_constraint_sensitivity_and_finite_shock_buffer_response
-  - distinguish_disturbance_class_from_structural_intervention
+  - dynamic_state_must_be_closed
+  - every_time_varying_structural_object_must_be_state_predetermined_or_have_explicit_exogenous_law
+  - do_not_collapse_R_plus_k_family_H_R_minus
+  - make_R_minus_horizon_and_disturbance_qualified_when_relevant
+  - distinguish_headroom_from_initial_state_sensitivity_general_intervention_sensitivity_and_finite_shock_response
+  - distinguish_disturbance_class_descriptor_and_intervention_operator
   - do_not_intervene_on_endogenous_outcome_labels
-  - distinguish_shock_consequence_from_structural_susceptibility
-  - require_loss_and_severity_functionals_for_F
+  - distinguish_absolute_stressed_consequence_incremental_causal_consequence_and_structural_susceptibility
+  - require_loss_orientation_and_severity_functionals_for_F
+  - normalize_amplitude_before_cross_system_susceptibility_comparisons
   - do_not_treat_connectivity_as_monotonic_risk
   - do_not_treat_delay_without_gain
   - do_not_equate_participant_count_with_diversity
-  - allow_fragility_without_prior_trend
-  - separate_latent_state_from_observed_proxy
+  - allow_run_like_vulnerability_without_prior_trend
+  - separate_true_observation_distribution_from_analyst_probabilistic_measurement_model
+  - report_identification_status_and_observationally_equivalent_alternative
   - do_not_treat_CSD_as_universal_crash_warning
   - do_not_use_biological_analogy_as_predictive_evidence
   - do_not_create_scalar_universal_fragility_score
+  - do_not_add_new_canonical_variables_without_theoretical_necessity_or_empirical_evidence
 
 empirical_priority:
   - counterfactual_path_response_functionals
@@ -2292,15 +2453,18 @@ empirical_priority:
 
 validation_standard:
   - prespecified_definitions
-  - explicit_disturbance_class_structural_intervention_amplitude_path_and_horizon
-  - explicit_path_loss_and_severity_functionals
+  - explicit_disturbance_class_descriptor_operator_amplitude_units_path_and_horizon
+  - explicit_path_loss_orientation_and_severity_functionals
+  - explicit_counterfactual_coupling_if_incremental_pathwise_effects_are_reported
   - real_time_data
   - strong_baselines
+  - flexible_same_raw_information_set_baseline
   - out_of_sample_evaluation
-  - disturbance_class_holdouts_where_possible
+  - disturbance_class_amplitude_and_episode_holdouts_where_possible
   - rare_event_correction
   - causal_identification_where_possible
-  - explicit_measurement_model
+  - prespecified_finite_measurement_model_set
+  - explicit_identification_status
   - explicit_falsifiers
 ```
 
@@ -2313,5 +2477,7 @@ MFSM should remain a living research object.
 Its purpose is not to force every market event into one grand theory. Its purpose is to provide a disciplined language for asking whether a market move is being sustained by healthy external information, self-generated reinforcement, finite buffers, delayed constraints, synchronized behavior, or threshold-sensitive balance sheets, and to determine how those elements interact.
 
 The framework should become simpler, not larger, when empirical testing shows that some variables are redundant or uninformative.
+
+**Theory-freeze rule:** until the current empirical program has been tested, new canonical state variables should not be added merely because they are interesting. Additions require either a contradiction the current architecture cannot represent or empirical evidence that a missing mechanism is needed.
 
 A future version is justified only when it improves causal clarity, measurement, or falsifiable predictive content.
