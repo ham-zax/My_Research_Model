@@ -81,3 +81,26 @@ def test_manifest_rejects_changed_screen_rule(tmp_path):
 
     assert run.returncode != 0
     assert not output.exists()
+
+
+def test_manifest_flags_spot_days_before_bybit_archive_starts(tmp_path):
+    report_data = _report()
+    early = int(datetime(2023, 7, 17, 12, tzinfo=timezone.utc).timestamp())
+    report_data['candidate_days'].insert(0, {
+        'date': '2023-07-17', 'first_signal_s': early,
+        'last_signal_s': early, 'primary_signals': 0, 'fallback_signals': 1,
+    })
+    report_data['candidate_day_count'] = 3
+    report_data['paid_spot_seed_days'].insert(0, '2023-07-17')
+    report_data['paid_spot_seed_day_count'] = 4
+    report = tmp_path / 'screen.json'
+    report.write_text(json.dumps(report_data))
+    output = tmp_path / 'manifest.json'
+
+    run = subprocess.run(
+        [sys.executable, str(SCRIPT), '--report', str(report), '--output', str(output)],
+        cwd=ROOT, capture_output=True, text=True)
+
+    assert run.returncode == 0, run.stderr
+    manifest = json.loads(output.read_text())
+    assert manifest['spot_catalog_coverage_exceptions'] == ['2023-07-17']

@@ -14,7 +14,8 @@ from mfsm_e001.capture_store import atomic_json, sha256
 ROOT = Path(__file__).resolve().parents[1]
 CALIBRATION = ROOT / 'artifacts/e001_historical_screen_calibration.json'
 PROTOCOL = ROOT / 'experiments/e001_liquidity_observational_protocol.yaml'
-CATALOG_START = date(2023, 7, 1)
+SCREEN_START = date(2023, 7, 1)
+BYBIT_SPOT_START = date(2023, 7, 18)
 CATALOG_END = date(2026, 8, 31)
 PREVIOUS_DAY_SUPPORT_SECONDS = 7500
 
@@ -88,7 +89,7 @@ def build_manifest(report_path):
     for row in rows:
         day = date.fromisoformat(row['date'])
         first = row.get('first_signal_s')
-        if (not CATALOG_START <= day <= CATALOG_END or
+        if (not SCREEN_START <= day <= CATALOG_END or
                 type(first) is not int or
                 datetime.fromtimestamp(first, timezone.utc).date() != day or
                 row.get('primary_signals', 0) + row.get('fallback_signals', 0) < 1):
@@ -128,7 +129,7 @@ def build_manifest(report_path):
         'paid_spot_seed_days_sha256': _digest_days(spot_days),
         'spot_catalog_coverage_exceptions': [
             item for item in spot_days if not
-            CATALOG_START <= date.fromisoformat(item) <= CATALOG_END],
+            BYBIT_SPOT_START <= date.fromisoformat(item) <= CATALOG_END],
         'spot_instruments': {'binance': 67838, 'bybit': 2000},
         'spot_availability_verified': False,
         'paid_l2_acquired': False,
