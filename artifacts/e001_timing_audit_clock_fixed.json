@@ -1,0 +1,187 @@
+{
+  "candidate_a": {
+    "qualifying_grid_seconds": 0,
+    "reason": "HTTP server-time evidence does not bound WebSocket timestamp domains",
+    "websocket_domain_evidence": "absent"
+  },
+  "candidate_b": {
+    "feature_windows_complete": false,
+    "flow_and_book_counts_are_window_membership_diagnostics": true,
+    "measurement": "receipt_time_quote_age_and_30s_window_membership",
+    "primary_eligibility_changed": false,
+    "source_freshness_certified": false,
+    "window_item_counts_repeat_across_overlapping_grid_windows": true
+  },
+  "capture_status_at_selection": "duration_reached",
+  "clock_steps": [],
+  "code_sha256": {
+    "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+    "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+    "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+  },
+  "first_envelope_negative": null,
+  "first_grid_second": 1790211845,
+  "first_legacy_invalid_grid_second": null,
+  "grid_counts": {
+    "candidate_b_30s_book_updates_in_receipt_windows": 4350,
+    "candidate_b_30s_book_window_membership_available": 29,
+    "candidate_b_30s_flow_items_in_receipt_windows": 4872,
+    "candidate_b_30s_linear_book_state_ready": 29,
+    "candidate_b_30s_linear_receipt_history_present": 29,
+    "candidate_b_receipt_quote_opportunity": 58,
+    "legacy_clock_invalid": 0,
+    "legacy_valid_composite": 58,
+    "total": 63
+  },
+  "histogram_note": "Percentiles are floor-millisecond buckets; extrema are exact nanoseconds.",
+  "http_probe_status": {},
+  "lag_by_timestamp_role": {
+    "binance_spot:btcusdt@depth@100ms:event_E": {
+      "count": 590,
+      "first_negative": null,
+      "max_ns": 140181212,
+      "min_ns": 62889771,
+      "negative_count": 0,
+      "p01_floor_ms": 63,
+      "p50_floor_ms": 64,
+      "p99_floor_ms": 71
+    },
+    "binance_spot:btcusdt@trade:event_E": {
+      "count": 1988,
+      "first_negative": null,
+      "max_ns": 207744133,
+      "min_ns": 62944424,
+      "negative_count": 0,
+      "p01_floor_ms": 63,
+      "p50_floor_ms": 68,
+      "p99_floor_ms": 205
+    },
+    "binance_spot:btcusdt@trade:trade_T": {
+      "count": 1988,
+      "first_negative": null,
+      "max_ns": 207744133,
+      "min_ns": 62944424,
+      "negative_count": 0,
+      "p01_floor_ms": 64,
+      "p50_floor_ms": 68,
+      "p99_floor_ms": 205
+    },
+    "bybit_linear:orderbook.1000.BTCUSDT:envelope_ts": {
+      "count": 302,
+      "first_negative": null,
+      "max_ns": 796003102,
+      "min_ns": 21062464,
+      "negative_count": 0,
+      "p01_floor_ms": 21,
+      "p50_floor_ms": 23,
+      "p99_floor_ms": 196
+    },
+    "bybit_linear:orderbook.50.BTCUSDT:envelope_ts": {
+      "count": 1907,
+      "first_negative": null,
+      "max_ns": 69747512,
+      "min_ns": 19130344,
+      "negative_count": 0,
+      "p01_floor_ms": 19,
+      "p50_floor_ms": 21,
+      "p99_floor_ms": 27
+    },
+    "bybit_linear:publicTrade.BTCUSDT:envelope_ts": {
+      "count": 104,
+      "first_negative": null,
+      "max_ns": 28298088,
+      "min_ns": 20409829,
+      "negative_count": 0,
+      "p01_floor_ms": 20,
+      "p50_floor_ms": 22,
+      "p99_floor_ms": 28
+    },
+    "bybit_linear:publicTrade.BTCUSDT:item_T": {
+      "count": 376,
+      "first_negative": null,
+      "max_ns": 34715106,
+      "min_ns": 21351612,
+      "negative_count": 0,
+      "p01_floor_ms": 21,
+      "p50_floor_ms": 23,
+      "p99_floor_ms": 34
+    },
+    "bybit_linear:tickers.BTCUSDT:envelope_ts": {
+      "count": 350,
+      "first_negative": null,
+      "max_ns": 1015894751,
+      "min_ns": 19260920,
+      "negative_count": 0,
+      "p01_floor_ms": 19,
+      "p50_floor_ms": 20,
+      "p99_floor_ms": 415
+    },
+    "bybit_spot:orderbook.1.BTCUSDT:envelope_ts": {
+      "count": 302,
+      "first_negative": null,
+      "max_ns": 703855082,
+      "min_ns": 18758753,
+      "negative_count": 0,
+      "p01_floor_ms": 18,
+      "p50_floor_ms": 20,
+      "p99_floor_ms": 32
+    },
+    "bybit_spot:orderbook.50.BTCUSDT:envelope_ts": {
+      "count": 1511,
+      "first_negative": null,
+      "max_ns": 66903412,
+      "min_ns": 19476132,
+      "negative_count": 0,
+      "p01_floor_ms": 19,
+      "p50_floor_ms": 21,
+      "p99_floor_ms": 26
+    },
+    "bybit_spot:publicTrade.BTCUSDT:envelope_ts": {
+      "count": 135,
+      "first_negative": null,
+      "max_ns": 36361390,
+      "min_ns": 20021988,
+      "negative_count": 0,
+      "p01_floor_ms": 20,
+      "p50_floor_ms": 21,
+      "p99_floor_ms": 29
+    },
+    "bybit_spot:publicTrade.BTCUSDT:item_T": {
+      "count": 358,
+      "first_negative": null,
+      "max_ns": 37361390,
+      "min_ns": 21078429,
+      "negative_count": 0,
+      "p01_floor_ms": 21,
+      "p50_floor_ms": 23,
+      "p99_floor_ms": 30
+    }
+  },
+  "last_grid_second": 1790211907,
+  "legacy_diagnostics": {
+    "connected": 3,
+    "disconnected": 3
+  },
+  "manifest_path": "data/raw/live_btc_clock_fixed_smoke/094532e21b2946268a5d829746463ee7.manifest.json",
+  "manifest_sha256": "c961d2b0339123ed2eb20dfe1f208986aa3c4f164dc57a69c8f5942bf917a9f3",
+  "model_fitted": false,
+  "record_kinds": {
+    "application_ping_sent": 4,
+    "book_snapshot_reset": 305,
+    "connected": 3,
+    "connection_attempt": 3,
+    "disconnected": 3,
+    "rest_snapshot": 1,
+    "run_started": 1,
+    "run_stopped": 1,
+    "subscribe_sent": 2,
+    "transport_pong": 6,
+    "ws_message": 7195
+  },
+  "run_id": "094532e21b2946268a5d829746463ee7",
+  "schema": "E001-timing-audit-v1",
+  "scope": "completed_capture",
+  "segment_sha256": {
+    "094532e21b2946268a5d829746463ee7-000001.jsonl": "f5a1dd5bd83560bdefe8219cc0a8ab75aaf1ba81b787fe517f71383080ce2c97"
+  }
+}

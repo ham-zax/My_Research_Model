@@ -1,0 +1,12 @@
+{
+  "provenance": "first_envelope_clock_inversion_in_sealed_capture_order",
+  "run_id": "53d688bfe33349aaab40dc8e7463c802",
+  "segment": "53d688bfe33349aaab40dc8e7463c802-000026.jsonl",
+  "record_id": 318059,
+  "source": "bybit_spot",
+  "source_event_ns": 1790214189300000000,
+  "received_ns": 1790214189299668141,
+  "receipt_utc": "2026-09-24T01:43:09.299668+00:00",
+  "receipt_minus_source_ms": -0.331859,
+  "policy_changed": false
+}

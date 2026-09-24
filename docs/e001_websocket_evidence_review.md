@@ -1,0 +1,15 @@
+# E001 public WebSocket timing evidence review
+
+Reviewed 2026-09-24 through the available Open WebSearch MCP fetch tool. Khiip was unavailable in this workspace, so no Khiip archive or raw source capture is claimed. This is a bounded source review for the current Binance spot and Bybit BTCUSDT spot/linear feeds, not a guarantee that no other provider can supply timing evidence.
+
+| Required role | Published definition | Numeric relation needed for source age |
+|---|---|---|
+| Binance spot depth `E` | Binance's [WebSocket stream reference](https://raw.githubusercontent.com/binance/binance-spot-api-docs/master/web-socket-streams.md) labels `E` event time and documents millisecond default or optional microsecond output | No bound on exchange clock error, delivery delay or relation to the REST server-time clock found in the reviewed reference |
+| Bybit spot/linear orderbook `ts` | Bybit's [orderbook reference](https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook) calls it the time the system generates data. `cts` is matching-engine time and can be correlated with public trade `T` | No numerical UTC error, `ts`/HTTP-clock offset or one-way delivery bound found |
+| Bybit linear trade envelope `ts` and item `T` | Bybit's [trade reference](https://bybit-exchange.github.io/docs/v5/websocket/public/trade) distinguishes system generation time from fill time; one message can contain multiple trades | No numerical clock/transport bound for either role found |
+| Bybit linear ticker `ts` | Bybit's [ticker reference](https://bybit-exchange.github.io/docs/v5/websocket/public/ticker) calls it system generation time; omitted delta fields retain their prior value | No per-field economic age or clock/transport bound found |
+| Bybit liquidation envelope `ts` and item `T` | Bybit's [all-liquidation reference](https://bybit-exchange.github.io/docs/v5/websocket/public/all-liquidation) calls `T` the updated timestamp and publishes a 500 ms push frequency | The push frequency is not a maximum delay. It does not identify an execution-price timestamp or numeric UTC/transport bound |
+
+**Result:** `source_delay_evidence_unavailable` for each required role under the public references reviewed. This is an inference from the scope of these references, not a proof that the exchanges lack internal timing guarantees. A REST clock probe and WebSocket ping/pong round trip measure different objects and cannot be used as a certified per-message source-age bound. The current `receipt_v1` candidate therefore remains diagnostic.
+
+An independent UTC monitor would improve the collector's local clock evidence but would not establish these venue relations. A provider contract that explicitly covers each required WebSocket timestamp role and delay/error expiry could support a stronger policy. A different observational receipt-time experiment could instead make a narrower claim about *locally received* order-flow information, with predeclared continuity and backlog exclusions. Either route requires a versioned primary measurement decision before real model fitting.

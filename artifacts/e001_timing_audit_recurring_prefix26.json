@@ -1,0 +1,244 @@
+{
+  "candidate_a": {
+    "qualifying_grid_seconds": 0,
+    "reason": "HTTP server-time evidence does not bound WebSocket timestamp domains",
+    "websocket_domain_evidence": "absent"
+  },
+  "candidate_b": {
+    "feature_windows_complete": false,
+    "flow_and_book_counts_are_window_membership_diagnostics": true,
+    "measurement": "receipt_time_quote_age_and_30s_window_membership",
+    "primary_eligibility_changed": false,
+    "source_freshness_certified": false,
+    "window_item_counts_repeat_across_overlapping_grid_windows": true
+  },
+  "capture_status_at_selection": "running",
+  "clock_steps": [],
+  "code_sha256": {
+    "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+    "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+    "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+  },
+  "first_envelope_negative": {
+    "lag_ns": -331859,
+    "receipt_utc": "2026-09-24T01:43:09.299668+00:00",
+    "received_ns": 1790214189299668141,
+    "record_id": 318059,
+    "role": "bybit_spot:orderbook.1.BTCUSDT:envelope_ts",
+    "source": "bybit_spot",
+    "source_ns": 1790214189300000000
+  },
+  "first_grid_second": 1790211962,
+  "first_legacy_invalid_grid_second": 1790214190,
+  "grid_counts": {
+    "candidate_b_30s_book_updates_in_receipt_windows": 334950,
+    "candidate_b_30s_book_window_membership_available": 2233,
+    "candidate_b_30s_flow_items_in_receipt_windows": 1219676,
+    "candidate_b_30s_linear_book_state_ready": 2233,
+    "candidate_b_30s_linear_receipt_history_present": 2233,
+    "candidate_b_receipt_quote_opportunity": 2262,
+    "legacy_clock_invalid": 36,
+    "legacy_valid_composite": 2226,
+    "total": 2264
+  },
+  "histogram_note": "Percentiles are floor-millisecond buckets; extrema are exact nanoseconds.",
+  "http_probe_status": {},
+  "lag_by_timestamp_role": {
+    "binance_spot:btcusdt@depth@100ms:event_E": {
+      "count": 22621,
+      "first_negative": null,
+      "max_ns": 523459323,
+      "min_ns": 34237511,
+      "negative_count": 0,
+      "p01_floor_ms": 35,
+      "p50_floor_ms": 43,
+      "p99_floor_ms": 72
+    },
+    "binance_spot:btcusdt@trade:event_E": {
+      "count": 69691,
+      "first_negative": null,
+      "max_ns": 364331175,
+      "min_ns": 34448971,
+      "negative_count": 0,
+      "p01_floor_ms": 36,
+      "p50_floor_ms": 47,
+      "p99_floor_ms": 208
+    },
+    "binance_spot:btcusdt@trade:trade_T": {
+      "count": 69691,
+      "first_negative": null,
+      "max_ns": 365331175,
+      "min_ns": 34448971,
+      "negative_count": 0,
+      "p01_floor_ms": 36,
+      "p50_floor_ms": 48,
+      "p99_floor_ms": 216
+    },
+    "bybit_linear:allLiquidation.BTCUSDT:envelope_ts": {
+      "count": 5,
+      "first_negative": null,
+      "max_ns": 13554450,
+      "min_ns": 1940971,
+      "negative_count": 0,
+      "p01_floor_ms": 1,
+      "p50_floor_ms": 2,
+      "p99_floor_ms": 13
+    },
+    "bybit_linear:allLiquidation.BTCUSDT:item_T": {
+      "count": 7,
+      "first_negative": null,
+      "max_ns": 389940971,
+      "min_ns": 25530644,
+      "negative_count": 0,
+      "p01_floor_ms": 25,
+      "p50_floor_ms": 282,
+      "p99_floor_ms": 389
+    },
+    "bybit_linear:orderbook.1000.BTCUSDT:envelope_ts": {
+      "count": 11327,
+      "first_negative": null,
+      "max_ns": 2432873267,
+      "min_ns": 2037828,
+      "negative_count": 0,
+      "p01_floor_ms": 3,
+      "p50_floor_ms": 11,
+      "p99_floor_ms": 27
+    },
+    "bybit_linear:orderbook.50.BTCUSDT:envelope_ts": {
+      "count": 79618,
+      "first_negative": null,
+      "max_ns": 382660531,
+      "min_ns": 173631,
+      "negative_count": 0,
+      "p01_floor_ms": 1,
+      "p50_floor_ms": 9,
+      "p99_floor_ms": 23
+    },
+    "bybit_linear:publicTrade.BTCUSDT:envelope_ts": {
+      "count": 12817,
+      "first_negative": null,
+      "max_ns": 340663615,
+      "min_ns": 1103240,
+      "negative_count": 0,
+      "p01_floor_ms": 2,
+      "p50_floor_ms": 10,
+      "p99_floor_ms": 41
+    },
+    "bybit_linear:publicTrade.BTCUSDT:item_T": {
+      "count": 41258,
+      "first_negative": null,
+      "max_ns": 341663615,
+      "min_ns": 1917261,
+      "negative_count": 0,
+      "p01_floor_ms": 3,
+      "p50_floor_ms": 12,
+      "p99_floor_ms": 53
+    },
+    "bybit_linear:tickers.BTCUSDT:envelope_ts": {
+      "count": 16305,
+      "first_negative": null,
+      "max_ns": 654941924,
+      "min_ns": 612578,
+      "negative_count": 0,
+      "p01_floor_ms": 1,
+      "p50_floor_ms": 9,
+      "p99_floor_ms": 22
+    },
+    "bybit_spot:orderbook.1.BTCUSDT:envelope_ts": {
+      "count": 17080,
+      "first_negative": {
+        "lag_ns": -331859,
+        "receipt_utc": "2026-09-24T01:43:09.299668+00:00",
+        "received_ns": 1790214189299668141,
+        "record_id": 318059
+      },
+      "max_ns": 342491757,
+      "min_ns": -331859,
+      "negative_count": 3,
+      "p01_floor_ms": 0,
+      "p50_floor_ms": 7,
+      "p99_floor_ms": 25
+    },
+    "bybit_spot:orderbook.50.BTCUSDT:envelope_ts": {
+      "count": 67936,
+      "first_negative": null,
+      "max_ns": 397150834,
+      "min_ns": 49277,
+      "negative_count": 0,
+      "p01_floor_ms": 1,
+      "p50_floor_ms": 9,
+      "p99_floor_ms": 23
+    },
+    "bybit_spot:publicTrade.BTCUSDT:envelope_ts": {
+      "count": 8784,
+      "first_negative": null,
+      "max_ns": 345462447,
+      "min_ns": 711079,
+      "negative_count": 0,
+      "p01_floor_ms": 2,
+      "p50_floor_ms": 11,
+      "p99_floor_ms": 31
+    },
+    "bybit_spot:publicTrade.BTCUSDT:item_T": {
+      "count": 25125,
+      "first_negative": null,
+      "max_ns": 347462447,
+      "min_ns": 2001878,
+      "negative_count": 0,
+      "p01_floor_ms": 3,
+      "p50_floor_ms": 11,
+      "p99_floor_ms": 33
+    }
+  },
+  "last_grid_second": 1790214225,
+  "legacy_diagnostics": {
+    "bybit_spot:source_event_after_receipt": 3,
+    "connected": 3
+  },
+  "manifest_path": "data/raw/live_btc_development/53d688bfe33349aaab40dc8e7463c802.manifest.json",
+  "manifest_sha256": "1319ae0773365caf23f27d3c9608bebfc4728a0b1e75e3464b27e36f8d534cda",
+  "model_fitted": false,
+  "record_kinds": {
+    "application_ping_sent": 224,
+    "book_snapshot_reset": 17083,
+    "connected": 3,
+    "connection_attempt": 3,
+    "event_loop_delay": 2,
+    "rest_snapshot": 1,
+    "run_started": 1,
+    "subscribe_sent": 2,
+    "transport_pong": 335,
+    "ws_message": 306410
+  },
+  "run_id": "53d688bfe33349aaab40dc8e7463c802",
+  "schema": "E001-timing-audit-v1",
+  "scope": "sealed_prefix_only",
+  "segment_sha256": {
+    "53d688bfe33349aaab40dc8e7463c802-000001.jsonl": "5b746f436cf55cd6c3ae348388fc50cfbfd332f36786a11cf94f65363dfe6bfb",
+    "53d688bfe33349aaab40dc8e7463c802-000002.jsonl": "474aa5baba98b278dd68515e8de12b582192daec7cb21779d39cb1d4f9af9f1d",
+    "53d688bfe33349aaab40dc8e7463c802-000003.jsonl": "1f342bbfd6a44911c9349c016e40103b677e8aeb237a8ab6a9b4ec29409a8317",
+    "53d688bfe33349aaab40dc8e7463c802-000004.jsonl": "773cf7766ac994517b4a0ccb39bf4f766ca90d605ae541390963df98d6d0b48f",
+    "53d688bfe33349aaab40dc8e7463c802-000005.jsonl": "0cdd0d529171681cf6d708fee53df4019fca19adc7c4d4b5f405ddd75dddf2b4",
+    "53d688bfe33349aaab40dc8e7463c802-000006.jsonl": "369341607776c1faf5e3e8de40ba9c23c7d23bb3d983dcd74fa2552759058d9f",
+    "53d688bfe33349aaab40dc8e7463c802-000007.jsonl": "0633180885181bf5420564da1a0603706a14a478b8935cf438cb9bbb750c8ab4",
+    "53d688bfe33349aaab40dc8e7463c802-000008.jsonl": "86ddb59d1f5437e9c6c4bebe8116e91243610268f4c37147824f48af0c6f369d",
+    "53d688bfe33349aaab40dc8e7463c802-000009.jsonl": "e05357b16220feba861379232129de838f24bbaa98ecb62bda41a6630016b96a",
+    "53d688bfe33349aaab40dc8e7463c802-000010.jsonl": "8e5d3862b88f31f143aeeb5212c6a5d10a91873c14be8f7b82afc7836ffe7846",
+    "53d688bfe33349aaab40dc8e7463c802-000011.jsonl": "cbcf7c2567e606cd0774a1f21c0ff188c0d57bc4eed220fd8b6d0835ac703b03",
+    "53d688bfe33349aaab40dc8e7463c802-000012.jsonl": "8f4e3ece72b4952ead6a1bf700682faaa71b6049c08c9393f4a7ed773eaa496d",
+    "53d688bfe33349aaab40dc8e7463c802-000013.jsonl": "f7a25257b57de3e4471798d6613d0c6581d518e3a6c9fa1c10fc7662972d3552",
+    "53d688bfe33349aaab40dc8e7463c802-000014.jsonl": "9006ab76f66cb802e3ab782f84335f937556f889f448f42c801faf987d9984db",
+    "53d688bfe33349aaab40dc8e7463c802-000015.jsonl": "ecf5ab458200cc3a248bc089f0cc027cb2956debbd95c99f77a511f488b1c5e3",
+    "53d688bfe33349aaab40dc8e7463c802-000016.jsonl": "a214333d7d3103896ad6254e4da835df9e5b27ed710fd04af35704602dd7ca6f",
+    "53d688bfe33349aaab40dc8e7463c802-000017.jsonl": "8ac174ec05607b5330ff4b03ea76957561c66a7ff75f2f30a2a9a1701d1ea81f",
+    "53d688bfe33349aaab40dc8e7463c802-000018.jsonl": "8b46bc6d71b026736c261924a4ed5fd8ad36a6b34a6a320d986b413cefb696eb",
+    "53d688bfe33349aaab40dc8e7463c802-000019.jsonl": "7db91da120372bb0fdca9dd4d7fba8ea5513ce1e86e166aa56f573d6721f807c",
+    "53d688bfe33349aaab40dc8e7463c802-000020.jsonl": "e74e4dce1862df02ec27f8cc78dd1dfa6ffc90ff0ba5dbc22fb15608562676c9",
+    "53d688bfe33349aaab40dc8e7463c802-000021.jsonl": "3b0f40cc39523376cf13454be3cb8397b0c99175c1d3e111ef8f56c365de904a",
+    "53d688bfe33349aaab40dc8e7463c802-000022.jsonl": "acdcb3e827f479685fff141970a2b85590c155bc079ba7e7eaf98ce6a51d63c3",
+    "53d688bfe33349aaab40dc8e7463c802-000023.jsonl": "a23f257f71fb1f263ff8f9980fb0c83a20ca6038a89f505578cec16e63608cf3",
+    "53d688bfe33349aaab40dc8e7463c802-000024.jsonl": "4ea6245d6ad3a97cc1848ed3c807d77af0e7c66ca5acc8aa9c0a30e765a509ea",
+    "53d688bfe33349aaab40dc8e7463c802-000025.jsonl": "fec7ce116001583ca52e4fbeafe7d25f8120dc24294d0ee675136c2d5ac2db55",
+    "53d688bfe33349aaab40dc8e7463c802-000026.jsonl": "9a196dc6ec217e25d9a1d042c4bfc5e82e8af3ec8b9e2c3669597e4aeb78b7f4"
+  }
+}

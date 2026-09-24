@@ -1,0 +1,136 @@
+{
+  "code_sha256": {
+    "pyproject.toml": "dcc1444c032f11f704f1be524dccd2b9034791ec634add457d68a8b8b33613df",
+    "scripts/run_e001_exploratory.py": "b443ce7ac84d9736f9f77ba4f16ea6ef8efd3efb34fd8e000b49c6ef33b47d0a",
+    "src/mfsm_e001/capture_store.py": "91c9cd2cb53e0811942c4a35d0810ae863612024ecf12da718ad723d1e259006",
+    "src/mfsm_e001/exploratory.py": "79d55b2d740e9ee876513f9970ccaf673178b82ffbc18b397c417ce42841f98d",
+    "src/mfsm_e001/models.py": "5684e2b86fbfa1a105dfb63977a3acba9d081f78749d66bc7faecb1f50934eaa",
+    "src/mfsm_e001/spot_quotes.py": "0031a3b708239ea14913717a9d0bb8b8f531d77b61ec1cb5310befaf14cbb255",
+    "src/mfsm_e001/validation.py": "18dc474d4d24bfc1e5fbd5af03edeed9802dee9ac201fb345987a7e40e85a5d5",
+    "uv.lock": "01cf9d2f887bae6f2697db3024b3081b6523a79a7a27fd486345d3f9768acbb3"
+  },
+  "episodes_sha256": "02f0d7aa110c3808c5d5be13983abb2e86fdb2ea1d47023a671ac6b3f20d0f39",
+  "protocol_sha256": "64b598d73d1bb02c25a00c031894167157dd9f11ed94f459b2f9d22aa8913c1d",
+  "python_version": "3.13.15",
+  "report_sha256": "0ecdaa3c90c605a2f70faaa03d90942d8e3c2817d3724bd25f98e9d56cb0ec08",
+  "result_sha256": "16c162ae892d43d81938f098b968052bf92203544caab7e4f7c729c113a8f8bc",
+  "schema": "E001-OBS-run-manifest-1",
+  "sklearn_version": "1.8.0",
+  "source_sha256_by_day": {
+    "2025-03-01": {
+      "binance_quotes": "68c5d283bcc0b6bb5b0a1ccf03d3dc037f752378e50fee455984ddef3445bd26",
+      "bybit_spot_quotes": "32d0383e35fdd65db137a30146b67a50a2c83464ad16b50a04efc903c3b1d6b3",
+      "bybit_ticker": "e2fcc444f4d0dd6a9a3b78e7231bade8d35c2286036b74fc3bf73c72b0fe0c32",
+      "bybit_trades": "28e3f4cd0e6cfbacbd0424054d424917c349901c7d73d0dc7fd04da69f66d794"
+    },
+    "2025-04-01": {
+      "binance_quotes": "1df9fc01b2ed9e918193ccd43edc544b1afedb8da1bc3001db004d97d3059315",
+      "bybit_spot_quotes": "d5ef8cad316204bcedaadc4d695c805f2ceabfba85f4407172276fa9b253b1eb",
+      "bybit_ticker": "bc41bad524bb85e3e99ccb1b2377d13b5b37bc4ec7ea99c7740dcff09d4e8aaa",
+      "bybit_trades": "b26acb506f7477c6f0e740d55b8be13f2eb4107e94d78635ea0b8b45a34e7fef"
+    },
+    "2025-05-01": {
+      "binance_quotes": "79200ac0880d359f6ccb39272c37c2ea7bcbab9836aafff36ba898b10c5c34c3",
+      "bybit_spot_quotes": "71aa55554058d2b992d0df9420fcb6fd270c2314ce7f66d21fbea352157e67ac",
+      "bybit_ticker": "da3e08cdce3c6d228735bcbc332104de3466ff004f572b7cbba4182443c58a17",
+      "bybit_trades": "36c4c2f5efd7bb6c5d5f499209512cd13c58fa505007ff72de794728588b5760"
+    },
+    "2025-06-01": {
+      "binance_quotes": "4a9df602575bec257e2b7909cc62fe77f251c13ff50c7c367c72f045e5d62177",
+      "bybit_spot_quotes": "25e6f5289d9a8ed0b27198936f3c5f726a0d51e1f1f0659c2e3db653a6e3fee3",
+      "bybit_ticker": "3839208c8cdc7e28b7f69f6b0ca3e953209148918e20ccdf9238440e06afb215",
+      "bybit_trades": "6674b36f286cd3c71eb2771efe72f663b7418fb9f1b7f0662f358dda18aa0dc8"
+    },
+    "2025-07-01": {
+      "binance_quotes": "e206320abefc48c191f78530dbfffe6e16c06543972778efdf600195df99064d",
+      "bybit_spot_quotes": "33b38dce989bd7282338ef6ace706f7e1581615118e45dc332125dd5cdaae0d5",
+      "bybit_ticker": "de526725e0f61a8d6b6be1be30dedb76efd90015280630f589ac5ddfd8ccff8b",
+      "bybit_trades": "8c3014eb530dee934600034b0ca84748be7375c2321faa8eb2fa9997305cfc45"
+    },
+    "2025-08-01": {
+      "binance_quotes": "e6853abd9e963e39d5fd3e83510a2732fb6e7be353cdc0c2bb8f59a71babe352",
+      "bybit_spot_quotes": "bd6bbe2fbcc76b0c573b9c08fb62c5ff3cf886199ea1172cf9157cfdd6ee693f",
+      "bybit_ticker": "2e6c10387dbce7dddf9615a71b41e10497dc0df8442fabe67c7b9d2779298a23",
+      "bybit_trades": "d45a2f1b2b9f2df528df6c58cec35b673059f38e0bde31c30d1a3196bbc87782"
+    },
+    "2025-09-01": {
+      "binance_quotes": "b2cabe4b0eb2793cd57c2fb54b643e1e4db7d0ce1326ce61610936487e2598d8",
+      "bybit_spot_quotes": "fa18e74a9edd5910f954c4a68f0f6966b35ce312f49235140ad6d888c9dc8156",
+      "bybit_ticker": "73fb580b846aede212c38c1036dc6051f9762040582b7604c8375d7f9b1cfe0f",
+      "bybit_trades": "16759bc9450973f2010f87505809f10d61afe0e42b4f3be8b1ce4100e072799f"
+    },
+    "2025-10-01": {
+      "binance_quotes": "4b6938e476924cc632d8bfb7ecb64da32f2f938d766f91ab0ed5690b92fc6315",
+      "bybit_spot_quotes": "38d071751bde5a1d1ca10ea0d64f73233a81178cf1b183d3cbb512bd3ec64a8f",
+      "bybit_ticker": "4ebabdef31cd47f0098c66d82110beddd11a36ee09fdb718066b8c2230ad9c3d",
+      "bybit_trades": "30e37552b15bd834891f0d897d2e3aa7b84ea3409961491806d06a458668110e"
+    },
+    "2025-11-01": {
+      "binance_quotes": "72d192f5389dab8e91c953bd2cec02fa0b277c9b95873659350a91c03976b2e8",
+      "bybit_spot_quotes": "8968714ccddc4b62dff221d0cc6a4bf21d67837a6a1cf326ebe275da4840d325",
+      "bybit_ticker": "956e2de8cfd902da25bb96cc66d486d6bdc1d895a0cb6dd1ce2270211c64274e",
+      "bybit_trades": "478908ba3b5f31277169939c58ebccfd2d09ab6fc807b2990fcc621e4b115d51"
+    },
+    "2025-12-01": {
+      "binance_quotes": "35d97b4df8651ff8b73c18d9635496e75897fecee92b57b6323790c40e4800cd",
+      "bybit_spot_quotes": "2160b22c2f44eed9949f2c3fb1fecb9f4ba83aad174213b7c0b8bf7224efe89c",
+      "bybit_ticker": "52db9d9fead139ac12e0074cf12df17514271df5c637a2c268d58e5777451a0d",
+      "bybit_trades": "f2d7dbcfc1886925918b3c0e10807b0a71102a49f452ce60ad85aedcb1ee6a71"
+    },
+    "2026-01-01": {
+      "binance_quotes": "bc30a682b6e62ab1e77bac42b3e98110431efc1d0db0fa1e37aae970f43c7e04",
+      "bybit_spot_quotes": "105deedd49a73dd2fcc9430629ceeff1ea61d74ac8dd7003e178d961aed6081d",
+      "bybit_ticker": "4e2b33ec3473d8ae2637f0be7889b2f3e43426d1f9eb5c2a12d607e4e52b71cd",
+      "bybit_trades": "e75dfaf7e448af4cae355bca9321b45531464abaca79aa19784cab2aa32f6ee2"
+    },
+    "2026-02-01": {
+      "binance_quotes": "23f324efe314c6c75c84c2c3ecf82e552783649749b14ee9cd4b24812567779b",
+      "bybit_spot_quotes": "78200afc56426ff153c74fad131fb3b8fbac7758d7ce428b95beeae63765c85c",
+      "bybit_ticker": "24ed9d73ca0aeb3131c6c248ac98d7f740f17d9ac812d0891d605a6a326e61df",
+      "bybit_trades": "bed6dcd73562c23a705530510eaa310b7da3f25b9b6e2859463f4dd8e9eb38c5"
+    },
+    "2026-03-01": {
+      "binance_quotes": "59373ddca9f96009dd22e0ca06f0e07d86a91f6202b13d05239e0cc24e355813",
+      "bybit_spot_quotes": "b4df16738a6e7038fd8cee5d83e5cf11b3adc4b41ea2315bf751e07307c54c5a",
+      "bybit_ticker": "ec41096fe016b9090c5f8233cb6c41874f170b9fb96c815f8e83b65706172957",
+      "bybit_trades": "4545e6bfdccb47bb24612bf6a69bac1f80ed24c6a284a09c63726af6c298b5b6"
+    },
+    "2026-04-01": {
+      "binance_quotes": "8e06ac098d207600bcb1609e202de8da979b12f0d7f7ecafb1bc24cc41076a1d",
+      "bybit_spot_quotes": "5cab66cd488de534520e1698e63b1bf8cc0873045b7abf7c39825d233d50d7f4",
+      "bybit_ticker": "739cb75a82ea8fcb3157bbe73023e19c185bfc84de704bcf8fc4e17d04df8ea4",
+      "bybit_trades": "c92c5d78e475f128d4accdf085eedb6d4828b4a8ddb93491ed8a957608d64be2"
+    },
+    "2026-05-01": {
+      "binance_quotes": "6667b0d8a2d4925a96a5756cc276b70755761a7e2db7ccc6fb90bd494e6ec354",
+      "bybit_spot_quotes": "6b64de14e5913145d1dc77c49da0edfd130eea6866b3acd5611c0411490aef45",
+      "bybit_ticker": "002ce60f7e868a367b03739b5ad2dc2e4c4c7837947b4431c73463fd35481798",
+      "bybit_trades": "0cce8768f7899328b09fa705bd314252f760e7118afe2574ace7438d8de79e36"
+    },
+    "2026-06-01": {
+      "binance_quotes": "8bb676d2a6bce45608d8b5d6e6c2527efaea9df8fc00647e5321c96a295419f7",
+      "bybit_spot_quotes": "e9124b89b6335241da7cbe04861f314f048d989649aba32a8a8b6d39801f8919",
+      "bybit_ticker": "28d421eee66fe367844221ecf763f052bd588ea7306b068adb6882daf5a7a0ac",
+      "bybit_trades": "2ad2c007369518e3fec3a8ff36b1cf89ab31d3325252f7bd4b48d824f1287708"
+    },
+    "2026-07-01": {
+      "binance_quotes": "2b9068bf62b2fc15ecc6f2a5e26e74f470c5231acd6dce51f115a2ba981b4bb8",
+      "bybit_spot_quotes": "a97514ea0427c2b5b9b3fc35c78be8a12aee5cdc740d70dfe3236e472f368519",
+      "bybit_ticker": "ac5913825c7940cd66dee45d2c2b3a401be6f6bd274a33125c3bf35f88f5f57f",
+      "bybit_trades": "c94597b39417d4e5e009b1c708cc0bbd111232dc333c8476399309231d67cac2"
+    },
+    "2026-08-01": {
+      "binance_quotes": "6b0d63e81be7ea614a68dbb9495f92203c949688c63a6cf1be9d478340e6fcf3",
+      "bybit_spot_quotes": "2cfadbec24167103b5a9b125ea6eb096f23c51450ffc23fb0a4a37252b6783c8",
+      "bybit_ticker": "f25ab55ce5c40a22e16aad40c880c66e2e35ee80302ed91b79647eba85612971",
+      "bybit_trades": "b85d6c0a9f378b249c673215a1afdb383035059e4f0cf9b60b3f47e1ca75c6db"
+    },
+    "2026-09-01": {
+      "binance_quotes": "d458e7dbc10aa0b626379c0a9904a43efe6fe49587de47dfba9b79d0ca892055",
+      "bybit_spot_quotes": "b71c514a193bb0daf8d65eedda2da9d12edd762f0bd7da3465dea52d2567d55c",
+      "bybit_ticker": "851dd3d1ed78fbdc0cf35cbbf4c7c28cad63783531b8408829873d1c2b3b01d0",
+      "bybit_trades": "25ff55e4433f2cc9efcc81e91dbac39a29f0c7eeb1cc3e210a0ea5853fc215ea"
+    }
+  },
+  "status": "EXPLORATORY_SCORED"
+}

@@ -1,5 +1,5 @@
 version: E001-features-candidate-2
-status: fixture_and_btc_quote_feasibility_no_model_fit
+status: live_capture_feature_diagnostics_no_model_fit
 raw_schema: E001-raw-candidate-2
 label_schema: E001-label-v3
 spot_reference: equal_weight_binance_bybit_spot_midquotes
@@ -32,12 +32,39 @@ shared_fixture_features:
 mfsm_fixture_combinations:
   - sell_pressure_ratio
   - liquidation_pressure_ratio
+live_capture_features:
+  schema: E001-live-features-candidate-1
+  status: supported_measurements_implemented_full_panel_not_frozen
+  contract: docs/e001_live_features.md
+  input_schema: E001-capture-v1
+  book_stream: bybit_linear:orderbook.1000.BTCUSDT
+  windows_seconds: [1, 5, 15, 30, 60, 300]
+  pressure_flow_window_seconds: 30
+  replenishment_window_seconds: 15
+  candidate_state_max_age_seconds: 5
+  candidate_source_silence_limit_seconds: 30
+  output_scope: explicit_decision_diagnostics_not_event_selection
+  primary_model_inputs: relative_shared_base_plus_prespecified_mfsm_combinations
+  unsupported_fields: null_with_reason
+receipt_time_revision:
+  status: prepared_unqualified_not_primary
+  policy: E001-receipt-time-candidate-1
+  proposed_experiment_version: e001-v1.3-candidate
+  feature_schema: E001-live-features-receipt-candidate-1
+  proposed_label_schema: E001-label-v4-candidate
+  contract: docs/e001_receipt_time_revision.md
+  spot_quote_max_receipt_age_seconds: 5
+  required_history_after_disruption_seconds: 1815
+  source_lead_rejection_cutoff_milliseconds: 100
+  required_websocket_role_delay_bound_ns: null
+  independent_utc_attestation: null
+  primary_eligible: false
 unavailable_until_feed_audit:
   - independently_valued_liquidation_notional
   - trade_liquidation_deduplication
-  - full_pretrigger_depth_median_from_real_book
-  - point_in_time_oi_funding_basis_mark_index
-  - receipt_time_validated_spot_composite
-  - full_neutral_preprocessing_windows
+  - sufficient_continuous_full_band_pretrigger_depth_history
+  - cancellation_and_execution_attribution_from_aggregate_book
+  - frozen_supported_common_feature_list_and_quality_rules
+  - feature_label_join_on_independently_eligible_events
 model_fit: disabled
 eth_access: sealed

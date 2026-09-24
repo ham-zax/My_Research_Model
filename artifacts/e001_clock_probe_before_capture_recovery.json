@@ -1,0 +1,101 @@
+{
+  "assumption": "Fresh server timestamp generated between request start and response receipt; bounds include timestamp quantization, not server clock error.",
+  "probes": {
+    "binance": [
+      {
+        "offset_lower_ns": -53146622,
+        "offset_upper_ns": 693580972,
+        "raw": {
+          "serverTime": 1790227895619
+        },
+        "received_ns": 1790227895671146622,
+        "request_start_ns": 1790227894926419028,
+        "round_trip_ns": 744728053,
+        "server_ns": 1790227895619000000
+      },
+      {
+        "offset_lower_ns": -30925093,
+        "offset_upper_ns": 578830428,
+        "raw": {
+          "serverTime": 1790227896249
+        },
+        "received_ns": 1790227896278925093,
+        "request_start_ns": 1790227895671169572,
+        "round_trip_ns": 607756411,
+        "server_ns": 1790227896249000000
+      },
+      {
+        "offset_lower_ns": -42146490,
+        "offset_upper_ns": 597045897,
+        "raw": {
+          "serverTime": 1790227896875
+        },
+        "received_ns": 1790227896916146490,
+        "request_start_ns": 1790227896278954103,
+        "round_trip_ns": 637193947,
+        "server_ns": 1790227896875000000
+      }
+    ],
+    "bybit": [
+      {
+        "offset_lower_ns": 2879986,
+        "offset_upper_ns": 251889387,
+        "raw": {
+          "result": {
+            "timeNano": "1790227895179303998",
+            "timeSecond": "1790227895"
+          },
+          "retCode": 0,
+          "retExtInfo": {},
+          "retMsg": "OK",
+          "time": 1790227895179
+        },
+        "received_ns": 1790227895176424011,
+        "request_start_ns": 1790227894927414612,
+        "round_trip_ns": 249009279,
+        "server_ns": 1790227895179303998
+      },
+      {
+        "offset_lower_ns": 2250551,
+        "offset_upper_ns": 211464977,
+        "raw": {
+          "result": {
+            "timeNano": "1790227895387917818",
+            "timeSecond": "1790227895"
+          },
+          "retCode": 0,
+          "retExtInfo": {},
+          "retMsg": "OK",
+          "time": 1790227895387
+        },
+        "received_ns": 1790227895385667266,
+        "request_start_ns": 1790227895176452842,
+        "round_trip_ns": 209215824,
+        "server_ns": 1790227895387917818
+      },
+      {
+        "offset_lower_ns": 1853339,
+        "offset_upper_ns": 94276324,
+        "raw": {
+          "result": {
+            "timeNano": "1790227895479992559",
+            "timeSecond": "1790227895"
+          },
+          "retCode": 0,
+          "retExtInfo": {},
+          "retMsg": "OK",
+          "time": 1790227895479
+        },
+        "received_ns": 1790227895478139219,
+        "request_start_ns": 1790227895385716236,
+        "round_trip_ns": 92424533,
+        "server_ns": 1790227895479992559
+      }
+    ]
+  },
+  "provenance": "public_server_time_offset_bounds_no_correction",
+  "sources": {
+    "binance": "https://data-api.binance.vision/api/v3/time",
+    "bybit": "https://api.bybit.com/v5/market/time"
+  }
+}

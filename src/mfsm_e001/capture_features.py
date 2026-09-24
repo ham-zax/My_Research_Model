@@ -11,13 +11,17 @@ from decimal import Decimal, InvalidOperation
 import json
 from statistics import median
 
-from .data import Liquidation, Trade, normalize_bybit_message
+from .data import DataError, Liquidation, Trade, normalize_bybit_message
 from .replay import BAND, NS, Replay, ReplayError, replay_grid
+from .timing import MAX_LOCAL_STEP_NS
+from .qualification import REQUIRED_WS_ROLES, assess_timing_evidence
 
 WINDOWS = (1, 5, 15, 30, 60, 300)
 BOOK_KEY = 'bybit_linear:orderbook.1000.BTCUSDT'
 MAX_STATE_AGE_NS = 5 * NS
 MAX_SOURCE_SILENCE_NS = 30 * NS
+RECEIPT_POLICY = 'E001-receipt-time-candidate-1'
+RECEIPT_HISTORY_NS = 1815 * NS  # pre-trigger 1800 seconds plus decision delay
 ZERO = Decimal(0)
 BP = Decimal(10000)
 
@@ -74,7 +78,7 @@ def normalized_features(raw, scales):
     return shared, mfsm
 
 
-def book_window(observations, boundary, seconds):
+def book_window(observations, boundary, seconds, *, band=BAND):
     """Event-time L2 windows, using only state received by the decision.
 
 Every observed reduction is charged against each eligible addition cohort.
@@ -120,7 +124,7 @@ observed state at/before the dwell endpoint; no future received update is used.
         added = decreased = persistent = ZERO
         for state, price, size in changes:
             mid = state['mid']
-            inside = mid*(1-BAND) <= price <= mid if side == 'bid' else mid <= price <= mid*(1+BAND)
+            inside = mid*(1-band) <= price <= mid if side == 'bid' else mid <= price <= mid*(1+band)
             if inside and state['event_ns'] > left:
                 added += price*max(size, ZERO)
                 decreased += price*max(-size, ZERO)
@@ -143,8 +147,20 @@ observed state at/before the dwell endpoint; no future received update is used.
 class CaptureFeatureReplay(Replay):
     """Extend state replay without changing the running recorder or raw input."""
 
-    def __init__(self):
+    def __init__(self, *, timing_candidate='legacy', utc_records=(),
+                 delay_records=(), qualification_policy=None):
+        if timing_candidate not in ('legacy', 'receipt_diagnostic', 'receipt_v1'):
+            raise ValueError('unknown feature timing candidate')
         super().__init__()
+        self.timing_candidate = timing_candidate
+        self.receipt_timing = timing_candidate != 'legacy'
+        self.utc_records = tuple(utc_records)
+        self.delay_records = tuple(delay_records)
+        self.qualification_policy = qualification_policy
+        self.local_clock_valid = True
+        self.capture_start_ns = None
+        self.last_feed_disruption_ns = None
+        self.last_feed_disruption_kind = None
         self.flow_start = self.last_linear_ns = self.last_ticker_ns = None
         self.latest_available_ns = 0
         self.flows = deque()
@@ -155,8 +171,15 @@ class CaptureFeatureReplay(Replay):
         self.states = {}
 
     def process(self, row, available_ns):
+        if self.capture_start_ns is None:
+            self.capture_start_ns = available_ns
         self.latest_available_ns = available_ns
         kind, source = row['kind'], row.get('source')
+        if kind == 'clock_step':
+            self.local_clock_valid = False
+        if kind in ('clock_step', 'event_loop_delay', 'disconnected', 'connection_error'):
+            self.last_feed_disruption_ns = available_ns
+            self.last_feed_disruption_kind = kind
         active = self.connections.get(source) == row.get('connection_id')
         message = json.loads(row['raw']) if kind == 'ws_message' and source == 'bybit_linear' and active else {}
         selected = message.get('topic') == 'orderbook.1000.BTCUSDT'
@@ -179,10 +202,23 @@ class CaptureFeatureReplay(Replay):
                 self.flow_start = available_ns
         topic = message.get('topic', '')
         if topic in ('publicTrade.BTCUSDT', 'allLiquidation.BTCUSDT'):
-            items = normalize_bybit_message(message, received_ms=row['received_ns']//1_000_000, market='linear')
+            try:
+                items = normalize_bybit_message(
+                    message, received_ms=row['received_ns']//1_000_000, market='linear',
+                    require_source_before_receipt=not self.receipt_timing)
+            except DataError as exc:
+                if str(exc) not in ('receipt precedes trade', 'receipt precedes liquidation'):
+                    raise
+                # The fixture adapter rejects these messages. Live replay keeps
+                # auditing the capture, while every subsequent feature remains
+                # clock-invalid. No timestamp or value is silently repaired.
+                self.clock_valid = False
+                self.diagnostics['bybit_linear:flow_event_after_receipt'] += 1
+                return
             self._expire_flows(available_ns)
             for item in items:
-                if item.event_ms*1_000_000 < available_ns-300*NS:
+                if (not self.receipt_timing and
+                        item.event_ms*1_000_000 < available_ns-300*NS):
                     continue
                 if isinstance(item, Trade):
                     identity = (item.event_ms, item.taker_side, item.base_size, item.price)
@@ -209,7 +245,8 @@ class CaptureFeatureReplay(Replay):
 
     def _observe_book(self, message, before, available_ns):
         book = self.books[BOOK_KEY]
-        event = int(message['ts'])*1_000_000
+        source_event = int(message['ts'])*1_000_000
+        event = available_ns if self.receipt_timing else source_event
         reset = message['type'] == 'snapshot'
         if reset:
             self.book_time_invalid = False
@@ -219,7 +256,8 @@ class CaptureFeatureReplay(Replay):
         # again rather than comparing unrelated price-level states.
         if reset or self.book_time_invalid or not book.ready:
             self.book_observations.clear()
-        valid = book.ready and book.receipt_clock_valid and not self.book_time_invalid
+        valid = (book.ready and not self.book_time_invalid and
+                 (self.receipt_timing or book.receipt_clock_valid))
         view = book.view(available_ns)
         changes = []
         known = {'bid': True, 'ask': True}
@@ -239,7 +277,8 @@ class CaptureFeatureReplay(Replay):
                             # beyond its former boundary. Absence there was not
                             # evidence of zero size, even if both bands are full.
                             known[side] = False
-        self.book_observations.append({'event_ns': event, 'available_ns': available_ns,
+        self.book_observations.append({'event_ns': event, 'source_event_ns': source_event,
+            'available_ns': available_ns,
             'reset': reset, 'valid': valid, 'mid': view.get('midpoint'),
             'bid_covered': view.get('bid_band_covered', False),
             'ask_covered': view.get('ask_band_covered', False),
@@ -251,21 +290,49 @@ class CaptureFeatureReplay(Replay):
     def grid(self, second):
         row = super().grid(second)
         boundary = second*NS
+        if self.receipt_timing:
+            row['strict_composite_price'] = row['composite_price']
+            row['strict_cross_clock_valid'] = row['clock_valid']
+            row['quotes'] = {name: self._receipt_quote(key, boundary) for name, key in (
+                ('binance', 'binance_spot:depth'),
+                ('bybit', 'bybit_spot:orderbook.1.BTCUSDT'))}
+            if self.local_clock_valid and all(q['valid'] for q in row['quotes'].values()):
+                row['composite_price'] = (row['quotes']['binance']['midpoint'] +
+                                          row['quotes']['bybit']['midpoint'])/2
+            else:
+                row['composite_price'] = None
+            row['clock_valid'] = self.local_clock_valid
+            row['timing_policy'] = (RECEIPT_POLICY if self.timing_candidate == 'receipt_v1'
+                                    else 'receipt_time_diagnostic')
+            row['clock_epoch'] = self.clock_epoch
+            row['latest_received_ns'] = (max(q['available_ns'] for q in row['quotes'].values())
+                                         if row['composite_price'] is not None else None)
         book = self.books.get(BOOK_KEY)
-        book_ok = (self.clock_valid and book and book.ready and book.receipt_clock_valid
-                   and not self.book_time_invalid and 0 <= boundary-book.event_ns <= MAX_STATE_AGE_NS)
+        timing_ok = self._timing_ok()
+        book_clock_ok = (book and (book.receipt_clock_valid or
+                                  self.receipt_timing))
+        book_time = (book.available_ns if self.receipt_timing
+                     else book.event_ns) if book else None
+        book_age_ns = boundary-book_time if book_time is not None else None
+        book_ok = (timing_ok and book and book.ready and book_clock_ok and
+                   not self.book_time_invalid and book_age_ns is not None and
+                   0 <= book_age_ns <= MAX_STATE_AGE_NS)
         view = row['books'].get(BOOK_KEY, {}) if book_ok else {}
         fields = row['bybit_linear_ticker']['fields']
-        ticker_ok = (self.clock_valid and self.ticker.ready and self.ticker.receipt_clock_valid
+        ticker_ok = (timing_ok and self.ticker.ready and
+                     (self.ticker.receipt_clock_valid or self.receipt_timing)
                      and self.last_ticker_ns is not None
                      and 0 <= boundary-self.last_ticker_ns <= MAX_STATE_AGE_NS)
         def field(name, positive=True):
             item = fields.get(name)
             return (numeric(item['value'], positive=positive) if ticker_ok and item
-                    and item['available_ns'] <= boundary and item['source_event_ns'] <= boundary else None)
+                    and item['available_ns'] <= boundary and
+                    (self.receipt_timing or
+                     item['source_event_ns'] <= boundary) else None)
         mark, index, funding = field('markPrice'), field('indexPrice'), field('fundingRate', False)
         bid, ask = view.get('bid_notional_25bps'), view.get('ask_notional_25bps')
-        mid, spot = view.get('midpoint'), row['composite_price']
+        mid = view.get('midpoint')
+        spot = row['composite_price']
         top = book.top() if book_ok else None
         state = {'second': second, 'spot': spot, 'depth_bid': bid, 'depth_ask': ask,
             'oi': field('openInterest'), 'funding_bps': funding*BP if funding is not None else None,
@@ -279,23 +346,55 @@ class CaptureFeatureReplay(Replay):
         self._expire_flows(boundary)
         return row
 
+    def _timing_ok(self):
+        return (self.local_clock_valid if self.receipt_timing
+                else self.clock_valid)
+
+    def _receipt_spot(self, boundary):
+        quotes = [self._receipt_quote(key, boundary) for key in (
+            'binance_spot:depth', 'bybit_spot:orderbook.1.BTCUSDT')]
+        return sum((q['midpoint'] for q in quotes), ZERO)/2 if all(q['valid'] for q in quotes) else None
+
+    def _receipt_quote(self, key, boundary):
+        if not self.local_clock_valid:
+            return {'valid': False, 'reason': 'local_clock_step'}
+        book = self.books.get(key)
+        if not book or not book.ready:
+            return {'valid': False, 'reason': 'not_connected_or_initialized'}
+        if book.quote_available_ns is None or book.quote_available_ns > boundary:
+            return {'valid': False, 'reason': 'quote_not_available'}
+        age = boundary-book.quote_available_ns
+        if age < 0 or age > MAX_STATE_AGE_NS:
+            return {'valid': False, 'reason': 'quote_not_fresh', 'age_ns': age}
+        top = book.top()
+        if top is None:
+            return {'valid': False, 'reason': 'invalid_book_top'}
+        return {'valid': True, 'midpoint': (top[0]+top[2])/2,
+                'source_event_ns': book.quote_event_ns,
+                'available_ns': book.quote_available_ns, 'age_ns': age}
+
     def features(self, second):
         if second not in self.states:
             raise ReplayError('decision outside reconstructed grid')
         boundary = second*NS
         state = self.states[second]
         raw = {key: value for key, value in state.items() if key not in ('second', 'spot')}
-        flow_ok = (self.clock_valid and self.flow_start is not None and self.last_linear_ns is not None
+        timing_ok = self._timing_ok()
+        flow_ok = (timing_ok and self.flow_start is not None and self.last_linear_ns is not None
                    and boundary-self.last_linear_ns <= MAX_SOURCE_SILENCE_NS)
         observations = list(self.book_observations)
         for seconds in WINDOWS:
             left = boundary-seconds*NS
             complete = flow_ok and self.flow_start <= left
             for side in ('buy', 'sell'):
-                trades = [x for _, x in self.flows if isinstance(x, Trade) and x.taker_side.lower() == side
-                          and left < x.event_ms*1_000_000 <= boundary]
-                liquidations = [x for _, x in self.flows if isinstance(x, Liquidation)
-                                and x.pressure_side.lower() == side and left < x.event_ms*1_000_000 <= boundary]
+                trades = [x for receipt, x in self.flows if isinstance(x, Trade) and
+                          x.taker_side.lower() == side and
+                          left < (receipt if self.receipt_timing
+                                  else x.event_ms*1_000_000) <= boundary]
+                liquidations = [x for receipt, x in self.flows if isinstance(x, Liquidation)
+                                and x.pressure_side.lower() == side and
+                                left < (receipt if self.receipt_timing
+                                        else x.event_ms*1_000_000) <= boundary]
                 notional = sum((x.notional_quote for x in trades), ZERO) if complete else None
                 raw[f'aggressive_{side}_notional_{seconds}s'] = notional
                 raw[f'aggressive_{side}_rate_{seconds}s'] = notional/seconds if notional is not None else None
@@ -322,7 +421,7 @@ class CaptureFeatureReplay(Replay):
         scales = pretrigger_scales(self.states, second)
         bid, rate, scale = raw['depth_bid'], raw['persistent_bid_add_rate_15s'], scales['depth']
         raw['capacity_proxy'] = max(bid+30*rate, scale*Decimal('0.01')) if None not in (bid, rate, scale) else None
-        if not self.clock_valid:
+        if not timing_ok:
             raw = dict.fromkeys(raw)
             scales = dict.fromkeys(scales)
         shared, mfsm = normalized_features(raw, scales)
@@ -330,7 +429,7 @@ class CaptureFeatureReplay(Replay):
         for key, value in raw.items():
             if value is not None:
                 continue
-            if not self.clock_valid:
+            if not timing_ok:
                 reason = 'receipt_clock_review_required'
             elif key.startswith('liquidation_') and '_size_base_' not in key:
                 reason = 'bankruptcy_price_is_not_execution_price'
@@ -339,8 +438,11 @@ class CaptureFeatureReplay(Replay):
             else:
                 reason = 'insufficient_valid_history_or_coverage'
             missing[key] = reason
-        return {'schema': 'E001-live-features-candidate-1', 'decision_second': second,
-                'trigger_second_if_event': second-15, 'clock_valid': self.clock_valid,
+        result = {'schema': ('E001-live-features-receipt-diagnostic-1'
+                             if self.receipt_timing
+                             else 'E001-live-features-candidate-1'),
+                'decision_second': second,
+                'trigger_second_if_event': second-15, 'clock_valid': timing_ok,
                 'latest_input_available_ns': self.latest_available_ns,
                 'raw': raw, 'pretrigger_scales': scales, 'shared': shared, 'mfsm': mfsm,
                 'missing_reasons': missing, 'ticker_provenance': self.ticker.view()['fields'],
@@ -349,6 +451,80 @@ class CaptureFeatureReplay(Replay):
                     'trade_flow_completeness': 'observed_subscribed_connection_not_exhaustiveness_proof',
                     'depth_feed': BOOK_KEY, 'state_max_age_seconds': MAX_STATE_AGE_NS//NS},
                 'full_common_feature_panel_complete': False, 'model_ready': False}
+        if self.receipt_timing:
+            result.update(timing_measurement='receipt_time_diagnostic',
+                          strict_cross_clock_valid=self.clock_valid,
+                          source_freshness_certified=False,
+                          primary_eligible=False)
+        if self.timing_candidate == 'receipt_v1':
+            result['schema'] = 'E001-live-features-receipt-candidate-1'
+            result['timing_measurement'] = 'receipt_time_candidate_v1'
+            result['timing_policy'] = RECEIPT_POLICY
+            result['timing_quality'] = self._receipt_quality(boundary, state['spot'])
+        return result
+
+    def _receipt_quality(self, boundary, spot):
+        """Causal operational checks; missing UTC/WS-delay proof fails closed."""
+        reasons = []
+        if not self.local_clock_valid:
+            reasons.append('local_clock_step_quarantine')
+        if self.max_source_lead_ns > MAX_LOCAL_STEP_NS:
+            reasons.append('source_clock_lead_exceeds_protective_cutoff')
+        history_start = max(x for x in (self.capture_start_ns, self.last_feed_disruption_ns)
+                            if x is not None)
+        if boundary-history_start < RECEIPT_HISTORY_NS:
+            reasons.append('required_receipt_history_incomplete')
+        if set(self.connections) != {'binance_spot', 'bybit_spot', 'bybit_linear'}:
+            reasons.append('required_connection_missing')
+        if any(not self.books.get(key) or not self.books[key].ready for key in (
+                'binance_spot:depth', 'bybit_spot:orderbook.1.BTCUSDT', BOOK_KEY)):
+            reasons.append('required_book_snapshot_missing')
+        if not self.ticker.ready:
+            reasons.append('ticker_snapshot_missing')
+        if spot is None:
+            reasons.append('receipt_spot_quote_unavailable_or_stale')
+        if (self.flow_start is None or self.last_linear_ns is None or
+                boundary-self.last_linear_ns > MAX_SOURCE_SILENCE_NS):
+            reasons.append('perpetual_flow_connection_unverified')
+        # The candidate has no embedded UTC attestation or reviewed WebSocket
+        # delay contract. An explicit caller may supply causal evidence and a
+        # separately approved policy; REST probes never enter this domain.
+        policy = self.qualification_policy or {
+            'supported_contracts': {}, 'max_utc_error_ns': 0,
+            'max_total_delay_ns': 0}
+        evidence = assess_timing_evidence(
+            boundary_ns=boundary, clock_epoch=self.clock_epoch,
+            utc_records=self.utc_records, delay_records=self.delay_records,
+            roles=REQUIRED_WS_ROLES,
+            supported_contracts=policy['supported_contracts'],
+            max_utc_error_ns=policy['max_utc_error_ns'],
+            max_total_delay_ns=policy['max_total_delay_ns'],
+            synthetic_fixture=policy.get('synthetic_fixture', False))
+        reasons.extend(evidence['reasons'])
+        if any(r.startswith('websocket_role_delay_bound_missing:') for r in evidence['reasons']):
+            reasons.append('websocket_role_delay_bound_missing')
+        if ('local_clock_step_quarantine' in reasons or
+                'source_clock_lead_exceeds_protective_cutoff' in reasons or
+                evidence['state'] == 'quarantined'):
+            state = 'quarantined'
+        elif evidence['state'] == 'expired':
+            state = 'expired'
+        elif any(reason not in ('independent_utc_clock_evidence_missing',
+                               'websocket_role_delay_bound_missing') and
+                 not reason.startswith('websocket_role_delay_bound_missing:')
+                 for reason in reasons):
+            state = 'warming'
+        else:
+            state = 'qualified' if not reasons else 'unknown'
+        return {'state': state, 'reasons': reasons, 'clock_epoch': self.clock_epoch,
+                'capture_start_ns': self.capture_start_ns,
+                'latest_disruption_ns': self.last_feed_disruption_ns,
+                'latest_disruption_kind': self.last_feed_disruption_kind,
+                'required_history_ns': RECEIPT_HISTORY_NS,
+                'max_observed_source_lead_ns': self.max_source_lead_ns,
+                'source_lead_protective_cutoff_ns': MAX_LOCAL_STEP_NS,
+                'source_delay_bound_ns': evidence['source_delay_bound_ns'],
+                'source_freshness_certified': evidence['state'] == 'qualified'}
 
 
 def feature_rows(records, decision_seconds, replay=None):

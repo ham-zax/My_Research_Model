@@ -1,0 +1,98 @@
+{
+  "binance_connections_without_rest_snapshot": [],
+  "code_sha256": {
+    "capture_health.py": "5415bece0328eb0b3caff6d75041492383af7c5e369566a9f2fcfb2af028cbdf",
+    "capture_store.py": "91c9cd2cb53e0811942c4a35d0810ae863612024ecf12da718ad723d1e259006",
+    "collect.py": "a0c7cd384989a0e493e9766de1c115638a3d0990a8937766645bc2083bda2b6a"
+  },
+  "end": {
+    "monotonic_ns": 4271610547945,
+    "received_ns": 1790227989482759222
+  },
+  "feed_completeness_verified": false,
+  "integrity_checks_passed": true,
+  "manifest_sha256": "fe1cda0e4818ee04d047d087116fc57d06c4f4ed10da6412d33e79bf2bd8579e",
+  "note": "A quiet liquidation channel can have no events. Subscription acknowledgement is separate; topic counts, transport heartbeats and hashes do not establish full market coverage.",
+  "planned_duration_seconds": 60.0,
+  "provenance": "live_capture_integrity_not_model_validation",
+  "raw_bytes_this_run": 4420383,
+  "record_kind_counts": {
+    "application_ping_sent": 4,
+    "book_snapshot_reset": 386,
+    "connected": 3,
+    "connection_attempt": 3,
+    "disconnected": 3,
+    "rest_snapshot": 1,
+    "run_started": 1,
+    "run_stopped": 1,
+    "subscribe_sent": 2,
+    "transport_pong": 6,
+    "ws_message": 5836
+  },
+  "records": 6246,
+  "run_id": "1c76f35dfac5433ea3509e2db547de7a",
+  "schema": "E001-capture-v1",
+  "segment_sha256": {
+    "1c76f35dfac5433ea3509e2db547de7a-000001.jsonl": "5bb8a0dc1451ac002be8e81a926e6dd33d26cc2bac2850f1af84abdd0b2b2cd7"
+  },
+  "start": {
+    "monotonic_ns": 4208544613390,
+    "received_ns": 1790227926416825157
+  },
+  "status": "duration_reached",
+  "ticker_fields_observed": [
+    "ask1Price",
+    "ask1Size",
+    "bid1Price",
+    "bid1Size",
+    "curPreListingPhase",
+    "fundingCap",
+    "fundingIntervalHour",
+    "fundingRate",
+    "highPrice24h",
+    "indexPrice",
+    "lastPrice",
+    "lowPrice24h",
+    "markPrice",
+    "nextFundingTime",
+    "openInterest",
+    "openInterestValue",
+    "preOpenPrice",
+    "preQty",
+    "prevPrice1h",
+    "prevPrice24h",
+    "price24hPcnt",
+    "singleOpenInterest",
+    "singleOpenInterestValue",
+    "symbol",
+    "tickDirection",
+    "turnover24h",
+    "volume24h"
+  ],
+  "topics": {
+    "binance_spot": {
+      "btcusdt@depth@100ms": 591,
+      "btcusdt@trade": 198
+    },
+    "bybit_linear": {
+      "control": 3,
+      "orderbook.1000.BTCUSDT": 311,
+      "orderbook.50.BTCUSDT": 2152,
+      "publicTrade.BTCUSDT": 217,
+      "tickers.BTCUSDT": 454
+    },
+    "bybit_spot": {
+      "control": 3,
+      "orderbook.1.BTCUSDT": 383,
+      "orderbook.50.BTCUSDT": 1442,
+      "publicTrade.BTCUSDT": 82
+    }
+  },
+  "topics_without_observations": {
+    "binance_spot": [],
+    "bybit_linear": [
+      "allLiquidation.BTCUSDT"
+    ],
+    "bybit_spot": []
+  }
+}

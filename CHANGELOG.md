@@ -2,6 +2,22 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
+## 2026-09-24 - Separate exploratory BTC test
+
+Added a versioned first-of-month observational BTC study using local-receipt spot midquotes, ordinary sell trades and open interest. It scored 126 held-out hourly decisions; the extra sell-pressure × spread interaction improved paired Brier by only +0.00016791, while both fitted models scored worse than an earlier-history positive-rate diagnostic. The [result and limits](docs/e001_exploratory_btc_result.md) are preserved with source, protocol, code and output hashes. This does not change the original shock-triggered E001 rules or its `BLOCKED_TIMING` status, and it does not establish trading edge. ETH remains sealed.
+
+## 2026-09-24 - Prepared receipt-time revision candidate
+
+Added separate `E001-receipt-time-candidate-1` feature output and a fail-closed quality gate. It measures spot, flow, book and ticker features on application receipt time, reports connection/snapshot/history checks, quarantines local steps and gross (>100 ms) source-clock leads, and names the missing independent UTC and WebSocket delay evidence. The candidate's proposed event/label version is documented but no new events or labels were produced. Saved BTC captures confirm the original 3.3-second error is quarantined; all candidate rows remain ineligible. See [the revision contract](docs/e001_receipt_time_revision.md) and [gate result](artifacts/e001_receipt_policy_gate_results.json). The strict mode remains the default and ETH remains sealed.
+
+## 2026-09-24 - Timing evidence and receipt-time diagnostic
+
+Added causal public HTTP clock-probe records, a timestamp-role audit, and a separate receipt-time feature diagnostic. Fixed sealed BTC inputs show that receipt windows produce different flow and persistence values even at clock-valid decisions; they also produce 80 raw measurements in the original 3.3-second clock-error sample, so those values are explicitly ineligible for the primary experiment. The strict source-time default, event/label definitions, model-fit gate and ETH holdout remain unchanged. The [timing comparison](artifacts/e001_timing_policy_comparison.md) records the unresolved HTTP-to-WebSocket clock relationship and feature-level evidence. Full suite: **126 passed**.
+
+## 2026-09-24 - Live common-feature measurements
+
+Added `E001-live-features-candidate-1` and a deterministic sealed-capture command for explicit diagnostic decision times. Implements receipt-aware trade/liquidation-size windows, displayed liquidity additions/decreases and persistence, depth histories, OI/funding/basis/mark-index summaries, returns/volatility, and shared causal normalization. Pressure ratios use the specified 30-second flows; persistence uses the separate 15-second lookback. Unknown prior sizes at newly revealed book boundaries invalidate dependent measurements. Executed liquidation notional and cancellation/execution attribution remain unavailable. All three independent-review findings have regression coverage; the full suite passes **114 tests**. Real-data diagnostic results and pending gates are in [the live-feature contract](docs/e001_live_features.md). This is not a frozen feature list, event dataset, or fitted model; ETH remains sealed.
+
 ## 2026-09-24 - Receipt-ordered replay and verified capture restart
 
 Added hash-verified book/ticker replay, deterministic one-second grids, finite-depth coverage and receipt-clock gates. The first replay detected approximately 3.3 seconds of local clock lag; the owner-approved old run was stopped and sealed without rewriting observations. After Windows host repair, a fresh 60-second capture passed integrity and timing checks: 7,195 WebSocket messages and 58 valid composite seconds, with five grid seconds excluded at startup/shutdown. Development capture restarted within the original deadline and directory-wide 16 GiB cap. Full suite: **90 passed**. The [replay report and handoff](docs/e001_capture_replay.md) preserve both historical failures and new evidence. Incomplete 25-bps book coverage remains missing; the full common feature panel and model evaluation remain unfinished. No event/label definition or ETH holdout changed.

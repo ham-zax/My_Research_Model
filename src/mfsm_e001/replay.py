@@ -1,6 +1,7 @@
 """Receipt-ordered replay of E001-capture-v1 into auditable state, not model rows."""
 
 from collections import Counter, deque
+from dataclasses import replace
 from decimal import Decimal, InvalidOperation
 import json
 from pathlib import Path
@@ -9,6 +10,7 @@ import re
 from .capture_health import FeedError, FeedMonitor
 from .capture_store import sha256
 from .collect import FEEDS, SNAPSHOT_URL
+from .timing import ClockEvidence, EvidenceTimeline
 
 NS = 1_000_000_000
 BAND = Decimal('0.0025')
@@ -250,7 +252,10 @@ class Replay:
         self.ticker = Ticker()
         self.diagnostics = Counter()
         self.clock_valid = True
+        self.clock_epoch = 0
+        self.clock_evidence = EvidenceTimeline()
         self.clock_lag_ms = {}
+        self.max_source_lead_ns = 0
         self.scope = {feed.name: FeedMonitor(feed.name, feed.topics) for feed in FEEDS}
 
     def reset(self, source, reason):
@@ -268,7 +273,24 @@ class Replay:
         connection = row.get('connection_id')
         if kind == 'clock_step':
             self.clock_valid = False
+            self.clock_epoch += 1
             self.diagnostics['clock_step'] += 1
+            return
+        if kind == 'clock_probe':
+            probe = row.get('evidence', {})
+            if not isinstance(probe, dict):
+                self.diagnostics['clock_probe_invalid'] += 1
+                return
+            if probe.get('status') != 'ok':
+                self.diagnostics['clock_probe_error'] += 1
+                return
+            try:
+                evidence = ClockEvidence.from_probe(probe)
+                evidence = replace(evidence, available_ns=max(evidence.available_ns, available_ns))
+                self.clock_evidence.add(evidence)
+                self.diagnostics['clock_probe_ok'] += 1
+            except (ValueError, KeyError, TypeError):
+                self.diagnostics['clock_probe_invalid'] += 1
             return
         if kind in ('connected', 'disconnected', 'connection_error'):
             if source not in self.scope:
@@ -303,6 +325,7 @@ class Replay:
                     lag = row['received_ns'] - event_ns
                     self.clock_lag_ms.setdefault(source, Counter())[round(lag / 1_000_000)] += 1
                     if lag < 0:
+                        self.max_source_lead_ns = max(self.max_source_lead_ns, -lag)
                         self.clock_valid = False
                         self.diagnostics[source + ':source_event_after_receipt'] += 1
                 if source == 'binance_spot' and message['data'].get('e') == 'depthUpdate':

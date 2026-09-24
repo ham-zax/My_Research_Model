@@ -1,0 +1,19 @@
+{
+  "authorized_latest_end_utc": "2026-09-25T00:19:44Z",
+  "collector_code_sha256": "050bbb301479952b7e1ed960c7e8a50a8e60d42fd8987189270c2a582d993090",
+  "data_kind": "separate_receipt_time_observational_btc",
+  "duration_seconds": 20673,
+  "launched_utc": "2026-09-24T18:34:50.506704+00:00",
+  "log_path": "data/raw/live_btc_development/collector-forward-liquidity-observation.log",
+  "manifest_path": "data/raw/live_btc_development/9c4ee7b3301742aabf31377f5d2c894c.manifest.json",
+  "model_fitted": false,
+  "original_e001_primary_eligible": false,
+  "pid": 2504994,
+  "planned_end_ns": 1790295563582342166,
+  "protocol_sha256": "e10625abc96d4ee670fe622561d4680e33e5b84fc9bcdba15f7a0acc03926b18",
+  "raw_bytes_before_launch": 1099061270,
+  "raw_cap_mib": 16384,
+  "run_id": "9c4ee7b3301742aabf31377f5d2c894c",
+  "schema": "E001-forward-liquidity-start-receipt-1",
+  "status": "running_at_initial_check"
+}

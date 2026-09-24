@@ -1,0 +1,55 @@
+{
+  "schema": "E001-shallow-capacity-audit-protocol-1",
+  "data_kind": "exploratory_tardis_btc_first_of_month",
+  "purpose": "Test whether near-touch displayed bid capacity tracks realized sell-flow absorption after predefined sharp BTC selloffs.",
+  "claim_scope": "observational near-touch liquidity only; separate from the original E001 25 bps capacity claim",
+  "event_source": "data/derived/e001_shallow_event_source_001/result.json",
+  "event_source_sha256": "8ce21fd9a9b9cf5393fbb37e976bf41184c552645f116e3b55428526e9896c12",
+  "event_selection": "all_predefined_crossings",
+  "expected_crossings": 90,
+  "expected_history_qualified_independent_episodes": 12,
+  "market": {
+    "exchange": "bybit",
+    "symbol": "BTCUSDT",
+    "clock": "local_timestamp_receipt_time",
+    "book": "incremental_book_L2",
+    "trades": "trades"
+  },
+  "capacity": {
+    "decision_delay_seconds": 15,
+    "visible_bid_band_bps": "0.5",
+    "replenishment_window_seconds": 15,
+    "minimum_addition_dwell_seconds": 1,
+    "projected_replenishment_seconds": 30,
+    "pretrigger_depth_history_seconds": 1800,
+    "floor_fraction_of_pretrigger_median_depth": 0.01,
+    "maximum_book_age_seconds": 5
+  },
+  "outcomes": {
+    "forward_seconds": 30,
+    "checkpoints_seconds": [5, 15, 30],
+    "midpoint_breach_bps": -25,
+    "aggressor_flow": "sell",
+    "notional": "price_times_base_amount"
+  },
+  "analysis": {
+    "independent_episode_field": "history_qualified",
+    "minimum_independent_episodes_for_rank_correlation": 5,
+    "locked_out_or_history_ambiguous_crossings_are_diagnostic_only": true,
+    "model_fit": false,
+    "threshold_tuning": false
+  },
+  "selection_record": {
+    "band_selected_before_shallow_outcomes": true,
+    "basis": "The prior 25 bps measurement audit observed only book coverage, stopped before event outcomes, and found a minimum of 0.718 bps across the later event histories. The new band is fixed at 0.5 bps.",
+    "event_calendar_selected_before_shallow_outcomes": true,
+    "event_source_contains_spot_triggers_and_lockout_history_only": true
+  },
+  "limitations": [
+    "The 0.5 bps band is a different and much narrower construct than original E001 capacity.",
+    "First-of-month days are nonconsecutive and may have calendar selection effects.",
+    "Trade aggressor flow does not identify liquidation flow.",
+    "Public normalized CSV does not independently certify feed continuity.",
+    "A no-breach outcome right-censors realized absorption at observed sell flow."
+  ]
+}

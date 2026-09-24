@@ -1,0 +1,10 @@
+{
+  "schema": "E001-synthetic-model-episodes-1",
+  "provenance": "synthetic_fixture",
+  "episode_count": 130,
+  "spacing_seconds": 7200,
+  "shared_features": ["depth_relative"],
+  "mfsm_combinations": ["interaction"],
+  "label_rule": "alternating_binary_by_index",
+  "feature_rule": "modular_numeric_by_index"
+}

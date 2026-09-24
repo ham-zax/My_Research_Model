@@ -1,0 +1,31 @@
+{
+  "schema": "E001-btc-evaluation-protocol-candidate-1",
+  "status": "software_verified_synthetic_real_fit_disabled",
+  "learner": "sklearn.ensemble.HistGradientBoostingClassifier",
+  "library": "scikit-learn==1.8.0",
+  "calibration": "CalibratedClassifierCV(FrozenEstimator(fitted_model), method=sigmoid)",
+  "seed": 1001,
+  "early_stopping": false,
+  "l2_regularization": 0.1,
+  "tuning_grid_in_tie_break_order": [
+    {"max_iter": 20, "max_leaf_nodes": 7, "min_samples_leaf": 5},
+    {"max_iter": 40, "max_leaf_nodes": 7, "min_samples_leaf": 5}
+  ],
+  "selection_metric": "equal_episode_weight_pooled_30m_calibrated_Brier",
+  "minimum_eligible_episodes": 130,
+  "walk_forward": {
+    "minimum_initial_fit": 50,
+    "calibration_block": 20,
+    "inner_validation_block": 20,
+    "outer_test_block": 20,
+    "minimum_full_outer_test_blocks": 2,
+    "fit": "all earlier episodes before the calibration block",
+    "unused_final_partial_test_block": "reported, not silently scored"
+  },
+  "split_gate": "every fit/calibration/validation label matures before the next block's first decision",
+  "model_pair": "identical episode ids and shared values; MFSM adds only predeclared combinations",
+  "missing_policy": "reject required missing, nonfinite or undefined values before fitting",
+  "real_feature_contract": null,
+  "real_fit_enabled": false,
+  "eth_access": "sealed"
+}

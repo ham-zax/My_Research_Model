@@ -1,0 +1,21 @@
+{
+  "schema": "E001-execution-candidate-1",
+  "data_kind": "real_btc",
+  "timing_candidate": "receipt_v1",
+  "timing_policy": "E001-receipt-time-candidate-1",
+  "experiment_version": "e001-v1.3-candidate",
+  "feature_schema": "E001-live-features-receipt-candidate-1",
+  "label_schema": "E001-label-v4-candidate",
+  "run_config": "experiments/e001_run_config.yaml",
+  "evaluation_protocol": "experiments/e001_btc_evaluation_protocol.yaml",
+  "real_inputs": [
+    {"name": "original", "manifest": "data/raw/live_btc_final/23b5d4a3f0614020a96bbb58344c725a.manifest.json", "decision_seconds": [1790209099]},
+    {"name": "clockfixed", "manifest": "data/raw/live_btc_clock_fixed_smoke/094532e21b2946268a5d829746463ee7.manifest.json", "decision_seconds": [1790211898]},
+    {"name": "probe", "manifest": "data/raw/live_btc_timing_probe_smoke/a0c8d57cfdef496e8ed786f0456534cc.manifest.json", "decision_seconds": [1790229735]},
+    {"name": "prefix26", "manifest": "data/raw/live_btc_development/53d688bfe33349aaab40dc8e7463c802.manifest.json", "sealed_prefix": true, "segment_limit": 26, "decision_seconds": [1790213822, 1790214200, 1790214220]}
+  ],
+  "fixture_inputs": [
+    {"name": "receipt_grid_synthetic_fixture", "path": "tests/fixtures/e001_receipt_grid_fixture.json"},
+    {"name": "matched_model_synthetic_fixture", "path": "tests/fixtures/e001_model_fixture.json"}
+  ]
+}

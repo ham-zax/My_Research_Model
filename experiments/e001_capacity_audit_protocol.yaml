@@ -1,0 +1,46 @@
+{
+  "schema": "E001-capacity-audit-protocol-1",
+  "data_kind": "exploratory_tardis_btc",
+  "purpose": "Audit whether the existing visible-capacity proxy tracks realized absorption after predefined sharp BTC selloffs.",
+  "event_source": "artifacts/e001_monthly_sample_results.json",
+  "event_source_sha256": "2a4e171eb2039dd616d962be588579143d648da4f42d85f6897a81fba6c1e849",
+  "event_selection": "all_predefined_crossings",
+  "expected_crossings": 22,
+  "market": {
+    "exchange": "bybit",
+    "symbol": "BTCUSDT",
+    "clock": "local_timestamp_receipt_time",
+    "book": "incremental_book_L2",
+    "trades": "trades"
+  },
+  "capacity": {
+    "decision_delay_seconds": 15,
+    "visible_bid_band_bps": 25,
+    "replenishment_window_seconds": 15,
+    "minimum_addition_dwell_seconds": 1,
+    "projected_replenishment_seconds": 30,
+    "pretrigger_depth_history_seconds": 1800,
+    "floor_fraction_of_pretrigger_median_depth": 0.01,
+    "maximum_book_age_seconds": 5
+  },
+  "outcomes": {
+    "forward_seconds": 30,
+    "checkpoints_seconds": [5, 15, 30],
+    "midpoint_breach_bps": -25,
+    "aggressor_flow": "sell",
+    "notional": "price_times_base_amount"
+  },
+  "analysis": {
+    "independent_episode_field": "accepted",
+    "minimum_independent_episodes_for_rank_correlation": 5,
+    "locked_out_crossings_are_diagnostic_only": true,
+    "model_fit": false,
+    "threshold_tuning": false
+  },
+  "limitations": [
+    "Normalized public data can contain undocumented gaps.",
+    "Trade aggressor flow does not identify liquidation flow.",
+    "A no-breach outcome right-censors realized absorption at the observed sell flow.",
+    "Repeated crossings inside a lockout episode are not independent observations."
+  ]
+}

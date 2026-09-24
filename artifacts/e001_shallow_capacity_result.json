@@ -1,0 +1,58 @@
+{
+  "schema": "E001-shallow-capacity-tracked-summary-1",
+  "status": "INSUFFICIENT_INDEPENDENT_EPISODES",
+  "data_kind": "exploratory_tardis_btc_first_of_month",
+  "model_fitted": false,
+  "thresholds_tuned": false,
+  "capacity_band_bps": "0.5",
+  "source_run": "data/derived/e001_shallow_capacity_audit_001",
+  "discovery_run": "data/derived/e001_shallow_event_discovery_001",
+  "event_source_run": "data/derived/e001_shallow_event_source_001",
+  "protocol_sha256": "a497b88bad8155851b36c56317d2211ec71ecd1be20558244b0f8cd52c3fc6c7",
+  "event_source_sha256": "8ce21fd9a9b9cf5393fbb37e976bf41184c552645f116e3b55428526e9896c12",
+  "source_result_sha256": "a9799704a522dc9cff00eb5704a10e66cc46f630180086083b74be82934dc9b2",
+  "source_report_sha256": "5e94098943aef5a645112cd4bfe6f9b7731b04c463b80876841a7a1a4c953e42",
+  "discovery": {
+    "calendar_days": 42,
+    "crossings": 90,
+    "nominal_independent_episodes": 20,
+    "history_qualified_independent_episodes": 12,
+    "crossing_history_status_counts": {
+      "accepted_with_observed_lockout": 12,
+      "ambiguous_lockout_history": 15,
+      "locked_out": 63
+    }
+  },
+  "measurement": {
+    "valid_crossings": 5,
+    "valid_history_qualified_independent_episodes": 2,
+    "exclusion_counts": {
+      "incomplete_replenishment_history": 9,
+      "invalid_or_stale_pretrigger_book_state": 17,
+      "invalid_pretrigger_bid_depth": 59
+    },
+    "rank_correlations": {
+      "status": "not_computed",
+      "reason": "2 valid independent episodes; minimum is 5"
+    }
+  },
+  "valid_history_qualified_events": [
+    {
+      "trigger_utc": "2023-09-01T17:27:29+00:00",
+      "capacity_proxy_usdt": "72846.57939999999999999999999",
+      "future_sell_notional_30s_usdt": "10773495.3650",
+      "future_sell_to_capacity": "147.8929478053158938029696972",
+      "first_25bps_breach_seconds": null,
+      "mid_return_bps_30s": "16.83881641568718267760732000"
+    },
+    {
+      "trigger_utc": "2024-03-01T21:03:16+00:00",
+      "capacity_proxy_usdt": "1330087.49740",
+      "future_sell_notional_30s_usdt": "2116321.1376",
+      "future_sell_to_capacity": "1.591114224994142855251832247",
+      "first_25bps_breach_seconds": null,
+      "mid_return_bps_30s": "4.396029506150045279103910000"
+    }
+  ],
+  "interpretation": "The near-touch midpoint band is usually empty when spread exceeds one basis point and yields only two independent measurements. Both are right-censored no-breach cases where gross sell flow exceeds the proxy, so this sample cannot establish a rank relationship or trading edge."
+}

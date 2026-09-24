@@ -136,6 +136,132 @@ def test_clock_failure_blocks_every_numeric_feature():
     assert all(value is None for value in output['shared'].values())
 
 
+def test_receipt_diagnostic_counts_future_source_trade_at_receipt_window_only():
+    from mfsm_e001.capture_features import CaptureFeatureReplay, feature_rows
+    rows = connected() + [trade(6000, 5*NS, ident='ahead'),
+                          trade(6000, 6*NS+1, ident='too_late'),
+                          record('noop', 7*NS)]
+    strict = list(feature_rows(rows, [6], CaptureFeatureReplay()))[0]
+    receipt = list(feature_rows(rows, [6],
+                                CaptureFeatureReplay(timing_candidate='receipt_diagnostic')))[0]
+    assert strict['raw']['aggressive_sell_notional_5s'] is None
+    assert receipt['raw']['aggressive_sell_notional_5s'] == D('200')
+    assert receipt['strict_cross_clock_valid'] is False
+    assert receipt['source_freshness_certified'] is False
+    assert receipt['primary_eligible'] is False and not receipt['model_ready']
+
+
+def test_receipt_diagnostic_book_dwell_uses_receipt_times_and_keeps_economics_missing():
+    from mfsm_e001.capture_features import CaptureFeatureReplay, feature_rows
+    future_delta = book(1.2, bids=[['99.9', '2']], asks=[])
+    payload = json.loads(future_delta['raw'])
+    payload['ts'] += 1  # source timestamp is 1 ms after actual receipt
+    future_delta['raw'] = json.dumps(payload)
+    rows = connected() + [snapshot(0), future_delta, record('noop', 6*NS)]
+    receipt = list(feature_rows(rows, [6],
+                                CaptureFeatureReplay(timing_candidate='receipt_diagnostic')))[0]
+    assert receipt['raw']['persistent_bid_add_rate_5s'] > 0
+    assert receipt['raw']['liquidation_sell_notional_5s'] is None
+    assert receipt['raw']['cancel_bid_rate_5s'] is None
+    assert receipt['primary_eligible'] is False
+
+
+def test_receipt_diagnostic_clock_step_still_blocks_every_numeric_feature():
+    from mfsm_e001.capture_features import CaptureFeatureReplay, feature_rows
+    rows = connected() + [snapshot(), record('clock_step', 3*NS, 'collector', None),
+                          record('noop', 5*NS)]
+    result = list(feature_rows(rows, [5],
+                               CaptureFeatureReplay(timing_candidate='receipt_diagnostic')))[0]
+    assert result['clock_valid'] is False
+    assert all(value is None for value in result['raw'].values())
+    assert result['primary_eligible'] is False
+
+
+def test_receipt_v1_reports_missing_delay_proof_and_keeps_late_packet_out():
+    from mfsm_e001.capture_features import CaptureFeatureReplay, feature_rows
+    rows = connected() + [trade(5001, 5*NS, ident='on_time'),
+                          trade(6000, 6*NS+1, ident='after_decision'),
+                          record('noop', 7*NS)]
+    result = list(feature_rows(rows, [6], CaptureFeatureReplay(timing_candidate='receipt_v1')))[0]
+    assert result['schema'] == 'E001-live-features-receipt-candidate-1'
+    assert result['raw']['aggressive_sell_notional_5s'] == D('200')
+    assert result['timing_quality']['state'] == 'warming'
+    assert 'independent_utc_clock_evidence_missing' in result['timing_quality']['reasons']
+    assert 'websocket_role_delay_bound_missing' in result['timing_quality']['reasons']
+    assert result['timing_quality']['source_delay_bound_ns'] is None
+    assert result['timing_quality']['max_observed_source_lead_ns'] == 1_000_000
+    assert result['primary_eligible'] is False and result['model_ready'] is False
+
+
+def test_receipt_v1_protective_cutoff_rejects_gross_source_clock_lead():
+    from mfsm_e001.capture_features import CaptureFeatureReplay, feature_rows
+    rows = connected() + [trade(8300, 5*NS), record('noop', 7*NS)]
+    result = list(feature_rows(rows, [6], CaptureFeatureReplay(timing_candidate='receipt_v1')))[0]
+    assert result['timing_quality']['state'] == 'quarantined'
+    assert result['timing_quality']['max_observed_source_lead_ns'] == 3_300_000_000
+    assert 'source_clock_lead_exceeds_protective_cutoff' in result['timing_quality']['reasons']
+    assert result['primary_eligible'] is False
+
+
+def test_receipt_v1_grid_exposes_same_spot_reference_used_by_features():
+    from mfsm_e001.capture_features import CaptureFeatureReplay
+    from mfsm_e001.collect import SNAPSHOT_URL
+    from mfsm_e001.replay import replay_grid
+    rows = [record('connected', 0, 'binance_spot'),
+            record('connected', 0, 'bybit_spot'),
+            record('rest_snapshot', 0, 'binance_spot', url=SNAPSHOT_URL,
+                   raw=json.dumps({'lastUpdateId': 10,
+                                   'bids': [['99.9', '1']], 'asks': [['100.1', '1']]})),
+            record('ws_message', NS, 'binance_spot', raw=json.dumps({
+                'stream': 'btcusdt@depth@100ms',
+                'data': {'e': 'depthUpdate', 's': 'BTCUSDT', 'E': 5000,
+                         'U': 11, 'u': 11, 'b': [], 'a': []}})),
+            record('ws_message', NS, 'bybit_spot', raw=json.dumps({
+                'topic': 'orderbook.1.BTCUSDT', 'type': 'snapshot', 'ts': 5000,
+                'data': {'s': 'BTCUSDT', 'u': 1, 'seq': 1,
+                         'b': [['99.9', '1']], 'a': [['100.1', '1']]}})),
+            record('noop', 7*NS)]
+    replay = CaptureFeatureReplay(timing_candidate='receipt_v1')
+    grid = {row['second']: row for row in replay_grid(rows, replay)}
+    assert grid[2]['strict_composite_price'] is None
+    assert grid[2]['composite_price'] == D('100')
+    assert grid[2]['quotes']['binance']['age_ns'] == NS
+    assert replay.states[2]['spot'] == grid[2]['composite_price']
+    assert grid[6]['composite_price'] == D('100')
+    assert grid[7]['composite_price'] is None
+
+
+def test_receipt_v1_quarantines_clock_step_and_marks_loop_gap_history():
+    from mfsm_e001.capture_features import CaptureFeatureReplay, feature_rows
+    gap = connected() + [record('event_loop_delay', 3*NS, 'collector', None),
+                         record('noop', 5*NS)]
+    candidate = CaptureFeatureReplay(timing_candidate='receipt_v1')
+    result = list(feature_rows(gap, [5], candidate))[0]
+    assert result['timing_quality']['state'] == 'warming'
+    assert 'required_receipt_history_incomplete' in result['timing_quality']['reasons']
+    assert result['timing_quality']['latest_disruption_ns'] == 3*NS
+    assert result['timing_quality']['latest_disruption_kind'] == 'event_loop_delay'
+    stepped = connected() + [record('clock_step', 3*NS, 'collector', None),
+                             record('noop', 5*NS)]
+    result = list(feature_rows(stepped, [5],
+                    CaptureFeatureReplay(timing_candidate='receipt_v1')))[0]
+    assert result['timing_quality']['state'] == 'quarantined'
+    assert result['timing_quality']['clock_epoch'] == 1
+    assert all(value is None for value in result['raw'].values())
+
+
+@pytest.mark.parametrize('message_time', [5000, 5001])
+def test_future_trade_clock_is_reported_without_aborting_earlier_diagnostics(message_time):
+    future = trade(5001, 5*NS)
+    payload = json.loads(future['raw'])
+    payload['ts'] = message_time
+    future['raw'] = json.dumps(payload)
+    output = extract(connected()+[future], 6)
+    assert not output['clock_valid']
+    assert all(value is None for value in output['raw'].values())
+    assert set(output['missing_reasons'].values()) == {'receipt_clock_review_required'}
+
+
 def test_pretrigger_denominators_use_exact_1800_grid_points_and_shared_normalization():
     module = importlib.import_module('mfsm_e001.capture_features')
     states = {}
@@ -263,8 +389,27 @@ def test_capture_command_produces_deterministic_features_and_rejects_missing_dec
     with gzip.open(a['features_path'], 'rt') as stream:
         row = json.loads(stream.readline())
     assert row['raw']['aggressive_sell_notional_5s'] == '200'
+    diagnostic = module.run(manifest, tmp_path/'receipt', [5], sealed_prefix=True,
+                            timing_candidate='receipt_diagnostic')
+    assert diagnostic['schema'] == 'E001-live-features-receipt-diagnostic-1'
+    assert diagnostic['primary_eligible_rows'] == 0
+    with gzip.open(diagnostic['features_path'], 'rt') as stream:
+        receipt_row = json.loads(stream.readline())
+    assert receipt_row['primary_eligible'] is False
+    candidate = module.run(manifest, tmp_path/'candidate', [5], sealed_prefix=True,
+                           timing_candidate='receipt_v1')
+    assert candidate['schema'] == 'E001-live-features-receipt-candidate-1'
+    assert candidate['clock_valid_semantics'] == 'no_detected_local_wall_clock_step_only'
+    assert candidate['timing_quality_states'] == {'warming': 1}
+    assert candidate['primary_eligible_rows'] == 0
+    comparison = importlib.import_module('compare_e001_timing_features')
+    pair = comparison.compare_pair(tmp_path/'a'/'report.json', tmp_path/'receipt'/'report.json')
+    assert pair['decisions'][0]['receipt_primary_eligible'] is False
     with pytest.raises(ValueError, match='outside captured grid'):
         module.run(manifest, tmp_path/'missing', [999], sealed_prefix=True)
     assert not (tmp_path/'missing'/'features.jsonl.gz').exists()
     with pytest.raises(ValueError, match='ETH'):
         module.run(manifest, tmp_path/'eth', [5], sealed_prefix=True)
+    (tmp_path/'receipt'/'features.jsonl.gz').write_bytes(b'tampered')
+    with pytest.raises(ValueError, match='hash mismatch'):
+        comparison.compare_pair(tmp_path/'a'/'report.json', tmp_path/'receipt'/'report.json')

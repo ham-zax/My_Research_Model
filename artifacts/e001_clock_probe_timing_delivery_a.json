@@ -1,0 +1,116 @@
+{
+  "assumption": "Fresh server timestamp generated between request start and response receipt; bounds include timestamp quantization, not server clock error. HTTP bounds do not certify WebSocket timestamp domains.",
+  "probes": {
+    "binance": [
+      {
+        "available_ns": 1790229598418191334,
+        "domain": "http_server_time",
+        "epoch": 0,
+        "offset_lower_ns": -24164874,
+        "offset_upper_ns": 607433510,
+        "provenance": "public_http_server_time_request_interval_v1",
+        "received_monotonic_ns": 5880545953367,
+        "received_ns": 1790229598418164874,
+        "request_start_monotonic_ns": 5879916355003,
+        "request_start_ns": 1790229597788566490,
+        "resolution_ns": 1000000,
+        "role": "server_time",
+        "server_ns": 1790229598395000000,
+        "source": "binance",
+        "status": "ok"
+      },
+      {
+        "available_ns": 1790229599001859246,
+        "domain": "http_server_time",
+        "epoch": 0,
+        "offset_lower_ns": -23828746,
+        "offset_upper_ns": 561803796,
+        "provenance": "public_http_server_time_request_interval_v1",
+        "received_monotonic_ns": 5881129617289,
+        "received_ns": 1790229599001828746,
+        "request_start_monotonic_ns": 5880545983987,
+        "request_start_ns": 1790229598418196204,
+        "resolution_ns": 1000000,
+        "role": "server_time",
+        "server_ns": 1790229598979000000,
+        "source": "binance",
+        "status": "ok"
+      },
+      {
+        "available_ns": 1790229599644963219,
+        "domain": "http_server_time",
+        "epoch": 0,
+        "offset_lower_ns": -35939329,
+        "offset_upper_ns": 609135564,
+        "provenance": "public_http_server_time_request_interval_v1",
+        "received_monotonic_ns": 5881772727782,
+        "received_ns": 1790229599644939329,
+        "request_start_monotonic_ns": 5881129652179,
+        "request_start_ns": 1790229599001864436,
+        "resolution_ns": 1000000,
+        "role": "server_time",
+        "server_ns": 1790229599610000000,
+        "source": "binance",
+        "status": "ok"
+      }
+    ],
+    "bybit": [
+      {
+        "available_ns": 1790229597954576872,
+        "domain": "http_server_time",
+        "epoch": 0,
+        "offset_lower_ns": 8911620,
+        "offset_upper_ns": 174155289,
+        "provenance": "public_http_server_time_request_interval_v1",
+        "received_monotonic_ns": 5880082336815,
+        "received_ns": 1790229597954548252,
+        "request_start_monotonic_ns": 5879917093328,
+        "request_start_ns": 1790229597789304585,
+        "resolution_ns": 1,
+        "role": "server_time",
+        "server_ns": 1790229597963459873,
+        "source": "bybit",
+        "status": "ok"
+      },
+      {
+        "available_ns": 1790229598184669611,
+        "domain": "http_server_time",
+        "epoch": 0,
+        "offset_lower_ns": 8466850,
+        "offset_upper_ns": 238525261,
+        "provenance": "public_http_server_time_request_interval_v1",
+        "received_monotonic_ns": 5880312427854,
+        "received_ns": 1790229598184639321,
+        "request_start_monotonic_ns": 5880082368675,
+        "request_start_ns": 1790229597954580912,
+        "resolution_ns": 1,
+        "role": "server_time",
+        "server_ns": 1790229598193106172,
+        "source": "bybit",
+        "status": "ok"
+      },
+      {
+        "available_ns": 1790229598278979171,
+        "domain": "http_server_time",
+        "epoch": 0,
+        "offset_lower_ns": 10121199,
+        "offset_upper_ns": 104399111,
+        "provenance": "public_http_server_time_request_interval_v1",
+        "received_monotonic_ns": 5880406740904,
+        "received_ns": 1790229598278951871,
+        "request_start_monotonic_ns": 5880312461754,
+        "request_start_ns": 1790229598184673961,
+        "resolution_ns": 1,
+        "role": "server_time",
+        "server_ns": 1790229598289073071,
+        "source": "bybit",
+        "status": "ok"
+      }
+    ]
+  },
+  "provenance": "public_server_time_offset_bounds_no_correction",
+  "sources": {
+    "binance": "https://data-api.binance.vision/api/v3/time",
+    "bybit": "https://api.bybit.com/v5/market/time"
+  }
+}

@@ -53,7 +53,16 @@ Its invariant question is:
   Public Binance/Bybit recording without API keys, original messages and receipt clocks, bounded storage, reconnect diagnostics, integrity audits and commands for a fixed forward recording.
 
 - [BTC capture replay](./docs/e001_capture_replay.md)
-  Receipt-ordered book/ticker reconstruction, finite-depth coverage and timing checks. The first live replay confirms a local clock offset; captured state remains blocked from model use until timing is repaired.
+  Receipt-ordered book/ticker reconstruction, finite-depth coverage and timing checks. Preserves the original clock failure and the successful post-repair capture verification.
+
+- [Live BTC feature pipeline](./docs/e001_live_features.md)
+  Receipt-aware trade, liquidity, OI/funding/basis and price summaries; causal normalization shared by B4/MFSM; explicit missing values for unsupported economics and incomplete depth. Includes reproducible diagnostic commands and measured data limits.
+
+- [Next implementation plan](./docs/e001_next_implementation_plan.md)
+  Ordered tasks for clock evidence and uncertainty policy, capture recovery, eligible event/label tables and gated model evaluation. Includes file ownership, regression cases, acceptance criteria and a copyable coding-agent handoff.
+
+- [Separate exploratory BTC result](./docs/e001_exploratory_btc_result.md)
+  Fixed hourly receipt-time test on 19 free first-of-month BTC sample days. The added sell-pressure interaction gave only a tiny, unstable Brier improvement and did not demonstrate trading edge. The original E001 remains blocked.
 
 ## Epistemic status
 

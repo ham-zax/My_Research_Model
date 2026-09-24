@@ -15,6 +15,7 @@ import uuid
 
 from .capture_health import FeedError, FeedMonitor
 from .capture_store import CaptureStore, StorageLimit, atomic_json, sha256
+from .timing import PROBE_URLS, probe_server_clock
 
 
 @dataclass(frozen=True)
@@ -64,6 +65,7 @@ class Recorder:
         self.queued_bytes = 0
         self.queued_sizes = {}
         self.sequence = 0
+        self.clock_epoch = 0
         self.stats = {f.name: {"connections": 0, "disconnects": 0, "messages": 0,
                               "topics": Counter(), "subscription_acknowledged": False}
                       for f in FEEDS}
@@ -206,12 +208,25 @@ class Recorder:
             drift = (current["received_ns"] - previous["received_ns"] -
                      current["monotonic_ns"] + previous["monotonic_ns"])
             if abs(drift) > 100_000_000:
+                self.clock_epoch += 1
                 self.emit("collector", None, "clock_step", discrepancy_ns=drift,
-                          requires_clock_audit=True)
+                          clock_epoch=self.clock_epoch, requires_clock_audit=True)
             elapsed = current["monotonic_ns"] - previous["monotonic_ns"]
             if elapsed > 1_100_000_000:
                 self.emit("collector", None, "event_loop_delay", interval_ns=elapsed)
             previous = current
+
+    async def clock_probes(self):
+        """Record bounded HTTP evidence without holding the market receive loops."""
+        while True:
+            epoch = self.clock_epoch
+            probes = await asyncio.gather(*(asyncio.to_thread(probe_server_clock, source,
+                                                               epoch=epoch, timeout=5)
+                                            for source in PROBE_URLS))
+            for evidence in probes:
+                # The record envelope is the conservative replay availability.
+                self.emit("collector", None, "clock_probe", evidence=evidence)
+            await asyncio.sleep(60)
 
 
 async def run_capture(output, *, duration, max_bytes, segment_bytes=8 << 20):
@@ -229,7 +244,8 @@ async def run_capture(output, *, duration, max_bytes, segment_bytes=8 << 20):
                 "feeds": [asdict(f) for f in FEEDS], "binance_snapshot_url": SNAPSHOT_URL,
                 "websockets_version": importlib.metadata.version("websockets"),
                 "code_sha256": {name: sha256(package_root / name)
-                                for name in ("collect.py", "capture_health.py", "capture_store.py")},
+                                for name in ("collect.py", "capture_health.py", "capture_store.py",
+                                             "timing.py")},
                 "recovered_unclean_segments": store.recovered,
                 "receipt_clock": "application_recv_wall_ns_and_monotonic_ns_not_kernel_timestamp",
                 "feed_completeness_verified": False, "model_fitting_enabled": False,
@@ -241,6 +257,7 @@ async def run_capture(output, *, duration, max_bytes, segment_bytes=8 << 20):
     writer = asyncio.create_task(recorder.write(store))
     tasks = [asyncio.create_task(recorder.feed(feed)) for feed in FEEDS]
     tasks.append(asyncio.create_task(recorder.clock_watch()))
+    tasks.append(asyncio.create_task(recorder.clock_probes()))
     timer = asyncio.create_task(asyncio.sleep(duration))
     stop = asyncio.Event()
     loop = asyncio.get_running_loop()

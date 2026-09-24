@@ -1,0 +1,50 @@
+{
+  "schema": "E001-OBS-exploratory-protocol-1",
+  "status": "predeclared_before_model_scoring",
+  "data_kind": "exploratory_tardis_btc",
+  "source": "Tardis first-of-month free BTCUSDT normalized CSV; spot quote grids rebuilt from CSV",
+  "dates": [
+    "2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01",
+    "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01",
+    "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01",
+    "2026-03-01", "2026-04-01", "2026-05-01", "2026-06-01",
+    "2026-07-01", "2026-08-01", "2026-09-01"
+  ],
+  "asset": "BTC",
+  "spot_venues": ["binance", "bybit-spot"],
+  "spot_reference": "equal_weight_midquote_at_local_receipt_cutoff",
+  "spot_max_receipt_age_seconds": 5,
+  "decision_hours_utc_inclusive": [2, 22],
+  "decision_spacing_seconds": 3600,
+  "label_horizon_seconds": 1800,
+  "label_lower_barrier": -0.005,
+  "label_upper_barrier": 0.00375,
+  "label_none_by_horizon_value": 0,
+  "predecision_spot_history_seconds": 300,
+  "trade_flow_window_seconds": 30,
+  "minimum_observed_trades_in_window": 1,
+  "ticker_max_receipt_age_seconds": 30,
+  "shared_features": [
+    "spot_return_300s", "spot_realized_vol_300s", "spot_spread_bps",
+    "cross_venue_mid_disagreement_bps", "oi_change_300s",
+    "mark_index_bps", "sell_notional_rel_oi_30s"
+  ],
+  "mfsm_combinations": ["sell_pressure_x_spread"],
+  "model": "same pinned HistGradientBoostingClassifier family and disjoint sigmoid calibration as E001 synthetic protocol",
+  "tuning_grid": [
+    {"max_iter": 20, "max_leaf_nodes": 7, "min_samples_leaf": 5},
+    {"max_iter": 40, "max_leaf_nodes": 7, "min_samples_leaf": 5}
+  ],
+  "outer_folds_by_date_index_inclusive": [
+    {"fit": [0, 6], "calibration": [7, 9], "validation": [10, 11], "test": [12, 14]},
+    {"fit": [0, 9], "calibration": [10, 12], "validation": [13, 14], "test": [15, 18]}
+  ],
+  "minimum_fit_rows": 50,
+  "minimum_calibration_rows": 20,
+  "minimum_validation_rows": 20,
+  "minimum_test_rows": 20,
+  "classes_required_in_fit_and_calibration": [0, 1],
+  "primary_metric": "paired_mean_Brier_improvement_MFSM_over_B4",
+  "score_interpretation": "exploratory_out_of_sample_association_not_trading_profit_or_E001_confirmation",
+  "eth_access": "sealed"
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "E001-shallow-capacity-discovery-1",
+  "data_kind": "exploratory_tardis_btc_first_of_month",
+  "purpose": "Discover every original-rule sharp BTC selloff on a fixed expanded free calendar before reading shallow-capacity outcomes.",
+  "dates": [
+    "2023-04-01", "2023-05-01", "2023-06-01", "2023-07-01",
+    "2023-08-01", "2023-09-01", "2023-10-01", "2023-11-01",
+    "2023-12-01", "2024-01-01", "2024-02-01", "2024-03-01",
+    "2024-04-01", "2024-05-01", "2024-06-01", "2024-07-01",
+    "2024-08-01", "2024-09-01", "2024-10-01", "2024-11-01",
+    "2024-12-01", "2025-01-01", "2025-02-01", "2025-03-01",
+    "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01",
+    "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01",
+    "2025-12-01", "2026-01-01", "2026-02-01", "2026-03-01",
+    "2026-04-01", "2026-05-01", "2026-06-01", "2026-07-01",
+    "2026-08-01", "2026-09-01"
+  ],
+  "spot_reference": {
+    "venues": ["binance", "bybit-spot"],
+    "price": "equal_weight_midquote",
+    "clock": "local_timestamp_receipt_time",
+    "maximum_event_age_seconds": 5,
+    "both_venues_required": true
+  },
+  "event_rule": {
+    "decline_fraction": -0.01,
+    "lookback_seconds": 300,
+    "decision_delay_seconds": 15,
+    "lockout_seconds": 7200,
+    "selection": "all_observed_crossings"
+  },
+  "planned_capacity_audit": {
+    "version": "E001-near-touch-capacity-observational-1",
+    "visible_bid_band_bps": "0.5",
+    "band_selection_basis": "measurement coverage only; no shallow capacity or forward outcome was computed",
+    "pretrigger_depth_history_seconds": 1800,
+    "replenishment_window_seconds": 15,
+    "minimum_addition_dwell_seconds": 1,
+    "projected_replenishment_seconds": 30,
+    "capacity_floor_fraction": 0.01,
+    "forward_outcome_seconds": 30,
+    "midpoint_breach_bps": -25,
+    "minimum_independent_episodes_for_descriptive_rank_correlation": 5
+  },
+  "rules": {
+    "compute_spot_labels_during_discovery": false,
+    "read_l2_or_trade_outcomes_during_discovery": false,
+    "fit_model": false,
+    "tune_thresholds": false,
+    "locked_out_crossings_are_diagnostic_only": true,
+    "eth_access": false
+  },
+  "limitations": [
+    "The 0.5 bps proxy measures near-touch displayed liquidity and is not the original 25 bps E001 capacity proxy.",
+    "First-of-month sample days are nonconsecutive and can contain calendar selection effects.",
+    "Missing preceding days leave episode lockout history uncertain.",
+    "Public normalized CSV does not certify feed continuity or causal market mechanism."
+  ]
+}

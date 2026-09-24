@@ -1,0 +1,36 @@
+{
+  "schema": "E001-synthetic-receipt-grid-1",
+  "provenance": "synthetic_fixture",
+  "asset": "BTC",
+  "experiment_version": "e001-v1.3-candidate",
+  "timing_policy": "E001-receipt-time-candidate-1",
+  "label_schema": "E001-label-v4-candidate",
+  "training_as_of_ms": 40000000,
+  "grid_epochs": [
+    {"clock_epoch": 0, "start_s": 0, "end_s": 17000,
+     "initial_price": "100",
+     "changes": {"7500": "98.9", "7510": "100", "7520": "98.9",
+                 "8000": "100", "15000": "98.9", "15016": "100"},
+     "missing_seconds": []},
+    {"clock_epoch": 1, "start_s": 23000, "end_s": 33000,
+     "initial_price": "100", "changes": {"31000": "98.9"},
+     "missing_seconds": [32000]},
+    {"clock_epoch": 2, "start_s": 35000, "end_s": 45000,
+     "initial_price": "100", "changes": {"43000": "98.9"},
+     "missing_seconds": []}
+  ],
+  "decision_features": [
+    {"decision_second": 7515, "clock_epoch": 0,
+     "shared": {"depth_relative": "1"},
+     "mfsm": {"depth_relative": "1", "interaction": "0.2"}},
+    {"decision_second": 15015, "clock_epoch": 0,
+     "shared": {"depth_relative": "1"},
+     "mfsm": {"depth_relative": "1", "interaction": "0.2"}},
+    {"decision_second": 31015, "clock_epoch": 1,
+     "shared": {"depth_relative": "1"},
+     "mfsm": {"depth_relative": "1", "interaction": "0.2"}},
+    {"decision_second": 43015, "clock_epoch": 2,
+     "shared": {"depth_relative": "1"},
+     "mfsm": {"depth_relative": "1", "interaction": "0.2"}}
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "capture_deadline_utc": "2026-09-25T00:19:49Z",
+  "created_utc_date": "2026-09-24",
+  "eth_read": false,
+  "legacy_primary_unchanged": true,
+  "model_fitted": false,
+  "receipt_feature_comparison": {
+    "path": "artifacts/e001_receipt_feature_comparison.json",
+    "sha256": "00254ed28d5bfa16a3058457a5b7a65a0a227f94a23ae7ba83da208004a0b9cc"
+  },
+  "reports": {
+    "clock_fixed": {
+      "audit_path": "artifacts/e001_timing_audit_clock_fixed.json",
+      "audit_sha256": "79668e6150dc5217428cd5515b299476d10ca9a368192875518e73bc045b99a3",
+      "code_sha256": {
+        "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+        "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+        "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+      },
+      "first_envelope_negative": null,
+      "grid_counts": {
+        "candidate_b_30s_book_updates_in_receipt_windows": 4350,
+        "candidate_b_30s_book_window_membership_available": 29,
+        "candidate_b_30s_flow_items_in_receipt_windows": 4872,
+        "candidate_b_30s_linear_book_state_ready": 29,
+        "candidate_b_30s_linear_receipt_history_present": 29,
+        "candidate_b_receipt_quote_opportunity": 58,
+        "legacy_clock_invalid": 0,
+        "legacy_valid_composite": 58,
+        "total": 63
+      },
+      "http_probe_status": {},
+      "manifest_path": "data/raw/live_btc_clock_fixed_smoke/094532e21b2946268a5d829746463ee7.manifest.json",
+      "manifest_sha256": "c961d2b0339123ed2eb20dfe1f208986aa3c4f164dc57a69c8f5942bf917a9f3",
+      "run_id": "094532e21b2946268a5d829746463ee7",
+      "scope": "completed_capture",
+      "sealed_segment_count": 1
+    },
+    "original": {
+      "audit_path": "artifacts/e001_timing_audit_original.json",
+      "audit_sha256": "fc37552aa7b8ad211fbe5e75ab680e9b71c8453244d576b99947a25f8ea41c76",
+      "code_sha256": {
+        "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+        "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+        "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+      },
+      "first_envelope_negative": {
+        "lag_ns": -3277725926,
+        "receipt_utc": "2026-09-24T00:17:38.851274+00:00",
+        "received_ns": 1790209058851274074,
+        "record_id": 8,
+        "role": "bybit_linear:orderbook.50.BTCUSDT:envelope_ts",
+        "source": "bybit_linear",
+        "source_ns": 1790209062129000000
+      },
+      "grid_counts": {
+        "candidate_b_30s_book_updates_in_receipt_windows": 2250,
+        "candidate_b_30s_book_window_membership_available": 15,
+        "candidate_b_30s_flow_items_in_receipt_windows": 4135,
+        "candidate_b_30s_linear_book_state_ready": 15,
+        "candidate_b_30s_linear_receipt_history_present": 15,
+        "candidate_b_receipt_quote_opportunity": 43,
+        "legacy_clock_invalid": 48,
+        "legacy_valid_composite": 0,
+        "total": 48
+      },
+      "http_probe_status": {},
+      "manifest_path": "data/raw/live_btc_final/23b5d4a3f0614020a96bbb58344c725a.manifest.json",
+      "manifest_sha256": "10843e34be73ebfdce0a2b590d01e5d87c97b4195b7c3395735e7d19f1b73cb2",
+      "run_id": "23b5d4a3f0614020a96bbb58344c725a",
+      "scope": "completed_capture",
+      "sealed_segment_count": 1
+    },
+    "probe_smoke": {
+      "audit_path": "artifacts/e001_timing_audit_probe_smoke.json",
+      "audit_sha256": "18aa83181130c66ac1f46f34e12ccabbe1c04db0ecb87412ec33cdfb7a7adb0c",
+      "code_sha256": {
+        "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+        "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+        "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+      },
+      "first_envelope_negative": {
+        "lag_ns": -9874649,
+        "receipt_utc": "2026-09-24T06:02:07.966125+00:00",
+        "received_ns": 1790229727966125351,
+        "record_id": 24,
+        "role": "bybit_spot:orderbook.50.BTCUSDT:envelope_ts",
+        "source": "bybit_spot",
+        "source_ns": 1790229727976000000
+      },
+      "grid_counts": {
+        "candidate_b_30s_book_updates_in_receipt_windows": 0,
+        "candidate_b_30s_book_window_membership_available": 0,
+        "candidate_b_30s_flow_items_in_receipt_windows": 0,
+        "candidate_b_30s_linear_book_state_ready": 0,
+        "candidate_b_30s_linear_receipt_history_present": 0,
+        "candidate_b_receipt_quote_opportunity": 13,
+        "legacy_clock_invalid": 18,
+        "legacy_valid_composite": 0,
+        "total": 18
+      },
+      "http_probe_status": {
+        "binance:ok": 1,
+        "bybit:ok": 1
+      },
+      "manifest_path": "data/raw/live_btc_timing_probe_smoke/a0c8d57cfdef496e8ed786f0456534cc.manifest.json",
+      "manifest_sha256": "ee81a34e4c346af9043c60d8af7655daabbd0198e3029034ffe534f5cc7de35b",
+      "run_id": "a0c8d57cfdef496e8ed786f0456534cc",
+      "scope": "completed_capture",
+      "sealed_segment_count": 1
+    },
+    "recovery": {
+      "audit_path": "artifacts/e001_timing_audit_recovery.json",
+      "audit_sha256": "9eb99d85023e0532f414772d1ea2dd4b4a1e423e65061c5435d70ce385f950b8",
+      "code_sha256": {
+        "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+        "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+        "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+      },
+      "first_envelope_negative": {
+        "lag_ns": -2218899,
+        "receipt_utc": "2026-09-24T05:32:06.993781+00:00",
+        "received_ns": 1790227926993781101,
+        "record_id": 23,
+        "role": "bybit_spot:orderbook.50.BTCUSDT:envelope_ts",
+        "source": "bybit_spot",
+        "source_ns": 1790227926996000000
+      },
+      "grid_counts": {
+        "candidate_b_30s_book_updates_in_receipt_windows": 4350,
+        "candidate_b_30s_book_window_membership_available": 29,
+        "candidate_b_30s_flow_items_in_receipt_windows": 8176,
+        "candidate_b_30s_linear_book_state_ready": 30,
+        "candidate_b_30s_linear_receipt_history_present": 30,
+        "candidate_b_receipt_quote_opportunity": 58,
+        "legacy_clock_invalid": 63,
+        "legacy_valid_composite": 0,
+        "total": 63
+      },
+      "http_probe_status": {},
+      "manifest_path": "data/raw/live_btc_recovery_smoke/1c76f35dfac5433ea3509e2db547de7a.manifest.json",
+      "manifest_sha256": "fe1cda0e4818ee04d047d087116fc57d06c4f4ed10da6412d33e79bf2bd8579e",
+      "run_id": "1c76f35dfac5433ea3509e2db547de7a",
+      "scope": "completed_capture",
+      "sealed_segment_count": 1
+    },
+    "recurring_prefix26": {
+      "audit_path": "artifacts/e001_timing_audit_recurring_prefix26.json",
+      "audit_sha256": "15dadeac728d20b8ba15e86d97a565e3613ea2b0009accab64c1a1adb92995cf",
+      "code_sha256": {
+        "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+        "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+        "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+      },
+      "first_envelope_negative": {
+        "lag_ns": -331859,
+        "receipt_utc": "2026-09-24T01:43:09.299668+00:00",
+        "received_ns": 1790214189299668141,
+        "record_id": 318059,
+        "role": "bybit_spot:orderbook.1.BTCUSDT:envelope_ts",
+        "source": "bybit_spot",
+        "source_ns": 1790214189300000000
+      },
+      "grid_counts": {
+        "candidate_b_30s_book_updates_in_receipt_windows": 334950,
+        "candidate_b_30s_book_window_membership_available": 2233,
+        "candidate_b_30s_flow_items_in_receipt_windows": 1219676,
+        "candidate_b_30s_linear_book_state_ready": 2233,
+        "candidate_b_30s_linear_receipt_history_present": 2233,
+        "candidate_b_receipt_quote_opportunity": 2262,
+        "legacy_clock_invalid": 36,
+        "legacy_valid_composite": 2226,
+        "total": 2264
+      },
+      "http_probe_status": {},
+      "manifest_path": "data/raw/live_btc_development/53d688bfe33349aaab40dc8e7463c802.manifest.json",
+      "manifest_sha256": "1319ae0773365caf23f27d3c9608bebfc4728a0b1e75e3464b27e36f8d534cda",
+      "run_id": "53d688bfe33349aaab40dc8e7463c802",
+      "scope": "sealed_prefix_only",
+      "sealed_segment_count": 26
+    }
+  },
+  "schema": "E001-timing-policy-comparison-v1",
+  "selection": "unresolved_missing_websocket_domain_evidence_and_source_backlog_rule",
+  "standalone_http_probe": {
+    "path": "artifacts/e001_clock_probe_timing_delivery_a.json",
+    "sha256": "9eec55a6941618189b942a6ba0ca51d533802e2e9201659fe29f1e940a12802d"
+  }
+}

@@ -25,6 +25,8 @@ Bybit's [ticker contract](https://bybit-exchange.github.io/docs/v5/websocket/pub
 
 ## Run
 
+**Latest status, 2026-09-24 05:31 UTC:** the restarted development process was no longer running. Its last checkpoint was 03:59:45 UTC, with no clean terminal marker. The [interruption record](../artifacts/e001_capture_interruption_observation.json) preserves the original manifest/checkpoint and verifies the open tail was sealed unchanged as `.unclean`. The old manifest's `running` field is stale. A new [60-second recovery check](../artifacts/e001_capture_recovery_smoke.json) passed integrity, but its [replay](../artifacts/e001_replay_recovery_smoke_results.json) failed the existing timing gate (Bybit median receipt-minus-source -2 ms). Long collection has **not restarted**. The launch details below describe historical runs.
+
 A bounded background recording started at **2026-09-24 00:19:49 UTC**. Run `54dccf2599ba4c6e9394cbc20a660dc8` was subsequently **stopped and sealed** for the approved clock repair; its [integrity audit](../artifacts/e001_capture_before_clock_repair.json) passed, but its original timestamps remain unsuitable for time-qualified replay. The [original launch observation](../artifacts/e001_forward_capture_start.json) is historical.
 
 After host repair and a successful fresh short capture/replay, collection restarted at **2026-09-24 01:06:01 UTC** as run `53d688bfe33349aaab40dc8e7463c802`, PID at launch `10220`. Planned end: **2026-09-25 00:19:44 UTC**, within the original 00:19:49 deadline. The **16 GiB raw-data cap** applies to the same `data/raw/live_btc_development/` directory, including the preserved old run. Current operational files are `collector.pid`, `collector-clock-fixed.log`, the new manifest and `checkpoint.json`. This is a detached process, not an installed restart-on-boot service; it may stop early on a limit, fatal error, interrupt or host shutdown. The [new launch observation](../artifacts/e001_forward_capture_clock_fixed_start.json) confirms initial reception, not a completed-run audit. Check the live process and files before launching another writer.
@@ -74,6 +76,8 @@ Replace `RUN_ID` with the printed identifier. The audit verifies file hashes, by
 ## Next data gate
 
 Book/ticker replay and its timing/depth audit are now [implemented](e001_capture_replay.md). The fresh post-repair capture passed the clock gate; keep auditing the development run and implement the full common perpetual feature panel. Full 25-bps coverage is still incomplete in some 1,000-level book states. Keep the existing approved price/event/label definitions. The fixture-only adapter currently accepts `orderbook.50` and is not the reader for this new capture envelope.
+
+The [live feature builder](e001_live_features.md) now implements supported trade, book, ticker and normalized summaries. The later recovery check shows that passing the first short clock audit did not establish lasting agreement with venue clocks. Resolve the residual clock disagreement under an explicit policy before primary collection resumes; synchronization status alone is not a substitute for recorded-message timing checks.
 
 Longer collection must supply independently eligible episodes and both outcome classes before chronological model development. A successful short feed check is not an event sample or a predictive result.
 

@@ -84,6 +84,8 @@ The current pre-freeze candidate uses the arithmetic mean of **Bybit BTCUSDT spo
 
 This midpoint/five-second candidate was approved by the research owner on 2026-09-23 after a BTC data-coverage audit and before any model fitting. It replaces the implementation's proposed last-trade/one-second rule. It changes the reference prices used for triggers and labels, so the candidate experiment and label versions advance. The original trade-based feasibility artifact is retained. Midquotes are reference prices, not executable fills. CSV quote age does not establish feed continuity: quote updates may be absent when the top of book is unchanged, and Tardis CSV files omit disconnect messages. Full feed-health qualification remains an open data audit gate. The fixed coverage sensitivity protocol is `e001_quote_audit_protocol.md`; no prediction score may select the quote-age limit.
 
+The owner later chose to **prepare** a separate receipt-time revision for live capture. Its proposed `e001-v1.3-candidate` / `E001-label-v4-candidate` contract is in [the receipt-time revision](../docs/e001_receipt_time_revision.md). It changes quote age and feature windows to application receipt time. It is unqualified for primary events and labels until independent UTC and WebSocket delay gates pass. The present source-time candidate and its labels remain the default and reproducible; no receipt-time event or label results are claimed.
+
 Define the five-minute point-to-point return
 
 \[

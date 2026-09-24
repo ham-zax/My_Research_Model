@@ -1,0 +1,242 @@
+{
+  "candidate_a": {
+    "qualifying_grid_seconds": 0,
+    "reason": "HTTP server-time evidence does not bound WebSocket timestamp domains",
+    "websocket_domain_evidence": "absent"
+  },
+  "candidate_b": {
+    "feature_windows_complete": false,
+    "flow_and_book_counts_are_window_membership_diagnostics": true,
+    "measurement": "receipt_time_quote_age_and_30s_window_membership",
+    "primary_eligibility_changed": false,
+    "source_freshness_certified": false,
+    "window_item_counts_repeat_across_overlapping_grid_windows": true
+  },
+  "capture_status_at_selection": "duration_reached",
+  "clock_steps": [],
+  "code_sha256": {
+    "scripts/audit_e001_timing.py": "f1dd45cbb686e48111043961dda4369ba66f50fcad4292974e5e240b670e3912",
+    "src/mfsm_e001/replay.py": "78e17ec952fd061b491fbc034b420f0dc5559882c18705d82cc72084bfe75d7c",
+    "src/mfsm_e001/timing.py": "421ec9f93ad832c773add305752d3d7893a160df9d21ce8c5b4945be10656341"
+  },
+  "first_envelope_negative": {
+    "lag_ns": -2218899,
+    "receipt_utc": "2026-09-24T05:32:06.993781+00:00",
+    "received_ns": 1790227926993781101,
+    "record_id": 23,
+    "role": "bybit_spot:orderbook.50.BTCUSDT:envelope_ts",
+    "source": "bybit_spot",
+    "source_ns": 1790227926996000000
+  },
+  "first_grid_second": 1790227927,
+  "first_legacy_invalid_grid_second": 1790227927,
+  "grid_counts": {
+    "candidate_b_30s_book_updates_in_receipt_windows": 4350,
+    "candidate_b_30s_book_window_membership_available": 29,
+    "candidate_b_30s_flow_items_in_receipt_windows": 8176,
+    "candidate_b_30s_linear_book_state_ready": 30,
+    "candidate_b_30s_linear_receipt_history_present": 30,
+    "candidate_b_receipt_quote_opportunity": 58,
+    "legacy_clock_invalid": 63,
+    "legacy_valid_composite": 0,
+    "total": 63
+  },
+  "histogram_note": "Percentiles are floor-millisecond buckets; extrema are exact nanoseconds.",
+  "http_probe_status": {},
+  "lag_by_timestamp_role": {
+    "binance_spot:btcusdt@depth@100ms:event_E": {
+      "count": 591,
+      "first_negative": null,
+      "max_ns": 262040879,
+      "min_ns": 38780805,
+      "negative_count": 0,
+      "p01_floor_ms": 39,
+      "p50_floor_ms": 40,
+      "p99_floor_ms": 47
+    },
+    "binance_spot:btcusdt@trade:event_E": {
+      "count": 198,
+      "first_negative": null,
+      "max_ns": 197070299,
+      "min_ns": 39434148,
+      "negative_count": 0,
+      "p01_floor_ms": 39,
+      "p50_floor_ms": 41,
+      "p99_floor_ms": 62
+    },
+    "binance_spot:btcusdt@trade:trade_T": {
+      "count": 198,
+      "first_negative": null,
+      "max_ns": 198070299,
+      "min_ns": 39434148,
+      "negative_count": 0,
+      "p01_floor_ms": 39,
+      "p50_floor_ms": 42,
+      "p99_floor_ms": 64
+    },
+    "bybit_linear:orderbook.1000.BTCUSDT:envelope_ts": {
+      "count": 311,
+      "first_negative": {
+        "lag_ns": -307021,
+        "receipt_utc": "2026-09-24T05:32:07.202693+00:00",
+        "received_ns": 1790227927202692979,
+        "record_id": 91
+      },
+      "max_ns": 2693637405,
+      "min_ns": -2363501,
+      "negative_count": 215,
+      "p01_floor_ms": -3,
+      "p50_floor_ms": -1,
+      "p99_floor_ms": 2093
+    },
+    "bybit_linear:orderbook.50.BTCUSDT:envelope_ts": {
+      "count": 2152,
+      "first_negative": {
+        "lag_ns": -2876899,
+        "receipt_utc": "2026-09-24T05:32:07.105123+00:00",
+        "received_ns": 1790227927105123101,
+        "record_id": 78
+      },
+      "max_ns": 400379172,
+      "min_ns": -4201661,
+      "negative_count": 2034,
+      "p01_floor_ms": -4,
+      "p50_floor_ms": -3,
+      "p99_floor_ms": 24
+    },
+    "bybit_linear:publicTrade.BTCUSDT:envelope_ts": {
+      "count": 217,
+      "first_negative": {
+        "lag_ns": -92015,
+        "receipt_utc": "2026-09-24T05:32:07.346908+00:00",
+        "received_ns": 1790227927346907985,
+        "record_id": 109
+      },
+      "max_ns": 7567937,
+      "min_ns": -2941111,
+      "negative_count": 182,
+      "p01_floor_ms": -3,
+      "p50_floor_ms": -1,
+      "p99_floor_ms": 4
+    },
+    "bybit_linear:publicTrade.BTCUSDT:item_T": {
+      "count": 517,
+      "first_negative": {
+        "lag_ns": -92015,
+        "receipt_utc": "2026-09-24T05:32:07.346908+00:00",
+        "received_ns": 1790227927346907985,
+        "record_id": 109
+      },
+      "max_ns": 9821309,
+      "min_ns": -1941111,
+      "negative_count": 252,
+      "p01_floor_ms": -2,
+      "p50_floor_ms": 0,
+      "p99_floor_ms": 9
+    },
+    "bybit_linear:tickers.BTCUSDT:envelope_ts": {
+      "count": 454,
+      "first_negative": {
+        "lag_ns": -1876103,
+        "receipt_utc": "2026-09-24T05:32:07.181124+00:00",
+        "received_ns": 1790227927181123897,
+        "record_id": 89
+      },
+      "max_ns": 913845361,
+      "min_ns": -3463288,
+      "negative_count": 430,
+      "p01_floor_ms": -4,
+      "p50_floor_ms": -3,
+      "p99_floor_ms": 413
+    },
+    "bybit_spot:orderbook.1.BTCUSDT:envelope_ts": {
+      "count": 383,
+      "first_negative": {
+        "lag_ns": -2488558,
+        "receipt_utc": "2026-09-24T05:32:07.086511+00:00",
+        "received_ns": 1790227927086511442,
+        "record_id": 48
+      },
+      "max_ns": 842573689,
+      "min_ns": -4590004,
+      "negative_count": 359,
+      "p01_floor_ms": -5,
+      "p50_floor_ms": -3,
+      "p99_floor_ms": 3
+    },
+    "bybit_spot:orderbook.50.BTCUSDT:envelope_ts": {
+      "count": 1442,
+      "first_negative": {
+        "lag_ns": -2218899,
+        "receipt_utc": "2026-09-24T05:32:06.993781+00:00",
+        "received_ns": 1790227926993781101,
+        "record_id": 23
+      },
+      "max_ns": 326618860,
+      "min_ns": -4130288,
+      "negative_count": 1368,
+      "p01_floor_ms": -4,
+      "p50_floor_ms": -3,
+      "p99_floor_ms": 7
+    },
+    "bybit_spot:publicTrade.BTCUSDT:envelope_ts": {
+      "count": 82,
+      "first_negative": {
+        "lag_ns": -1165863,
+        "receipt_utc": "2026-09-24T05:32:07.270834+00:00",
+        "received_ns": 1790227927270834137,
+        "record_id": 98
+      },
+      "max_ns": 6161890,
+      "min_ns": -3542763,
+      "negative_count": 75,
+      "p01_floor_ms": -4,
+      "p50_floor_ms": -2,
+      "p99_floor_ms": 6
+    },
+    "bybit_spot:publicTrade.BTCUSDT:item_T": {
+      "count": 380,
+      "first_negative": {
+        "lag_ns": -165863,
+        "receipt_utc": "2026-09-24T05:32:07.270834+00:00",
+        "received_ns": 1790227927270834137,
+        "record_id": 98
+      },
+      "max_ns": 8161890,
+      "min_ns": -2240554,
+      "negative_count": 228,
+      "p01_floor_ms": -3,
+      "p50_floor_ms": -1,
+      "p99_floor_ms": 2
+    }
+  },
+  "last_grid_second": 1790227989,
+  "legacy_diagnostics": {
+    "bybit_linear:source_event_after_receipt": 2861,
+    "bybit_spot:source_event_after_receipt": 1802,
+    "connected": 3,
+    "disconnected": 3
+  },
+  "manifest_path": "data/raw/live_btc_recovery_smoke/1c76f35dfac5433ea3509e2db547de7a.manifest.json",
+  "manifest_sha256": "fe1cda0e4818ee04d047d087116fc57d06c4f4ed10da6412d33e79bf2bd8579e",
+  "model_fitted": false,
+  "record_kinds": {
+    "application_ping_sent": 4,
+    "book_snapshot_reset": 386,
+    "connected": 3,
+    "connection_attempt": 3,
+    "disconnected": 3,
+    "rest_snapshot": 1,
+    "run_started": 1,
+    "run_stopped": 1,
+    "subscribe_sent": 2,
+    "transport_pong": 6,
+    "ws_message": 5836
+  },
+  "run_id": "1c76f35dfac5433ea3509e2db547de7a",
+  "schema": "E001-timing-audit-v1",
+  "scope": "completed_capture",
+  "segment_sha256": {
+    "1c76f35dfac5433ea3509e2db547de7a-000001.jsonl": "5bb8a0dc1451ac002be8e81a926e6dd33d26cc2bac2850f1af84abdd0b2b2cd7"
+  }
+}

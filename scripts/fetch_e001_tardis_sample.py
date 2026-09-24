@@ -23,7 +23,7 @@ SOURCES = (
     ("bybit", "liquidations"),
     ("bybit", "derivative_ticker"),
 )
-MAX_BYTES = 250_000_000
+MAX_BYTES = 300_000_000
 
 
 def digest(path: Path) -> tuple[str, str, int]:
@@ -41,8 +41,8 @@ def digest(path: Path) -> tuple[str, str, int]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch fixed BTCUSDT Tardis CSV sample feeds")
     parser.add_argument("--date", default="2025-03-01", help="UTC first day of month, YYYY-MM-01")
-    parser.add_argument("--profile", choices=("all", "spot-quotes"), default="all",
-                        help="Use spot-quotes for a bounded two-file coverage audit")
+    parser.add_argument("--profile", choices=("all", "spot-quotes", "capacity"), default="all",
+                        help="Use spot-quotes for quotes only or capacity for Bybit L2 and trades")
     args = parser.parse_args()
     day = datetime.strptime(args.date, "%Y-%m-%d").date()
     if day.day != 1 or not (datetime(2023, 4, 1).date() <= day <= datetime.now(timezone.utc).date()):
@@ -53,6 +53,9 @@ def main() -> None:
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     for exchange, kind in SOURCES:
         if args.profile == "spot-quotes" and kind != "quotes":
+            continue
+        if args.profile == "capacity" and (exchange, kind) not in {
+                ("bybit", "trades"), ("bybit", "incremental_book_L2")}:
             continue
         name = f"{exchange}_{kind}_{args.date}_BTCUSDT.csv.gz"
         output = target / name

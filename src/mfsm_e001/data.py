@@ -81,7 +81,8 @@ def _levels(values: Any) -> tuple[tuple[Decimal, Decimal], ...]:
     return tuple(output)
 
 
-def normalize_bybit_message(message: dict[str, Any], *, received_ms: int, market: str):
+def normalize_bybit_message(message: dict[str, Any], *, received_ms: int, market: str,
+                             require_source_before_receipt: bool = True):
     """Normalize documented Bybit V5 BTCUSDT fields without inferring missing economics."""
     if market not in {"spot", "linear"}:
         raise DataError("unsupported contract market")
@@ -103,7 +104,7 @@ def normalize_bybit_message(message: dict[str, Any], *, received_ms: int, market
             if item["s"] != "BTCUSDT" or item["S"] not in {"Buy", "Sell"}:
                 raise DataError("unsupported trade symbol or side")
             event_ms = int(item["T"])
-            if event_ms > received_ms or generated_ms > received_ms:
+            if require_source_before_receipt and (event_ms > received_ms or generated_ms > received_ms):
                 raise DataError("receipt precedes trade")
             size, price = _positive(item["v"], "trade size"), _positive(item["p"], "trade price")
             rows.append(Trade("bybit", market, "BTCUSDT", event_ms, received_ms,
@@ -117,7 +118,7 @@ def normalize_bybit_message(message: dict[str, Any], *, received_ms: int, market
             if item["s"] != "BTCUSDT" or item["S"] not in {"Buy", "Sell"}:
                 raise DataError("unsupported liquidation symbol or side")
             event_ms = int(item["T"])
-            if event_ms > received_ms or generated_ms > received_ms:
+            if require_source_before_receipt and (event_ms > received_ms or generated_ms > received_ms):
                 raise DataError("receipt precedes liquidation")
             rows.append(Liquidation("bybit", market, "BTCUSDT", event_ms, received_ms,
                                     item["S"], "Sell" if item["S"] == "Buy" else "Buy",
@@ -128,7 +129,7 @@ def normalize_bybit_message(message: dict[str, Any], *, received_ms: int, market
         item = message["data"]
         if item["s"] != "BTCUSDT" or message["type"] not in {"snapshot", "delta"}:
             raise DataError("invalid orderbook message")
-        if generated_ms > received_ms:
+        if require_source_before_receipt and generated_ms > received_ms:
             raise DataError("receipt precedes orderbook event")
         return [BookUpdate("bybit", market, "BTCUSDT", generated_ms, received_ms,
                            message["type"], int(item["u"]), int(item["seq"]),

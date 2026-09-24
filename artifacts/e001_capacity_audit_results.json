@@ -1,0 +1,76 @@
+{
+  "schema": "E001-capacity-audit-tracked-summary-1",
+  "status": "INSUFFICIENT_INDEPENDENT_EPISODES",
+  "data_kind": "exploratory_tardis_btc",
+  "model_fitted": false,
+  "thresholds_tuned": false,
+  "source_run": "data/derived/e001_capacity_audit_003",
+  "protocol_sha256": "1810a9d23e5d89b3de50af8cc68b4b4e84b2f81c4f903a7df24ccc838c114f93",
+  "event_source_sha256": "2a4e171eb2039dd616d962be588579143d648da4f42d85f6897a81fba6c1e849",
+  "source_result_sha256": "1bb964c5fb18dbbd6b0c34681e034c401a26657ffc8b0f0e94456d66049abe08",
+  "source_report_sha256": "879e31126ed91787f460490ee2e1c9cafcfe2f36e7d7a5376daac18a9473364a",
+  "summary": {
+    "crossings": 22,
+    "valid_crossings": 0,
+    "valid_independent_episodes": 0,
+    "exclusion_counts": {
+      "incomplete_pretrigger_bid_band": 14,
+      "invalid_or_stale_pretrigger_book_state": 8
+    },
+    "excluded_pretrigger_minimum_bid_coverage_bps": {
+      "minimum": "0.7179154838847376989062460587",
+      "median": "1.038136969849963067717151741",
+      "maximum": "1.197850583017530581430569299"
+    },
+    "maximum_observed_pretrigger_bid_coverage_bps": "5.277787019366000163324068221",
+    "rank_correlations": {
+      "status": "not_computed",
+      "reason": "0 valid independent episodes; minimum is 5"
+    }
+  },
+  "independent_episode_measurements": [
+    {
+      "trigger_utc": "2025-12-01T00:06:06+00:00",
+      "valid": false,
+      "reason": "invalid_or_stale_pretrigger_book_state"
+    },
+    {
+      "trigger_utc": "2026-02-01T23:06:40+00:00",
+      "valid": false,
+      "reason": "incomplete_pretrigger_bid_band",
+      "pretrigger_bid_coverage_bps_min": "0.7179154838847376989062460587",
+      "pretrigger_bid_coverage_bps_median": "1.448845049617347453993641814",
+      "pretrigger_bid_coverage_bps_max": "2.701989863991245294894141970"
+    },
+    {
+      "trigger_utc": "2026-03-01T16:48:28+00:00",
+      "valid": false,
+      "reason": "incomplete_pretrigger_bid_band",
+      "pretrigger_bid_coverage_bps_min": "1.038136969849963067717151741",
+      "pretrigger_bid_coverage_bps_median": "1.578583931101641640783975573",
+      "pretrigger_bid_coverage_bps_max": "4.087499641778167925345061893"
+    },
+    {
+      "trigger_utc": "2026-03-01T22:36:40+00:00",
+      "valid": false,
+      "reason": "incomplete_pretrigger_bid_band",
+      "pretrigger_bid_coverage_bps_min": "1.197850583017530581430569299",
+      "pretrigger_bid_coverage_bps_median": "2.051973233256198555692460932",
+      "pretrigger_bid_coverage_bps_max": "5.277787019366000163324068221"
+    }
+  ],
+  "source_sha256_by_day": {
+    "2025-12-01": {
+      "book": "ddab13327f176bd506772a7a23987f022588d27d4f8e648ecb95ba4a077deceb",
+      "trades": "f2d7dbcfc1886925918b3c0e10807b0a71102a49f452ce60ad85aedcb1ee6a71"
+    },
+    "2026-02-01": {
+      "book": "45737424a9cd7872ad5ca6583ed02d2a5c019bc39bf6dc27d583148836d79359",
+      "trades": "bed6dcd73562c23a705530510eaa310b7da3f25b9b6e2859463f4dd8e9eb38c5"
+    },
+    "2026-03-01": {
+      "book": "77541ea5ed51369547b94850cd7a38846b060a3860efda2a5a079bba81bd9163",
+      "trades": "4545e6bfdccb47bb24612bf6a69bac1f80ed24c6a284a09c63726af6c298b5b6"
+    }
+  }
+}

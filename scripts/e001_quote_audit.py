@@ -35,7 +35,7 @@ def file_sha256(path):
     return sha.hexdigest()
 
 
-def audit_day(date):
+def audit_day(date, *, include_labels=True):
     day = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
     folder = ROOT / "data" / "raw" / "tardis" / date
     manifest = json.loads((folder / "manifest.json").read_text())
@@ -92,7 +92,7 @@ def audit_day(date):
     events = detect_events(points)
     labels = []
     counts = Counter()
-    for event in events:
+    for event in events if include_labels else ():
         if not event.accepted:
             continue
         if event.decision_s + 1800 > end:

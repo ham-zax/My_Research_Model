@@ -1,0 +1,32 @@
+{
+  "observed_at_utc": "2026-09-24T05:31:36.062717+00:00",
+  "provenance": "orphaned_capture_observation_before_recovery",
+  "writer_lock_available": true,
+  "manifest_path": "data/raw/live_btc_development/53d688bfe33349aaab40dc8e7463c802.manifest.json",
+  "manifest_sha256": "1319ae0773365caf23f27d3c9608bebfc4728a0b1e75e3464b27e36f8d534cda",
+  "manifest_status_at_check": "running",
+  "checkpoint": {
+    "durable_bytes_in_segment": 2962394,
+    "raw_bytes_in_directory": 1099058160,
+    "records_in_run": 1468361,
+    "run_id": "53d688bfe33349aaab40dc8e7463c802",
+    "segment": "53d688bfe33349aaab40dc8e7463c802-000120.open",
+    "updated_ns": 1790222385277464102
+  },
+  "checkpoint_utc": "2026-09-24T03:59:45.277464+00:00",
+  "checkpoint_age_seconds": 5510.785400308,
+  "open_tails": [
+    {
+      "path": "data/raw/live_btc_development/53d688bfe33349aaab40dc8e7463c802-000120.open",
+      "bytes": 2965504,
+      "sha256": "3ec5312e5a0d070d2621a49f4b3dd1e91c86b7ef06bffeeacfbee395c4275748"
+    }
+  ],
+  "cause": "unknown; no clean terminal record",
+  "model_fitted": false,
+  "recovered_unclean_segments": [
+    "53d688bfe33349aaab40dc8e7463c802-000120.unclean"
+  ],
+  "tail_bytes_preserved": true,
+  "restart_status": "blocked_by_fresh_recovery_smoke_clock_gate"
+}
