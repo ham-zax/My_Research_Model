@@ -1,0 +1,318 @@
+{
+  "economy_code_sha256": "8bf6864af83b8697ede73cc973958871cc10fd9a8590b73b66087526fefbb840",
+  "empirical_data_used": false,
+  "initial_state": {
+    "breach_ticks": 0,
+    "buyer": {
+      "cash": 1000,
+      "units": 0
+    },
+    "dealer": {
+      "cash": 0,
+      "units": 1
+    },
+    "debt": 740,
+    "holder": {
+      "cash": 0,
+      "units": 10
+    },
+    "mode": "NORMAL",
+    "signals": [],
+    "tick": 0
+  },
+  "model_fitted": false,
+  "paths": {
+    "F0": {
+      "end_mode": "NORMAL",
+      "end_tick": 6,
+      "failure_tick": null,
+      "first_buyer_tick": 0,
+      "first_restoration_tick": 1,
+      "maximum_cash_conservation_error": 0.0,
+      "maximum_unit_conservation_error": 0.0,
+      "parameters": {
+        "buyer_speed": 200,
+        "currency_tolerance": 1e-09,
+        "deadline": 2,
+        "delay": 0,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "exponential",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 98
+      },
+      "path": [
+        {
+          "buyer_purchase": 1,
+          "forced_sale": 1.0,
+          "headroom": 12.429594283227857,
+          "mark": 97.02488370741847,
+          "mode": "NORMAL",
+          "tick": 1
+        },
+        {
+          "buyer_purchase": 1.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 2
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 3
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 4
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 5
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 6
+        }
+      ],
+      "total_buyer_purchase": 2.0,
+      "total_forced_sale": 1.0
+    },
+    "F1": {
+      "end_mode": "NORMAL",
+      "end_tick": 6,
+      "failure_tick": null,
+      "first_buyer_tick": 1,
+      "first_restoration_tick": 2,
+      "maximum_cash_conservation_error": 0.0,
+      "maximum_unit_conservation_error": 0.0,
+      "parameters": {
+        "buyer_speed": 200,
+        "currency_tolerance": 1e-09,
+        "deadline": 2,
+        "delay": 1,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "exponential",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 98
+      },
+      "path": [
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": -12.313372194361364,
+          "mark": 97.02488370741847,
+          "mode": "MARGIN",
+          "tick": 1
+        },
+        {
+          "buyer_purchase": 1.0,
+          "forced_sale": 1.0,
+          "headroom": 12.429594283227857,
+          "mark": 97.02488370741847,
+          "mode": "NORMAL",
+          "tick": 2
+        },
+        {
+          "buyer_purchase": 1.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 3
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 4
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 5
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": 19.011629258153107,
+          "mark": 98.0,
+          "mode": "NORMAL",
+          "tick": 6
+        }
+      ],
+      "total_buyer_purchase": 2.0,
+      "total_forced_sale": 1.0
+    },
+    "F2": {
+      "end_mode": "MARGIN_FAILURE",
+      "end_tick": 2,
+      "failure_tick": 2,
+      "first_buyer_tick": null,
+      "first_restoration_tick": null,
+      "maximum_cash_conservation_error": 0.0,
+      "maximum_unit_conservation_error": 0.0,
+      "parameters": {
+        "buyer_speed": 200,
+        "currency_tolerance": 1e-09,
+        "deadline": 2,
+        "delay": 2,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "exponential",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 98
+      },
+      "path": [
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": -12.313372194361364,
+          "mark": 97.02488370741847,
+          "mode": "MARGIN",
+          "tick": 1
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": -12.313372194361364,
+          "mark": 97.02488370741847,
+          "mode": "MARGIN_FAILURE",
+          "tick": 2
+        }
+      ],
+      "total_buyer_purchase": 0.0,
+      "total_forced_sale": 0.0
+    },
+    "F5": {
+      "end_mode": "MARGIN_FAILURE",
+      "end_tick": 2,
+      "failure_tick": 2,
+      "first_buyer_tick": null,
+      "first_restoration_tick": null,
+      "maximum_cash_conservation_error": 0.0,
+      "maximum_unit_conservation_error": 0.0,
+      "parameters": {
+        "buyer_speed": 200,
+        "currency_tolerance": 1e-09,
+        "deadline": 2,
+        "delay": 5,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "exponential",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 98
+      },
+      "path": [
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": -12.313372194361364,
+          "mark": 97.02488370741847,
+          "mode": "MARGIN",
+          "tick": 1
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": -12.313372194361364,
+          "mark": 97.02488370741847,
+          "mode": "MARGIN_FAILURE",
+          "tick": 2
+        }
+      ],
+      "total_buyer_purchase": 0.0,
+      "total_forced_sale": 0.0
+    },
+    "N0": {
+      "end_mode": "MARGIN_FAILURE",
+      "end_tick": 2,
+      "failure_tick": 2,
+      "first_buyer_tick": null,
+      "first_restoration_tick": null,
+      "maximum_cash_conservation_error": 0.0,
+      "maximum_unit_conservation_error": 0.0,
+      "parameters": {
+        "buyer_speed": 0,
+        "currency_tolerance": 1e-09,
+        "deadline": 2,
+        "delay": 0,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "exponential",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 98
+      },
+      "path": [
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": -12.313372194361364,
+          "mark": 97.02488370741847,
+          "mode": "MARGIN",
+          "tick": 1
+        },
+        {
+          "buyer_purchase": 0.0,
+          "forced_sale": 0.0,
+          "headroom": -12.313372194361364,
+          "mark": 97.02488370741847,
+          "mode": "MARGIN_FAILURE",
+          "tick": 2
+        }
+      ],
+      "total_buyer_purchase": 0.0,
+      "total_forced_sale": 0.0
+    }
+  },
+  "post_intervention_discount_signal": 0.009950166250832004,
+  "post_intervention_headroom": -12.313372194361364,
+  "pre_intervention_headroom": 2.5373753118759623,
+  "protocol_sha256": "e281ae619a4ab04825dc202fc150ad4f701f13bf3e189f95316eee67b17196cb",
+  "runner_sha256": "5f4e883a87f8993195ca976c989805003ab2fa5fe2a327d6bae454cc11d60163",
+  "schema": "MFSM-RE-TIME-1-result-1",
+  "status": "synthetic_transition_diagnostic_only",
+  "trading_edge_claim": false
+}

@@ -10,7 +10,9 @@ This file records material changes to the Market Feedback-State Model so definit
 - Add a limited-observation counterexample: identical mark, benchmark, and
   dealer inventory can conceal different margin states and next forced sales.
 - Record that the no-cash/long-delay diagnostic does not isolate delay, and
-  make its correction the next model step.
+  follow it with a separately frozen [timing check](docs/mfsm_reference_timing_result.md)
+  in which the buyer signal exists and arrival before the deadline changes the
+  holder's margin outcome.
 
 ## 2026-09-24 - Canonical operational contract and reference economy
 

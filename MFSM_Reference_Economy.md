@@ -320,3 +320,10 @@ inventory can conceal different holder debt and therefore different forced-sale
 responses. The reference's exact-observation uniqueness proposition applies
 only when the full initial state and law are supplied. It cannot be promoted
 to an observer's unique forecast from a price snapshot.
+
+The separately frozen [timing diagnostic](docs/mfsm_reference_timing_result.md)
+repairs a limitation in the first structural comparison. Starting with a
+cashless dealer that holds one unit, buyer lags of 0 or 1 tick fund the dealer
+in time to restore the holder's margin under a two-tick deadline; lags of 2 or
+5 ticks fail before the buyer can act. This demonstrates a possible timing
+effect under the stated transition order, not an estimated market clock.

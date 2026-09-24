@@ -28,6 +28,9 @@ Its invariant question is:
 - [Reference sensitivity and observation result](./docs/mfsm_reference_sensitivity_result.md)
   Frozen synthetic structural comparisons and an explicit case where identical limited observations conceal different market responses.
 
+- [Reference timing result](./docs/mfsm_reference_timing_result.md)
+  Synthetic check that buyer funding arriving before a margin deadline can change the outcome in the specified economy.
+
 - [MFSM_Reference_Economy.md](./MFSM_Reference_Economy.md)
   Complete deterministic reference economy with finite budgets, inventory-dependent execution, margin rules, delayed buying, and derived response conditions. Includes executable mathematical checks; parameters are synthetic and uncalibrated.
 

@@ -125,11 +125,14 @@ those observations are sufficient in a real market.
 
 ### Stage 4 — Resolve a named limitation before adding a mechanism
 
-**Next, conditional.** First repair the inconclusive timing diagnostic with an
-initial state in which the buyer has a nonzero observable discount and sufficient
-cash to act, then compare deadlines under the same law. Freeze the pair before
-running it. This is a better test of the existing mechanism, not a reason to add
-a new state coordinate.
+**Timing diagnostic completed in MFSM-RE-TIME-1; extensions remain conditional.**
+The [frozen timing protocol](mfsm_reference_timing_protocol.md) gives the
+cashless dealer starting inventory and a positive buyer signal. The
+[result](mfsm_reference_timing_result.md) shows that lags 0 and 1 fund the
+dealer before the holder's two-tick margin deadline; lags 2 and 5, and the
+no-buyer control, reach margin failure. This repairs the earlier comparison's
+diagnostic flaw.
+It is a theoretical existence example, not a calibrated market delay law.
 
 Potential extensions are both long and short constraints, participant
 heterogeneity, changing margin terms, or anticipation. These are optional
@@ -160,8 +163,8 @@ causal refutation. Decision claims also require relevant costs and constraints.
 2. Preserve primitive accounts, derived responses, and observed measurements as
    distinct objects. Do not add a universal fragility score.
 3. Work on the earliest incomplete stage above with one coherent change. The
-   next diagnostic is the timing counterexample described in Stage 4; do not
-   retroactively interpret row D as evidence for delay.
+   next stage is a named real application or a specific failure of this member;
+   do not add a mechanism solely because a canonical symbol lacks an equation.
 4. State the error or unanswered question and its discriminating check first.
    Do not choose a mechanism after seeing a desired result.
 5. After a transition change, run accounting, timing, limiting-case, and relevant
