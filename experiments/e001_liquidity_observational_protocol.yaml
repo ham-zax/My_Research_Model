@@ -18,8 +18,10 @@
   },
   "capture": {
     "protocol": "experiments/e001_forward_liquidity_observation.yaml",
-    "selected_run_id": "9c4ee7b3301742aabf31377f5d2c894c",
+    "qualification_seed_run_id": "9c4ee7b3301742aabf31377f5d2c894c",
+    "qualification_seed_role": "measurement_and_feed_quality_only; its 20673-second duration and 7200-second episode lockout permit at most three independent episodes, so it cannot satisfy the 130-episode evaluation gate",
     "selection_timing": "selected while acquisition was still running and before event labels or model scores were inspected",
+    "future_evaluation_data_rule": "any longer acquisition window must be fixed and recorded before launch and before inspecting new labels or model scores; do not extend or stop collection according to prediction results",
     "require_completed_or_explicitly_sealed_input": true,
     "require_segment_hash_verification": true,
     "require_feed_epoch_and_gap_audit": true,
