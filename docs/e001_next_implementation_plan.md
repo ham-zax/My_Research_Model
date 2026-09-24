@@ -124,6 +124,8 @@ Use these bounded real inputs for the initial readiness config; verify their cur
 
 ### Task 5 — Verify acquisition and construct a real BTC dataset
 
+**Historical extension selected for feasibility:** use the [CryptoStruct candidate path](e001_cryptostruct_historical_data.md) to solve the sample-size problem without changing the frozen E001-LIQ-OBS feature contract. The consecutive official Binance BTCUSDT one-second scan is now complete for July 2023-August 2026: all 38 monthly checksums passed, 100,051,200 seconds had zero gaps, and the price-only proxy found 428 accepted two-hour-lockout episodes on 283 days. Next freeze a deterministic paid-data candidate-day rule before reading any new CryptoStruct L2 outcomes. The final research trigger must still be rebuilt from Binance+Bybit spot receipt-time midquotes; the Binance-only scan is acquisition planning only. The free Bybit perpetual sample passed the initial top-50/gap/timing probe and the source adapter can produce the frozen liquidity feature vector.
+
 **Files:** existing capture/audit tooling, dataset builder, execution config and run manifests. Do not launch a collector as part of a default readiness command.
 
 - [ ] Verify actual process/lock/checkpoint state, free space and the remaining authorized acquisition period. Preserve interrupted inputs and their previous audit artifacts.

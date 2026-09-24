@@ -105,6 +105,22 @@
     "real_fit_gate": "capture complete and hash verified; feed/epoch/gap audit passed; exact feature contract applied; at least 130 eligible episodes; split and class requirements satisfied",
     "real_fit_enabled_before_gate": false
   },
+  "historical_extension": {
+    "status": "candidate_source_sample_validated_not_yet_evaluation_input",
+    "decision_record": "docs/e001_cryptostruct_historical_data.md",
+    "audit_receipt": "artifacts/e001_historical_data_candidate_audit.json",
+    "candidate_source": "CryptoStruct full-depth day files",
+    "required_inputs_per_selected_day": [
+      "CryptoStruct 67838: Binance Spot BTCUSDT",
+      "CryptoStruct 2000: Bybit Spot BTCUSDT.spot",
+      "CryptoStruct 2449: Bybit BTCUSDT perpetual full L2 and aggressor trades"
+    ],
+    "common_catalog_coverage_start": "2023-07",
+    "free_event_yield_source": "official Binance BTCUSDT 1-second archive",
+    "candidate_day_rule": "must be frozen after the multi-year free incidence scan and before paid L2 outcome/model inspection",
+    "final_trigger_rule": "unchanged two-venue receipt-time midpoint event definition; Binance-only screening can never become the research trigger",
+    "model_fit_enabled": false
+  },
   "data_reuse": {
     "previous_42_first_of_month_shallow_capacity_dates": "development_only_not_validation_for_this_feature_family",
     "E001_OBS_1_exploratory_sample": "separate_prior_experiment_not_part_of_this_evaluation",

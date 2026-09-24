@@ -1,0 +1,184 @@
+{
+  "schema": "E001-historical-data-candidate-audit-1",
+  "checked_utc_date": "2026-09-24",
+  "model_fitted": false,
+  "primary_eligible": false,
+  "cryptostruct": {
+    "status": "candidate_source_sample_validated",
+    "source_page": "https://cryptostruct.com/download",
+    "format_reference": "https://cryptostruct.com/skills/cryptostruct-market-data/references/day-file-format.md",
+    "sample": {
+      "venue": "bybit",
+      "instrument": "BTCUSDT",
+      "instrument_id": 2449,
+      "market_type": "perpetual",
+      "nominal_day": "2026-09-17",
+      "download_path": "/api/download/sample/2449/2026-09-17",
+      "compressed_bytes": 243964743,
+      "decompressed_bytes": 1106807478,
+      "sha256": "4b90e9d6d93d8792fff6a71689b7800157a8028e45782edb8df27e91f922c561"
+    },
+    "stream_audit": {
+      "events": 5095711,
+      "book_updates": 2930693,
+      "trade_event_batches": 513174,
+      "trade_fills": 1708571,
+      "top_of_book_events": 1478568,
+      "mark_events": 62148,
+      "index_events": 111120,
+      "snapshots": 1,
+      "parse_errors": 0,
+      "book_chain_gaps": 0,
+      "trade_chain_gaps": 0,
+      "crossed_book_states": 0,
+      "max_book_levels": 100
+    },
+    "top50_one_second_audit": {
+      "seconds": 86937,
+      "valid_top50_seconds": 86937,
+      "valid_percent": 100.0,
+      "suspect_seconds": 0,
+      "crossed_seconds": 0,
+      "minimum_bid_levels": 50,
+      "minimum_ask_levels": 50
+    },
+    "receipt_minus_exchange_ms": {
+      "book_update": {"records": 2930693, "negative": 0, "minimum": 1.911505, "mean": 4.92357596521403, "maximum": 56.3888},
+      "trade_batch": {"records": 513174, "negative": 0, "minimum": 2.795904, "mean": 4.669434179225759, "maximum": 60.942715},
+      "top_of_book": {"records": 1478568, "negative": 0, "minimum": 1.829537, "mean": 3.667448101525936, "maximum": 59.268578},
+      "mark": {"records": 62148, "negative": 0, "minimum": 1.241498, "mean": 2.131252710577975, "maximum": 24.010545},
+      "index": {"records": 111120, "negative": 0, "minimum": 1.246076, "mean": 2.1167968873560117, "maximum": 28.918533}
+    },
+    "adapter_timestamp_order": {
+      "all_stream_regressions": 1,
+      "all_stream_maximum_regression_ns": 968574498,
+      "regression_message_type": 9,
+      "combined_model_stream_0_1_2_regressions": 0
+    },
+    "frozen_feature_probe": {
+      "engineering_trigger_second": 1789605900,
+      "engineering_trigger_utc": "2026-09-17T00:45:00Z",
+      "decision_delay_seconds": 15,
+      "feature_vector_ready": true,
+      "book_chain_gaps": 0,
+      "trade_chain_gaps": 0,
+      "source_clock_leads": 0,
+      "shared_features": [
+        "buy_relative_total_depth_30s",
+        "gross_trade_relative_total_depth_30s",
+        "imbalance",
+        "persistent_bid_add_relative_15s",
+        "sell_relative_total_depth_30s",
+        "spread_bps",
+        "top_ask_relative",
+        "top_bid_relative"
+      ],
+      "mfsm_additions": [
+        "sell_pressure_x_inverse_bid_depth",
+        "sell_pressure_x_inverse_replenishment"
+      ],
+      "note": "Fixed 00:45 UTC engineering timestamp only; not an observed shock event and not a model score."
+    }
+  },
+  "required_historical_instruments": {
+    "catalog_source": "https://cryptostruct.com/pairs/btc-usdt",
+    "catalog_checked_utc_date": "2026-09-24",
+    "binance_spot": {"instrument_id": 67838, "code": "BTCUSDT", "catalog_since": "2023-03"},
+    "bybit_spot": {"instrument_id": 2000, "code": "BTCUSDT.spot", "catalog_since": "2023-07"},
+    "bybit_perpetual": {"instrument_id": 2449, "code": "BTCUSDT", "catalog_since": "2023-07"},
+    "common_catalog_coverage_start": "2023-07"
+  },
+  "binance_event_yield_common_window": {
+    "period": "2023-07 through 2026-08",
+    "months": 38,
+    "rows": 100051200,
+    "gaps": 0,
+    "raw_crossings": 3067,
+    "accepted_2h_lockout": 428,
+    "accepted_by_year": {"2023": 50, "2024": 200, "2025": 94, "2026": 84},
+    "months_with_accepted_events": 37,
+    "median_accepted_per_month": 9.0,
+    "maximum_month": {"month": "2024-03", "accepted": 35},
+    "unique_accepted_event_days": 283,
+    "exact_threshold_days_with_boundary_support": 330,
+    "three_instrument_day_lower_bound": 990,
+    "days_with_multiple_accepted_events": 95,
+    "maximum_accepted_events_same_day": 8,
+    "first_accepted_utc": "2023-07-02T15:23:59+00:00",
+    "last_accepted_utc": "2026-08-28T16:25:16+00:00",
+    "derived_report": "data/derived/e001_binance_event_yield_2023-07_to_2026-08.json",
+    "derived_report_sha256": "20f85c2e1120b4f871f74a3edac3e75ddb54d47972b2c4751cdcf727a5f5a2b0",
+    "purpose": "acquisition planning only",
+    "warning": "Uses Binance one-second close, not the frozen two-venue receipt-time midpoint trigger."
+  },
+  "development_spot_reference_error": {
+    "source": "39 existing e001_quote_grid development days from 2023-07-01 through 2026-09-01",
+    "valid_two_venue_seconds": 3369529,
+    "valid_five_minute_comparisons": 3357829,
+    "five_minute_return_difference_bps_binance_minus_composite": {
+      "minimum": -33.98191064006623,
+      "p001": -1.7238267700131709,
+      "p01": -1.0439082110814608,
+      "median": 0.0,
+      "p99": 1.0431657770729839,
+      "p999": 1.6789023837168244,
+      "maximum": 31.981015088397488,
+      "maximum_absolute": 33.98191064006623
+    },
+    "composite_le_minus_1pct": {
+      "comparisons": 1506,
+      "maximum_positive_binance_minus_composite_bps": 31.981015088397488,
+      "worst_case_binance_return_bps": -70.39049847939734,
+      "worst_case_composite_return_bps": -102.37151356779482,
+      "worst_case_grid": "e001_quote_grid_2023-10-01.jsonl.gz",
+      "worst_case_second": 1696198980
+    },
+    "purpose": "candidate-day screening-margin design only"
+  },
+  "forward_spot_reference_audit": {
+    "run_id": "9c4ee7b3301742aabf31377f5d2c894c",
+    "scope": "first_92_sealed_segments_of_running_capture",
+    "grid_seconds": 7501,
+    "valid_two_venue_seconds": 7481,
+    "basis_bps_bybit_minus_binance": {
+      "minimum": -4.004721668284829,
+      "p01": -1.0026562980186242,
+      "median": 0.3410739383866777,
+      "p99": 1.7663395717799568,
+      "maximum": 2.906384519822827,
+      "maximum_absolute": 4.004721668284829
+    },
+    "five_minute_return_difference_bps_binance_minus_composite": {
+      "comparisons": 7163,
+      "minimum": -2.2197385526712132,
+      "p01": -0.8660746906463679,
+      "median": -0.030159548281005755,
+      "p99": 0.858129368126459,
+      "maximum": 2.5155912646412926,
+      "maximum_absolute": 2.5155912646412926
+    },
+    "purpose": "candidate-day acquisition-screen design only",
+    "warning": "Short continuous prefix; does not replace the older 19-day quote-disagreement audit or certify a universal screening margin."
+  },
+  "binance_event_yield_pilot": {
+    "source": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1s/BTCUSDT-1s-2026-08.zip",
+    "month": "2026-08",
+    "sha256": "b2bcf50e5f8c692dfea238c93068251a8dfab1262ead187d9a3a8f7b1216403f",
+    "rows": 2678400,
+    "gaps": 0,
+    "raw_crossings": 30,
+    "accepted_2h_lockout": 8,
+    "purpose": "acquisition planning only",
+    "warning": "Uses Binance one-second close, not the frozen two-venue receipt-time midpoint trigger."
+  },
+  "interpretation": {
+    "supported": "CryptoStruct is a credible historical source candidate for reconstructable receipt-ordered top-50 liquidity state and aggressor trade flow.",
+    "not_supported": [
+      "original E001 capacity claim",
+      "prediction edge",
+      "trading edge",
+      "universal source-delay bound",
+      "historical source qualification beyond the audited free sample"
+    ]
+  }
+}
