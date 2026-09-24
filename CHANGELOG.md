@@ -2,6 +2,27 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
+## 2026-09-24 - Receipt-ordered replay and verified capture restart
+
+Added hash-verified book/ticker replay, deterministic one-second grids, finite-depth coverage and receipt-clock gates. The first replay detected approximately 3.3 seconds of local clock lag; the owner-approved old run was stopped and sealed without rewriting observations. After Windows host repair, a fresh 60-second capture passed integrity and timing checks: 7,195 WebSocket messages and 58 valid composite seconds, with five grid seconds excluded at startup/shutdown. Development capture restarted within the original deadline and directory-wide 16 GiB cap. Full suite: **90 passed**. The [replay report and handoff](docs/e001_capture_replay.md) preserve both historical failures and new evidence. Incomplete 25-bps book coverage remains missing; the full common feature panel and model evaluation remain unfinished. No event/label definition or ETH holdout changed.
+
+## 2026-09-24 - Public continuous BTC recorder
+
+Implemented BTC-only Binance spot and Bybit spot/perpetual capture without credentials. Original messages, receipt/monotonic clocks, connection and snapshot evidence, bounded queues/storage, segment hashes and restart interruptions are preserved. Added a completed-run integrity audit and [operating instructions with source research](docs/e001_continuous_capture.md). Live checks reached all three connections; the initial check observed every requested topic. The final collector's 45-second integrity-checked run recorded 5,209 WebSocket messages without connection errors. The full suite passes 71 tests. Raw capture does not yet establish synchronized book replay, full feature coverage or predictive performance; event/label definitions remain unchanged.
+
+## 2026-09-24 - Fixed BTC monthly sample scan
+
+Completed all 19 first-of-month quote samples from March 2025 through September 2026 with the approved midpoint/five-second rule unchanged. Found 22 observed crossings, four nominal labelled episodes and two labels with eligibility supported by observed lockout history. Both remaining labels are binary-negative, so no model was fitted. Added reproducible acquisition/audit checkpoints, a conservative missing-history audit and a [complete result and handoff](artifacts/e001_monthly_sample_report.md). These are isolated days; quote coverage does not prove feed connectivity. No freeze or ETH access occurred.
+
+## 2026-09-23 - Owner-approved BTC spot reference candidate
+
+Candidate Experiment 001 advances from `e001-v1.1` to `e001-v1.2`, raw schema to `E001-raw-candidate-2`, and labels to `E001-label-v3`. No release tag or freeze is created, and ETH remains sealed. The label formulas and barriers are unchanged; the reference prices used to compute them change.
+
+- Replace the implementation's proposed equal-weight last-trade composite with equal-weight Binance/Bybit BTCUSDT spot **midquotes**, each at most **five seconds old**, as explicitly approved by the owner on 2026-09-23 before any model fitting. Preserve original microsecond receipt-time gating, both-venue requirements, explicit invalid quotes, and no future interpolation.
+- Reason: the 2025-03-01 receipt-timestamped sample supported only 53,497 of 86,400 seconds under the trade/one-second rule. An initial quote coverage probe suggested 86,386 seconds under five seconds. This motivates a candidate data-quality change, not evidence of predictive value or a guarantee that all labels are usable. The original trade feasibility artifact remains available.
+- Define a fixed 1/2/5/10-second coverage sensitivity audit on the first three monthly samples from March through May 2025. Check full 30-minute continuity, quote age, spread and cross-venue disagreement. No predictive score selects the age limit.
+- State the unresolved measurement limit: quote CSVs omit disconnect events, and an unchanged top quote need not generate an update. A complete archive of book updates plus connection/reset evidence is preferable for distinguishing unchanged prices from missing feeds. No feed-health claim follows from the five-second cap.
+
 ## 2026-09-22 - Repository review corrections before Experiment 001 freeze
 
 These corrections amend the pre-freeze specification. They are **not** a completed experiment freeze, dataset audit, or empirical result.

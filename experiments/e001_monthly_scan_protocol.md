@@ -1,0 +1,9 @@
+# Fixed BTC monthly sample feasibility scan
+
+Recorded before expanding the downloads on 2026-09-23. Scan every first-of-month sample from **2025-03-01 through 2026-09-01 inclusive**: 19 dates. The first three dates have already been inspected and yielded no events; all 16 additional dates are retained regardless of outcome. This is 19 isolated days, not 19 months of continuous data.
+
+Use the approved `e001-v1.2` midpoint reference: Binance and Bybit BTCUSDT spot quotes, equal weights, five-second maximum source-event age, original receipt-time gating, and both constituents required. Keep the -1%/300-second crossing, 15-second decision delay, two-hour episode lockout and 30-minute barrier target unchanged. No date or threshold is selected based on outcomes. Failed acquisition, corrupt files and incomplete coverage must appear explicitly in the report; they are never zero-event days.
+
+Produce every observable crossing, the per-day lockout ledger, primary label availability/exclusion reasons, quote coverage, and complete 30-minute path counts. Isolated days lack preceding-day trigger history: report the nominal per-day counts and separately flag uncertainty about the actual episode lockout. Do not count nominal episodes as independent model-ready observations without checking that history. Consecutive valid label paths can stop at the first barrier, subject to the experiment's full-window sample boundary rule.
+
+Source files stay BTC-only with hashes. Use only unauthenticated documented free samples; no paid archive, account, ETH access or parameter tuning is authorized by this scan. Preserve the earlier three-day audit. Decide feasibility from event counts, class support, chronological coverage and unresolved feed requirements, without inventing a universal minimum sample size or fitting a model to an inadequate sample.

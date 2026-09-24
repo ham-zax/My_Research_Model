@@ -3,13 +3,13 @@ model:
   release_tag: mfsm-v1.0
   resolved_commit: null
 experiment:
-  spec_tag: e001-v1.1
+  spec_tag: e001-v1.2
   resolved_commit: null
   spec_file: experiments/Experiment_001_Crypto_Liquidation_Response.md
 schemas:
   raw_data: null
   feature: null
-  label: E001-label-v2
+  label: E001-label-v3
 freeze:
   timestamp_utc: null
   btc_development_cutoff_utc: null

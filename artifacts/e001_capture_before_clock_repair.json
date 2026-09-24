@@ -1,0 +1,109 @@
+{
+  "binance_connections_without_rest_snapshot": [],
+  "code_sha256": {
+    "capture_health.py": "5415bece0328eb0b3caff6d75041492383af7c5e369566a9f2fcfb2af028cbdf",
+    "capture_store.py": "91c9cd2cb53e0811942c4a35d0810ae863612024ecf12da718ad723d1e259006",
+    "collect.py": "a0c7cd384989a0e493e9766de1c115638a3d0990a8937766645bc2083bda2b6a"
+  },
+  "end": {
+    "monotonic_ns": 21592191931573,
+    "received_ns": 1790210459916464600
+  },
+  "feed_completeness_verified": false,
+  "integrity_checks_passed": true,
+  "manifest_sha256": "02fd4f5f2a8991b85caccb43b98d33e9a306c3494954c6fc67e14af0f830ef8c",
+  "note": "A quiet liquidation channel can have no events. Subscription acknowledgement is separate; topic counts, transport heartbeats and hashes do not establish full market coverage.",
+  "planned_duration_seconds": 86400.0,
+  "provenance": "live_capture_integrity_not_model_validation",
+  "raw_bytes_this_run": 97995758,
+  "record_kind_counts": {
+    "application_ping_sent": 126,
+    "book_snapshot_reset": 7095,
+    "connected": 3,
+    "connection_attempt": 3,
+    "disconnected": 3,
+    "event_loop_delay": 2,
+    "rest_snapshot": 1,
+    "run_started": 1,
+    "run_stopped": 1,
+    "subscribe_sent": 2,
+    "transport_pong": 188,
+    "ws_message": 143190
+  },
+  "records": 150615,
+  "run_id": "54dccf2599ba4c6e9394cbc20a660dc8",
+  "schema": "E001-capture-v1",
+  "segment_sha256": {
+    "54dccf2599ba4c6e9394cbc20a660dc8-000001.jsonl": "27b49e6e1a2c2bb547130a1f4e2cd5a48cc04bea05553508824ebb31d8e66fd3",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000002.jsonl": "d61ec69b686d1d0cd01da010023838d8056cd1411f5ffd5dd1046d2515a7eab5",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000003.jsonl": "cf11942209acabbd1605ff2061d53264e3873c674c3ebea94d029a10ba5a2af9",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000004.jsonl": "174af9c735507d59e1008a30e0577879431de0f9e489b5c0572ff18481534a67",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000005.jsonl": "85135f8f47a733b2294e357b1638bf346a576b83da25f96251c36892ab0464dc",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000006.jsonl": "d2b8ed7af48a0b630f6892e6f815606cead84da36b2a78174f7639eca85cec84",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000007.jsonl": "6f4d85efb40de23a8b741d7f11b2b9956e09ade60078af3204d92f7aee595375",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000008.jsonl": "546cf759b9bb01a6538dcd2b4304e11a6fa9fbce5ba068f483d6e21860122278",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000009.jsonl": "67c42da048a6851596a18591ab05ed105f4bcb3267dffc14ffbd6f84cf7a7891",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000010.jsonl": "1ae273df1e7df059332f9375aacdd6b73a6312d4904587d8e4a1955f9d67ec37",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000011.jsonl": "fa7a06678ccd62b0e8df44040a07fae2ea78fe639f6c37d4c45755288b2a7b21",
+    "54dccf2599ba4c6e9394cbc20a660dc8-000012.jsonl": "a4dd436aa1363209c7ffd4a9395f65df333cfc5dd3c5cf37ea82c9bdb0513983"
+  },
+  "start": {
+    "monotonic_ns": 20322237918720,
+    "received_ns": 1790209189962452447
+  },
+  "status": "interrupted",
+  "ticker_fields_observed": [
+    "ask1Price",
+    "ask1Size",
+    "bid1Price",
+    "bid1Size",
+    "curPreListingPhase",
+    "fundingCap",
+    "fundingIntervalHour",
+    "fundingRate",
+    "highPrice24h",
+    "indexPrice",
+    "lastPrice",
+    "lowPrice24h",
+    "markPrice",
+    "nextFundingTime",
+    "openInterest",
+    "openInterestValue",
+    "preOpenPrice",
+    "preQty",
+    "prevPrice1h",
+    "prevPrice24h",
+    "price24hPcnt",
+    "singleOpenInterest",
+    "singleOpenInterestValue",
+    "symbol",
+    "tickDirection",
+    "turnover24h",
+    "volume24h"
+  ],
+  "topics": {
+    "binance_spot": {
+      "btcusdt@depth@100ms": 12650,
+      "btcusdt@trade": 32205
+    },
+    "bybit_linear": {
+      "allLiquidation.BTCUSDT": 1,
+      "control": 64,
+      "orderbook.1000.BTCUSDT": 6339,
+      "orderbook.50.BTCUSDT": 39962,
+      "publicTrade.BTCUSDT": 3869,
+      "tickers.BTCUSDT": 8074
+    },
+    "bybit_spot": {
+      "control": 64,
+      "orderbook.1.BTCUSDT": 7092,
+      "orderbook.50.BTCUSDT": 29215,
+      "publicTrade.BTCUSDT": 3655
+    }
+  },
+  "topics_without_observations": {
+    "binance_spot": [],
+    "bybit_linear": [],
+    "bybit_spot": []
+  }
+}

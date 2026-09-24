@@ -1,0 +1,29 @@
+{
+  "provenance": "forward_capture_start_receipt_not_completed_run_audit",
+  "observed_at_utc": "2026-09-24T00:21:12.886024+00:00",
+  "pid": 1004970,
+  "manifest_path": "data/raw/live_btc_development/54dccf2599ba4c6e9394cbc20a660dc8.manifest.json",
+  "run_id": "54dccf2599ba4c6e9394cbc20a660dc8",
+  "start_utc": "2026-09-24T00:19:49.962452+00:00",
+  "planned_end_utc": "2026-09-25T00:19:49.962452+00:00",
+  "max_raw_bytes_in_directory": 17179869184,
+  "status_at_check": "running",
+  "observed_record_kinds": {
+    "run_started": 1,
+    "connection_attempt": 3,
+    "connected": 3,
+    "subscribe_sent": 2,
+    "ws_message": 10120,
+    "book_snapshot_reset": 438,
+    "rest_snapshot": 1,
+    "application_ping_sent": 8,
+    "transport_pong": 12,
+    "event_loop_delay": 1
+  },
+  "observed_ws_messages_by_source": {
+    "bybit_spot": 2622,
+    "bybit_linear": 4764,
+    "binance_spot": 2734
+  },
+  "model_fitted": false
+}

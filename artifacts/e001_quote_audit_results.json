@@ -1,0 +1,254 @@
+{
+  "days": [
+    {
+      "accepted_events": 0,
+      "crossings": 0,
+      "date": "2025-03-01",
+      "event_ledger": [],
+      "grid_file": "data/derived/e001_quote_grid_2025-03-01.jsonl.gz",
+      "primary_invalid_venue_seconds": {
+        "binance:no_received_quote": 1,
+        "bybit:no_received_quote": 1,
+        "bybit:quote_too_old": 13
+      },
+      "primary_label_counts": {},
+      "primary_labels": [],
+      "primary_valid_grid_midpoint_disagreement_bps": {
+        "max": 8.034058753284915,
+        "p50": 0.7981517571293353,
+        "p95": 2.984177704617628,
+        "p99": 4.351068398052041
+      },
+      "primary_valid_grid_quote_age_seconds": {
+        "binance": {
+          "max": 2.385251,
+          "p50": 0.085503,
+          "p95": 0.285507,
+          "p99": 0.485487
+        },
+        "bybit": {
+          "max": 4.95,
+          "p50": 0.131,
+          "p95": 0.83,
+          "p99": 1.651
+        }
+      },
+      "primary_valid_grid_spread_bps": {
+        "binance": {
+          "max": 2.7634479815765487,
+          "p50": 0.0011747548242628458,
+          "p95": 0.001186887480752394,
+          "p99": 0.0011915632791892937
+        },
+        "bybit": {
+          "max": 6.957556854437386,
+          "p50": 0.0011748546102734105,
+          "p95": 0.0011879332355387096,
+          "p99": 0.0011921809382547436
+        }
+      },
+      "sensitivity": {
+        "1": {
+          "complete_30m_windows": 0,
+          "longest_invalid_seconds": 9,
+          "longest_valid_seconds": 978,
+          "valid_percent": 96.61805555555556,
+          "valid_seconds": 83478
+        },
+        "10": {
+          "complete_30m_windows": 84599,
+          "longest_invalid_seconds": 1,
+          "longest_valid_seconds": 86399,
+          "valid_percent": 99.9988425925926,
+          "valid_seconds": 86399
+        },
+        "2": {
+          "complete_30m_windows": 4931,
+          "longest_invalid_seconds": 8,
+          "longest_valid_seconds": 3388,
+          "valid_percent": 99.48611111111111,
+          "valid_seconds": 85956
+        },
+        "5": {
+          "complete_30m_windows": 77238,
+          "longest_invalid_seconds": 5,
+          "longest_valid_seconds": 71062,
+          "valid_percent": 99.9837962962963,
+          "valid_seconds": 86386
+        }
+      },
+      "spot_source_sha256": {
+        "binance": "68c5d283bcc0b6bb5b0a1ccf03d3dc037f752378e50fee455984ddef3445bd26",
+        "bybit": "32d0383e35fdd65db137a30146b67a50a2c83464ad16b50a04efc903c3b1d6b3"
+      }
+    },
+    {
+      "accepted_events": 0,
+      "crossings": 0,
+      "date": "2025-04-01",
+      "event_ledger": [],
+      "grid_file": "data/derived/e001_quote_grid_2025-04-01.jsonl.gz",
+      "primary_invalid_venue_seconds": {
+        "binance:no_received_quote": 1,
+        "bybit:no_received_quote": 1
+      },
+      "primary_label_counts": {},
+      "primary_labels": [],
+      "primary_valid_grid_midpoint_disagreement_bps": {
+        "max": 11.039177060422176,
+        "p50": 0.6002563184070093,
+        "p95": 1.7781904500716343,
+        "p99": 2.4084036154783175
+      },
+      "primary_valid_grid_quote_age_seconds": {
+        "binance": {
+          "max": 1.78549,
+          "p50": 0.085486,
+          "p95": 0.285565,
+          "p99": 0.485593
+        },
+        "bybit": {
+          "max": 4.569,
+          "p50": 0.11,
+          "p95": 0.65,
+          "p99": 1.21
+        }
+      },
+      "primary_valid_grid_spread_bps": {
+        "binance": {
+          "max": 2.053151926477159,
+          "p50": 0.0011897963776530303,
+          "p95": 0.0012098627283699077,
+          "p99": 0.0012118652514908216
+        },
+        "bybit": {
+          "max": 1.5745718398401927,
+          "p50": 0.011897941834531753,
+          "p95": 0.012099747901752467,
+          "p99": 0.012121175390377605
+        }
+      },
+      "sensitivity": {
+        "1": {
+          "complete_30m_windows": 7545,
+          "longest_invalid_seconds": 4,
+          "longest_valid_seconds": 7751,
+          "valid_percent": 98.1863425925926,
+          "valid_seconds": 84833
+        },
+        "10": {
+          "complete_30m_windows": 84599,
+          "longest_invalid_seconds": 1,
+          "longest_valid_seconds": 86399,
+          "valid_percent": 99.9988425925926,
+          "valid_seconds": 86399
+        },
+        "2": {
+          "complete_30m_windows": 35053,
+          "longest_invalid_seconds": 3,
+          "longest_valid_seconds": 12468,
+          "valid_percent": 99.84953703703704,
+          "valid_seconds": 86270
+        },
+        "5": {
+          "complete_30m_windows": 84599,
+          "longest_invalid_seconds": 1,
+          "longest_valid_seconds": 86399,
+          "valid_percent": 99.9988425925926,
+          "valid_seconds": 86399
+        }
+      },
+      "spot_source_sha256": {
+        "binance": "1df9fc01b2ed9e918193ccd43edc544b1afedb8da1bc3001db004d97d3059315",
+        "bybit": "d5ef8cad316204bcedaadc4d695c805f2ceabfba85f4407172276fa9b253b1eb"
+      }
+    },
+    {
+      "accepted_events": 0,
+      "crossings": 0,
+      "date": "2025-05-01",
+      "event_ledger": [],
+      "grid_file": "data/derived/e001_quote_grid_2025-05-01.jsonl.gz",
+      "primary_invalid_venue_seconds": {
+        "binance:no_received_quote": 1,
+        "bybit:no_received_quote": 1
+      },
+      "primary_label_counts": {},
+      "primary_labels": [],
+      "primary_valid_grid_midpoint_disagreement_bps": {
+        "max": 8.480854790254915,
+        "p50": 0.5036287744555353,
+        "p95": 1.385495407669667,
+        "p99": 1.8524299492507377
+      },
+      "primary_valid_grid_quote_age_seconds": {
+        "binance": {
+          "max": 2.385471,
+          "p50": 0.085521,
+          "p95": 0.385425,
+          "p99": 0.585505
+        },
+        "bybit": {
+          "max": 3.333,
+          "p50": 0.133,
+          "p95": 0.732,
+          "p99": 1.233
+        }
+      },
+      "primary_valid_grid_spread_bps": {
+        "binance": {
+          "max": 1.4227744851288688,
+          "p50": 0.0010398446097808927,
+          "p95": 0.0010578518551468644,
+          "p99": 0.0010611213877769958
+        },
+        "bybit": {
+          "max": 1.2238649552440815,
+          "p50": 0.010398128752749656,
+          "p95": 0.01058002332895144,
+          "p99": 0.010612877772017344
+        }
+      },
+      "sensitivity": {
+        "1": {
+          "complete_30m_windows": 3868,
+          "longest_invalid_seconds": 3,
+          "longest_valid_seconds": 4604,
+          "valid_percent": 97.9074074074074,
+          "valid_seconds": 84592
+        },
+        "10": {
+          "complete_30m_windows": 84599,
+          "longest_invalid_seconds": 1,
+          "longest_valid_seconds": 86399,
+          "valid_percent": 99.9988425925926,
+          "valid_seconds": 86399
+        },
+        "2": {
+          "complete_30m_windows": 42349,
+          "longest_invalid_seconds": 2,
+          "longest_valid_seconds": 30942,
+          "valid_percent": 99.89583333333333,
+          "valid_seconds": 86310
+        },
+        "5": {
+          "complete_30m_windows": 84599,
+          "longest_invalid_seconds": 1,
+          "longest_valid_seconds": 86399,
+          "valid_percent": 99.9988425925926,
+          "valid_seconds": 86399
+        }
+      },
+      "spot_source_sha256": {
+        "binance": "79200ac0880d359f6ccb39272c37c2ea7bcbab9836aafff36ba898b10c5c34c3",
+        "bybit": "71aa55554058d2b992d0df9420fcb6fd270c2314ce7f66d21fbea352157e67ac"
+      }
+    }
+  ],
+  "experiment_candidate": "e001-v1.2",
+  "feed_liveness_verified": false,
+  "label_schema": "E001-label-v3",
+  "primary_max_quote_age_seconds": 5,
+  "provenance": "btc_quote_quality_and_episode_feasibility_no_model_scoring",
+  "raw_schema": "E001-raw-candidate-2"
+}

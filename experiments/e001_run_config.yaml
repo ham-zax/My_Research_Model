@@ -1,0 +1,43 @@
+version: E001-features-candidate-2
+status: fixture_and_btc_quote_feasibility_no_model_fit
+raw_schema: E001-raw-candidate-2
+label_schema: E001-label-v3
+spot_reference: equal_weight_binance_bybit_spot_midquotes
+spot_quote_max_age_seconds: 5
+asset: BTC
+trigger_return_5m: -0.0100
+trigger_grid_seconds: 1
+episode_lockout_seconds: 7200
+decision_delay_seconds: 15
+primary_label_horizon_seconds: 1800
+secondary_label_horizon_seconds: 7200
+lower_barrier_from_decision: -0.0100
+upper_barrier_from_decision: 0.0075
+capacity:
+  venue: bybit
+  band_bps: 25
+  horizon_seconds: 30
+  replenishment_lookback_seconds: 15
+  dwell_seconds: 1
+  floor_fraction_of_pretrigger_depth_median: 0.01
+  pretrigger_depth_median_window_seconds: 1800
+shared_fixture_features:
+  - visible_bid_depth
+  - replenishment_rate
+  - capacity_floor
+  - capacity_proxy
+  - low_capacity
+  - aggressive_sell_notional
+  - liquidation_notional
+mfsm_fixture_combinations:
+  - sell_pressure_ratio
+  - liquidation_pressure_ratio
+unavailable_until_feed_audit:
+  - independently_valued_liquidation_notional
+  - trade_liquidation_deduplication
+  - full_pretrigger_depth_median_from_real_book
+  - point_in_time_oi_funding_basis_mark_index
+  - receipt_time_validated_spot_composite
+  - full_neutral_preprocessing_windows
+model_fit: disabled
+eth_access: sealed

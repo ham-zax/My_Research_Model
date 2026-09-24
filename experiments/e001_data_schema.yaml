@@ -1,0 +1,112 @@
+version: E001-raw-candidate-2
+status: btc_spot_feasibility_full_feature_audit_pending
+authority: experiments/Experiment_001_Crypto_Liquidation_Response.md
+primary_asset: BTC
+holdout_asset: ETH
+time_unit: UTC_epoch_milliseconds
+
+synthetic_fixture:
+  manifest: {kind: fixture_manifest, asset: BTC, synthetic: true}
+  required_name_prefix: btc_
+  format: JSONL
+  receipt_time: explicit_per_message
+  scope: software_verification_only
+
+public_archive_preview:
+  binance_spot_trades:
+    filename: data/raw/2023-10-01/binance-btcusdt-spot-trades.zip
+    symbol: BTCUSDT
+    columns: [trade_id, price_usdt, base_quantity_btc, quote_quantity_usdt, event_time, is_buyer_maker, is_best_match]
+    event_time_precision: milliseconds_for_2023_sample
+    local_receipt_time: unavailable
+    venue_side_contract: raw_is_buyer_maker_preserved
+  bybit_spot_trades:
+    filename: data/raw/2023-10-01/bybit-btcusdt-spot.csv.gz
+    symbol: BTCUSDT
+    columns: [id, timestamp_ms, price_usdt, volume_btc, raw_side]
+    local_receipt_time: unavailable
+    venue_side_contract: raw_side_preserved_without_taker_inference
+  use: coverage_and_event_time_audit_only
+
+tardis_normalized_csv_candidate:
+  status: btc_quote_feasibility_and_feed_audits_no_model_fit
+  sources:
+    overview: https://docs.tardis.dev/downloadable-csv-files/overview
+    api: https://docs.tardis.dev/downloadable-csv-files/api.md
+    data_types: https://docs.tardis.dev/downloadable-csv-files/data-types.md
+    bybit_derivatives: https://docs.tardis.dev/historical-data-details/bybit
+    bybit_spot: https://docs.tardis.dev/historical-data-details/bybit-spot
+  timestamp_unit: UTC_epoch_microseconds
+  receipt_time: local_timestamp
+  row_order: capture_order_by_local_timestamp
+  free_access_limit: first_day_of_each_month_without_api_key_per_tardis_docs
+  supported_audit_data_types:
+    trades: [exchange, symbol, timestamp, local_timestamp, id, side, price, amount]
+    incremental_book_L2: [exchange, symbol, timestamp, local_timestamp, is_snapshot, side, price, amount]
+    derivative_ticker: [exchange, symbol, timestamp, local_timestamp, funding_timestamp, funding_rate, predicted_funding_rate, open_interest, last_price, index_price, mark_price]
+    liquidations: [exchange, symbol, timestamp, local_timestamp, id, side, price, amount]
+  candidate_btcusdt_exchanges:
+    bybit_spot: bybit-spot
+    bybit_linear_perpetual: bybit
+    binance_spot: binance
+    binance_usdt_perpetual: binance-futures
+  current_limit: monthly_sample_days_only; full_period_and_feed_health_audit_pending
+  quote_timestamp_precision: preserve_microseconds_for_all_availability_and_age_comparisons
+  quotes: [exchange, symbol, timestamp, local_timestamp, ask_amount, ask_price, bid_price, bid_amount]
+
+approved_candidate_spot_composite:
+  grid: integer_UTC_seconds
+  constituents: [bybit_BTCUSDT_spot, binance_BTCUSDT_spot]
+  quote: USDT
+  source_price: arithmetic_midpoint_of_best_bid_and_ask
+  source_weight: equal
+  max_event_age_ms: 5000
+  select_source_state: latest_received_quote_in_capture_order_with_row_order_tiebreak
+  source_validity: positive_finite_prices_and_sizes; bid_strictly_below_ask; event_no_later_than_receipt
+  invalid_new_state: invalidate_constituent_until_next_valid_state
+  require_event_and_receipt_time_no_later_than_grid: true
+  require_both_constituents: true
+  missing_or_stale: invalid_grid_point
+  validity: provisional_quote_age_rule_not_proof_of_feed_continuity
+  approval: research_owner_2026-09-23
+  prior_rule: E001-raw-candidate-1_last_trade_one_second_retained_in_legacy_feasibility_artifact
+
+bybit_v5_candidate:
+  linear_contract: BTCUSDT
+  trade:
+    event_ms: data.T
+    receipt_ms: collector_field_required
+    taker_side: data.S
+    size_btc: data.v
+    execution_price_usdt: data.p
+    unique_id: data.i
+  all_liquidation:
+    event_ms: data.T
+    receipt_ms: collector_field_required
+    position_side: data.S
+    sell_pressure_when_position_side: Buy
+    size_btc: data.v
+    bankruptcy_price_usdt: data.p
+    executed_notional_usdt: unavailable_without_independent_valuation_rule
+  orderbook_50:
+    event_ms: message.ts
+    receipt_ms: collector_field_required
+    update_id: data.u
+    cross_sequence: data.seq
+    snapshot: reset_book
+    delta: absolute_level_size
+    zero_size: delete_level
+    gap_detection: explicit_source_gap_or_archive_guarantee_required
+  open_interest:
+    historical_API_minimum_interval: 5min
+    stress_delivery_delay: possible
+    unit_linear_BTCUSDT: BTC
+
+output_contract:
+  observation_key: [venue, market, symbol, event_ms, source_record_id]
+  episode_key: [asset, trigger_second, experiment_version]
+  feature_availability: latest_required_receipt_ms_no_later_than_decision_ms
+  label_primary_horizon_s: 1800
+  label_secondary_horizon_s: 7200
+  label_version: E001-label-v3
+  missing_label: unavailable_with_reason_never_zero

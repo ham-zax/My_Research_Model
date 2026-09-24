@@ -1,0 +1,59 @@
+{
+  "provenance": "clock_corrected_forward_start_receipt_not_completed_run_audit",
+  "launched_at_utc": "2026-09-24T01:06:01.900826+00:00",
+  "pid": 10220,
+  "duration_seconds": 83623,
+  "original_deadline_utc": "2026-09-25T00:19:49.962452+00:00",
+  "command": [
+    "/home/hamza/repo/My_Research_Model/.venv/bin/python",
+    "-m",
+    "mfsm_e001.collect",
+    "--duration",
+    "83623",
+    "--max-mib",
+    "16384",
+    "--output",
+    "/home/hamza/repo/My_Research_Model/data/raw/live_btc_development"
+  ],
+  "log_path": "data/raw/live_btc_development/collector-clock-fixed.log",
+  "prior_run_id": "54dccf2599ba4c6e9394cbc20a660dc8",
+  "same_directory_raw_cap_bytes": 17179869184,
+  "prior_history_unknown": true,
+  "model_fitted": false,
+  "observed_at_utc": "2026-09-24T01:06:27.461825+00:00",
+  "run_id": "53d688bfe33349aaab40dc8e7463c802",
+  "manifest_path": "data/raw/live_btc_development/53d688bfe33349aaab40dc8e7463c802.manifest.json",
+  "start_utc": "2026-09-24T01:06:01.977089+00:00",
+  "planned_end_utc": "2026-09-25T00:19:44.977089+00:00",
+  "status_at_check": "running",
+  "observed_record_kinds": {
+    "run_started": 1,
+    "connection_attempt": 3,
+    "connected": 3,
+    "subscribe_sent": 2,
+    "ws_message": 3212,
+    "book_snapshot_reset": 244,
+    "rest_snapshot": 1,
+    "application_ping_sent": 2,
+    "transport_pong": 3
+  },
+  "observed_ws_messages_by_source": {
+    "bybit_spot": 1101,
+    "binance_spot": 771,
+    "bybit_linear": 1340
+  },
+  "code_sha256": {
+    "capture_health.py": "5415bece0328eb0b3caff6d75041492383af7c5e369566a9f2fcfb2af028cbdf",
+    "capture_store.py": "91c9cd2cb53e0811942c4a35d0810ae863612024ecf12da718ad723d1e259006",
+    "collect.py": "a0c7cd384989a0e493e9766de1c115638a3d0990a8937766645bc2083bda2b6a"
+  },
+  "smoke_code_hashes_match": true,
+  "checkpoint_at_check": {
+    "durable_bytes_in_segment": 2712125,
+    "raw_bytes_in_directory": 100707883,
+    "records_in_run": 3374,
+    "run_id": "53d688bfe33349aaab40dc8e7463c802",
+    "segment": "53d688bfe33349aaab40dc8e7463c802-000001.open",
+    "updated_ns": 1790211986504232851
+  }
+}

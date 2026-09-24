@@ -40,6 +40,21 @@ Its invariant question is:
 - [experiments/Experiment_001_Freeze_Manifest.yaml](./experiments/Experiment_001_Freeze_Manifest.yaml)
   Administrative freeze manifest for the canonical model tag/commit, experiment-spec version/commit, data-feature-label schema versions, freeze timestamp, and first ETH access record.
 
+- [MFSM next steps and agent handoff](./docs/superpowers/plans/2026-09-23-mfsm-next-steps.md)
+  Ordered implementation tasks, acceptance criteria, evidence gates, and a copyable prompt for a coding model to begin the BTC pipeline while preserving the ETH holdout.
+
+- [BTC spot reference audit](./artifacts/e001_spot_reference_audit.md)
+  Measured quote coverage across three BTC sample days, the approved provisional midpoint rule, and the remaining feed-health and model-evaluation gates. Resume from the [implementation status](./artifacts/e001_implementation_status.md).
+
+- [BTC monthly sample result](./artifacts/e001_monthly_sample_report.md)
+  Completed scan of 19 first-of-month days: four nominal episodes, two with supported lockout eligibility, insufficient class support for model evaluation. Includes every sampled day, exclusions, reproducible commands and the next implementation handoff.
+
+- [Continuous BTC capture](./docs/e001_continuous_capture.md)
+  Public Binance/Bybit recording without API keys, original messages and receipt clocks, bounded storage, reconnect diagnostics, integrity audits and commands for a fixed forward recording.
+
+- [BTC capture replay](./docs/e001_capture_replay.md)
+  Receipt-ordered book/ticker reconstruction, finite-depth coverage and timing checks. The first live replay confirms a local clock offset; captured state remains blocked from model use until timing is repaired.
+
 ## Epistemic status
 
 MFSM is **not a validated trading system** and is **not a universal fragility score**.

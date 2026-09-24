@@ -12,10 +12,10 @@ This file is a **pre-freeze candidate specification**. No confirmatory ETH analy
 Required immutable references:
 
 - MFSM architecture tag: `mfsm-v1.0`;
-- Experiment 001 specification tag: `e001-v1.1`;
-- raw-data schema version: **TBD before data extraction**;
+- Experiment 001 specification tag: `e001-v1.2` (candidate; tag not created);
+- raw-data schema version: `E001-raw-candidate-2` (BTC spot feasibility; full feed approval pending);
 - feature-schema version: **TBD before model fitting**;
-- label-schema version: `E001-label-v2`;
+- label-schema version: `E001-label-v3`;
 - freeze timestamp: **TBD**.
 
 Because a Git commit cannot contain its own final hash without changing that hash, the exact resolved commit SHAs are recorded **after** the frozen commits/tags exist in `Experiment_001_Freeze_Manifest.yaml`. That manifest is an administrative research record and may be committed after the tagged model/spec commit or archived with the research run.
@@ -79,6 +79,10 @@ Do not pool incompatible venue fields merely because they have the same name.
 ## 4. Event definition
 
 Let \(P_t^{spot}\) be the frozen independent BTC spot-composite price sampled on the experiment's canonical one-second grid. The composite's venue constituents, weighting rule, stale-price handling, and missing-data rule must be fixed in the raw-data schema before event extraction.
+
+The current pre-freeze candidate uses the arithmetic mean of **Bybit BTCUSDT spot and Binance BTCUSDT spot midquotes**, each midpoint equal to `(best bid + best ask) / 2`. At each integer UTC second, use the latest received quote state from each venue in collector capture order, with CSV row order breaking ties. Both quotes must have positive finite prices and displayed sizes, bid strictly below ask, source event time no later than collector receipt time, receipt time no later than the grid boundary, and source event age at most **five seconds**, inclusive. If either quote fails, the grid price is unavailable; do not use a single-venue fallback or an older valid quote after a newer invalid state. Compare timestamps at their original microsecond precision. Missing outcomes remain governed by Section 6.
+
+This midpoint/five-second candidate was approved by the research owner on 2026-09-23 after a BTC data-coverage audit and before any model fitting. It replaces the implementation's proposed last-trade/one-second rule. It changes the reference prices used for triggers and labels, so the candidate experiment and label versions advance. The original trade-based feasibility artifact is retained. Midquotes are reference prices, not executable fills. CSV quote age does not establish feed continuity: quote updates may be absent when the top of book is unchanged, and Tardis CSV files omit disconnect messages. Full feed-health qualification remains an open data audit gate. The fixed coverage sensitivity protocol is `e001_quote_audit_protocol.md`; no prediction score may select the quote-age limit.
 
 Define the five-minute point-to-point return
 
