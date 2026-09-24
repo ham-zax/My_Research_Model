@@ -177,11 +177,17 @@ Acquisition is staged to avoid paying for perpetual L2 before the exact spot eve
 
 For each selected UTC event day, the preferred historical inputs are:
 
-- Binance Spot BTCUSDT, CryptoStruct instrument 67838: independent spot constituent; public catalog coverage since March 2023;
-- Bybit Spot BTCUSDT.spot, CryptoStruct instrument 2000: independent spot constituent; public catalog coverage since July 2023;
-- Bybit BTCUSDT perpetual, CryptoStruct instrument 2449: full L2 + aggressor trades for liquidity state; public catalog coverage since July 2023.
+- Binance Spot BTCUSDT, CryptoStruct instrument 67838: independent spot constituent; catalog coverage from 2023-03-01;
+- Bybit Spot BTCUSDT.spot, CryptoStruct instrument 2000: independent spot constituent; catalog coverage from 2023-07-18;
+- Bybit BTCUSDT perpetual, CryptoStruct instrument 2449: full L2 + aggressor trades for liquidity state; catalog coverage from 2023-07-18, with a nine-day gap from 2024-02-29 through 2024-03-08.
 
-The common advertised coverage window for all three therefore begins in July 2023. These ids and coverage statements were rechecked on the public BTC/USDT catalog on 2026-09-24; availability for every selected paid day still must be verified before purchase.
+The common advertised coverage window starts on 2023-07-18, excluding the
+perpetual gap. The [2026-09-24 catalog receipt](../artifacts/e001_cryptostruct_catalog_coverage.json)
+records the keyless `get_coverage` responses for all three instrument IDs.
+The frozen screen still covers 2023-07-01 onward; the acquisition manifest must
+flag selected days before Bybit spot coverage, and no two-venue event can be
+certified there. Availability for each purchasable selected day still needs a
+read-only price/availability quote before purchase.
 
 Acquire adjacent UTC files whenever the required 30-minute pre-trigger history,
 two-hour lockout history, or 120-minute secondary label window crosses a day
@@ -195,7 +201,7 @@ do not treat the present website price as a permanent contract.
 
 The price-only Binance screening event is not the research event.
 
-After the three source files are available, rebuild the frozen spot reference
+After the two spot source files are available, rebuild the frozen spot reference
 from the latest causally available Binance and Bybit spot midquotes and apply:
 
 - exact 300-second point-to-point return;

@@ -1,0 +1,63 @@
+{
+  "captured_utc": "2026-09-24T21:30:06.248764+00:00",
+  "instruments": [
+    {
+      "coverage": {
+        "code": "BTCUSDT",
+        "coverage_pct": 100,
+        "days_with_data": 1303,
+        "first_day": "2023-03-01",
+        "gaps": [],
+        "instrument_id": 67838,
+        "last_day": "2026-09-23",
+        "price_eur_per_day": 1,
+        "total_bytes_compressed": 443928057291,
+        "total_days": 1303,
+        "venue": "binance_spot"
+      },
+      "instrument_id": 67838
+    },
+    {
+      "coverage": {
+        "code": "BTCUSDT.spot",
+        "coverage_pct": 100,
+        "days_with_data": 1164,
+        "first_day": "2023-07-18",
+        "gaps": [],
+        "instrument_id": 2000,
+        "last_day": "2026-09-23",
+        "price_eur_per_day": 1,
+        "total_bytes_compressed": 242079503138,
+        "total_days": 1164,
+        "venue": "bybit"
+      },
+      "instrument_id": 2000
+    },
+    {
+      "coverage": {
+        "code": "BTCUSDT",
+        "coverage_pct": 99.22680412371135,
+        "days_with_data": 1155,
+        "first_day": "2023-07-18",
+        "gaps": [
+          {
+            "days": 9,
+            "from": "2024-02-29",
+            "to": "2024-03-08"
+          }
+        ],
+        "instrument_id": 2449,
+        "last_day": "2026-09-23",
+        "price_eur_per_day": 1,
+        "total_bytes_compressed": 358302342536,
+        "total_days": 1164,
+        "venue": "bybit"
+      },
+      "instrument_id": 2449
+    }
+  ],
+  "purpose": "historical_data_availability_planning_only",
+  "schema": "E001-CryptoStruct-catalog-coverage-1",
+  "source": "https://cryptostruct.com/mcp",
+  "source_tool": "get_coverage"
+}
