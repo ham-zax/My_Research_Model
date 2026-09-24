@@ -1,0 +1,36 @@
+{
+  "binance_proxy_accepted_2h_episodes": 428,
+  "binance_proxy_distinct_event_days": 283,
+  "binance_proxy_event_days_sha256": "6a4563bba96be311eec272575327c526aec4b260e2dd3e76e5a5ccda8f33df4d",
+  "binance_proxy_event_report_sha256": "20f85c2e1120b4f871f74a3edac3e75ddb54d47972b2c4751cdcf727a5f5a2b0",
+  "bybit_archive_listed_days": 2374,
+  "bybit_perpetual_trade_sample": {
+    "csv_columns": [
+      "timestamp",
+      "symbol",
+      "side",
+      "size",
+      "price",
+      "tickDirection",
+      "trdMatchID",
+      "grossValue",
+      "homeNotional",
+      "foreignNotional"
+    ],
+    "date": "2024-01-01",
+    "path": "data/raw/bybit_perp_trades/BTCUSDT2024-01-01.csv.gz",
+    "sha256": "cc74c2be7df6dfe742cfd4c3b25eb27a7270f0e4172d0d666a1c587d575c232b"
+  },
+  "bybit_public_trade_archive_url": "https://public.bybit.com/trading/BTCUSDT/",
+  "bybit_trade_available_proxy_event_days": 283,
+  "captured_utc": "2026-09-24T21:43:27.259726+00:00",
+  "caveats": [
+    "Binance price proxy is not the final E001 receipt-time two-venue trigger.",
+    "Public trade CSV has no recorder receive timestamp or Level-2 book states.",
+    "Directory listing does not certify file integrity or row continuity for every selected day.",
+    "No label, model, or trading score was computed."
+  ],
+  "missing_proxy_event_days": [],
+  "purpose": "free_data_feasibility_only_no_model_fit",
+  "schema": "E001-free-perpetual-trade-availability-1"
+}
