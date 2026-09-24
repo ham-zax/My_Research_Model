@@ -35,12 +35,17 @@ class Parameters:
     delay: int = 2
     deadline: int = 10
     currency_tolerance: float = 1e-9
+    impact_curve: str = "exponential"
+    liquidation_rule: str = "restore_target"
+    lot_units: float = 2.0
+    delay_weights: tuple[float, ...] | None = None
 
     def __post_init__(self):
         _nonnegative_finite(self.value, self.impact, self.inventory_limit,
-                            self.buyer_speed, self.currency_tolerance)
-        if self.value == 0 or self.currency_tolerance == 0:
-            raise ValueError("value and currency tolerance must be positive")
+                            self.buyer_speed, self.currency_tolerance,
+                            self.lot_units)
+        if self.value == 0 or self.currency_tolerance == 0 or self.lot_units == 0:
+            raise ValueError("value, currency tolerance, and lot size must be positive")
         if not 0 < self.maintenance < self.restore < 1:
             raise ValueError("require 0 < maintenance < restore < 1")
         if type(self.delay) is not int or self.delay < 0:
@@ -49,6 +54,16 @@ class Parameters:
             raise ValueError("deadline must be a positive integer")
         if self.impact * self.inventory_limit > 100:
             raise ValueError("impact times inventory limit exceeds numerical domain")
+        if self.impact_curve not in {"exponential", "hyperbolic"}:
+            raise ValueError("unknown impact curve")
+        if self.liquidation_rule not in {"restore_target", "fixed_lot"}:
+            raise ValueError("unknown liquidation rule")
+        if self.delay_weights is not None:
+            weights = self.delay_weights
+            if (type(weights) is not tuple or not weights
+                    or any(not isfinite(w) or w < 0 for w in weights)
+                    or weights[-1] == 0 or abs(sum(weights) - 1) > 1e-12):
+                raise ValueError("delay weights must be a normalized finite tuple without trailing zeros")
 
 
 @dataclass(frozen=True)
@@ -81,8 +96,18 @@ class Transition:
     mark_after: float
 
 
+@dataclass(frozen=True)
+class LimitedObservation:
+    mark: float
+    benchmark: float
+    dealer_units: float
+
+
 def price(state: State, law: Parameters) -> float:
-    value = law.value * exp(-law.impact * state.dealer.units)
+    if law.impact_curve == "exponential":
+        value = law.value * exp(-law.impact * state.dealer.units)
+    else:
+        value = law.value / (1 + law.impact * state.dealer.units)
     if not isfinite(value) or value <= 0:
         raise ValueError("mark outside floating-point domain")
     return value
@@ -97,31 +122,78 @@ def equity(state: State, law: Parameters) -> float:
     return state.holder.cash + price(state, law) * state.holder.units - state.debt
 
 
-def _buy_cost(mark: float, units: float, impact: float) -> float:
-    return mark * units if impact == 0 else mark * (expm1(impact * units) / impact)
+def observe_limited(state: State, law: Parameters) -> LimitedObservation:
+    """Give a synthetic observer mark, benchmark, and reported dealer inventory."""
+    return LimitedObservation(price(state, law), law.value, state.dealer.units)
 
 
-def _sell_proceeds(mark: float, units: float, impact: float) -> float:
-    return mark * units if impact == 0 else mark * (-expm1(-impact * units) / impact)
+def _buy_cost(mark: float, units: float, law: Parameters, inventory: float) -> float:
+    impact = law.impact
+    if impact == 0:
+        return mark * units
+    if law.impact_curve == "exponential":
+        return mark * expm1(impact * units) / impact
+    scale = 1 + impact * inventory
+    return law.value * -log1p(-impact * units / scale) / impact
 
 
-def _buy_limit(cash: float, mark: float, impact: float) -> float:
-    return cash / mark if impact == 0 else log1p(impact * cash / mark) / impact
+def _sell_proceeds(mark: float, units: float, law: Parameters, inventory: float) -> float:
+    impact = law.impact
+    if impact == 0:
+        return mark * units
+    if law.impact_curve == "exponential":
+        return mark * -expm1(-impact * units) / impact
+    scale = 1 + impact * inventory
+    return law.value * log1p(impact * units / scale) / impact
 
 
-def _sell_limit(cash: float, mark: float, impact: float) -> float:
+def _buy_limit(cash: float, mark: float, law: Parameters, inventory: float) -> float:
+    impact = law.impact
     if impact == 0:
         return cash / mark
-    fraction = impact * cash / mark
-    return float("inf") if fraction >= 1 else -log1p(-fraction) / impact
+    if law.impact_curve == "exponential":
+        return log1p(impact * cash / mark) / impact
+    scale = 1 + impact * inventory
+    return scale * -expm1(-impact * cash / law.value) / impact
+
+
+def _sell_limit(cash: float, mark: float, law: Parameters,
+                inventory: float, room: float) -> float:
+    impact = law.impact
+    if impact == 0:
+        return cash / mark
+    if law.impact_curve == "exponential":
+        fraction = impact * cash / mark
+        return float("inf") if fraction >= 1 else -log1p(-fraction) / impact
+    if _sell_proceeds(mark, room, law, inventory) <= cash:
+        return room
+    scale = 1 + impact * inventory
+    return scale * expm1(impact * cash / law.value) / impact
+
+
+def _buyer_signal(state: State, law: Parameters, current_signal: float) -> tuple[float, int]:
+    if law.delay_weights is None:
+        lag = law.delay
+        weighted = (current_signal if lag == 0 else
+                    state.signals[-lag] if len(state.signals) >= lag else 0.0)
+        return weighted, lag
+    weights = law.delay_weights
+    weighted = sum(
+        weight * (current_signal if lag == 0 else
+                  state.signals[-lag] if len(state.signals) >= lag else 0.0)
+        for lag, weight in enumerate(weights)
+    )
+    return weighted, len(weights) - 1
 
 
 def step(state: State, law: Parameters) -> Transition:
     """Apply one ordered, cash-constrained transition; terminal modes absorb."""
     if state.dealer.units > law.inventory_limit:
         raise ValueError("initial dealer inventory exceeds its limit")
-    if len(state.signals) > law.delay:
-        raise ValueError("signal history exceeds the declared delay")
+    history_length = (law.delay if law.delay_weights is None
+                      else len(law.delay_weights) - 1)
+    if len(state.signals) > history_length:
+        raise ValueError("signal history exceeds the declared kernel")
     mark_before = price(state, law)
     if state.mode in TERMINAL_MODES:
         return Transition(state, 0.0, 0.0, mark_before, mark_before)
@@ -130,12 +202,13 @@ def step(state: State, law: Parameters) -> Transition:
                           mark_before, mark_before)
 
     # Record the observation before either trade. Missing synthetic prehistory is zero.
-    signal = -expm1(-law.impact * state.dealer.units)
-    delayed = (signal if law.delay == 0 else
-               state.signals[0] if len(state.signals) == law.delay else 0.0)
+    signal = max(0.0, (1 - mark_before / law.value if law.impact_curve == "hyperbolic"
+                       else -expm1(-law.impact * state.dealer.units)))
+    delayed, history_length = _buyer_signal(state, law, signal)
     bought = min(law.buyer_speed * delayed, state.dealer.units,
-                 _buy_limit(state.buyer.cash, mark_before, law.impact))
-    paid = min(state.buyer.cash, _buy_cost(mark_before, bought, law.impact))
+                 _buy_limit(state.buyer.cash, mark_before, law, state.dealer.units))
+    paid = min(state.buyer.cash,
+               _buy_cost(mark_before, bought, law, state.dealer.units))
     current = replace(
         state,
         dealer=Account(state.dealer.cash + paid, state.dealer.units - bought),
@@ -145,12 +218,18 @@ def step(state: State, law: Parameters) -> Transition:
     mark = price(current, law)
     sold = 0.0
     if headroom(current, law) < -law.currency_tolerance:
-        restore_gap = (current.debt - current.holder.cash
-                       - (1 - law.restore) * mark * current.holder.units)
-        requested = min(current.holder.units, max(0.0, restore_gap) / (law.restore * mark))
-        sold = min(requested, max(0.0, law.inventory_limit - current.dealer.units),
-                   _sell_limit(current.dealer.cash, mark, law.impact))
-        proceeds = min(current.dealer.cash, _sell_proceeds(mark, sold, law.impact))
+        if law.liquidation_rule == "fixed_lot":
+            requested = min(current.holder.units, law.lot_units)
+        else:
+            restore_gap = (current.debt - current.holder.cash
+                           - (1 - law.restore) * mark * current.holder.units)
+            requested = min(current.holder.units,
+                            max(0.0, restore_gap) / (law.restore * mark))
+        room = max(0.0, law.inventory_limit - current.dealer.units)
+        sold = min(requested, room, _sell_limit(
+            current.dealer.cash, mark, law, current.dealer.units, room))
+        proceeds = min(current.dealer.cash,
+                       _sell_proceeds(mark, sold, law, current.dealer.units))
         current = replace(
             current,
             holder=Account(current.holder.cash + proceeds, current.holder.units - sold),
@@ -165,7 +244,7 @@ def step(state: State, law: Parameters) -> Transition:
         mode = "MARGIN_FAILURE"
     else:
         mode = "MARGIN" if breach_ticks else "NORMAL"
-    history = (state.signals + (signal,))[-law.delay:] if law.delay else ()
+    history = (state.signals + (signal,))[-history_length:] if history_length else ()
     current = replace(current, signals=history, tick=state.tick + 1,
                       breach_ticks=breach_ticks, mode=mode)
     return Transition(current, sold, bought, mark_before, price(current, law))

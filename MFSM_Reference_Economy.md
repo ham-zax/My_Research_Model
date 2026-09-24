@@ -281,3 +281,42 @@ Financial precedent: [Brunnermeier and Pedersen, Market Liquidity and Funding
 Liquidity](https://www.princeton.edu/~markus/research/papers/liquidity.pdf) motivates
 the interaction of funding constraints and liquidity. The equations and sequencing
 in this reference are our declared simplification, not their estimated model.
+
+## 9. Structural variants and incomplete observation
+
+The [MFSM-RE-SENS-1 protocol](docs/mfsm_reference_sensitivity_protocol.md) and
+[result](docs/mfsm_reference_sensitivity_result.md) extend this reference in
+three controlled ways: a hyperbolic impact curve, fixed-lot forced selling, and
+a finite distributed buyer delay. They also replace the idealized exact
+observation `Y=Z` with a limited map for a non-identification example. The
+default implementation remains the exponential, restoration-target, pure-delay
+member above.
+
+For the hyperbolic member, `p(q_D)=v/(1+lambda*q_D)`. Starting at inventory `q`,
+selling `f` asset units to the dealer pays
+`v/lambda * log((1+lambda*(q+f))/(1+lambda*q))` and buying `b` units from the
+dealer costs `v/lambda * log((1+lambda*q)/(1+lambda*(q-b)))`. The continuous
+limit at zero impact is `v` times the traded quantity. Fixed-lot selling requests
+up to a declared number of units when headroom is negative; cash, inventory,
+holdings, and the original termination rules still cap execution. A delay kernel
+uses a normalized weighted sum of available start-of-tick dislocations, with
+zero synthetic prehistory as specified in the protocol.
+
+For any differentiable decreasing mark curve whose execution proceeds equal
+the integral of its marginal mark, the local headroom response at dealer
+inventory `q_D` is
+
+\[
+H'(0)=m p(q_D)+(1-m)q_L p'(q_D).
+\]
+
+Both curves have `p(0)=v` and `p'(0)=-lambda*v`, so they share the local
+headroom slope at zero inventory. They need not agree for a finite sale or away
+from zero inventory. The synthetic comparison shows such a finite difference;
+it does not select the correct curve for any exchange.
+
+Under limited observation, the same pre-shock mark, benchmark, and dealer
+inventory can conceal different holder debt and therefore different forced-sale
+responses. The reference's exact-observation uniqueness proposition applies
+only when the full initial state and law are supplied. It cannot be promoted
+to an observer's unique forecast from a price snapshot.

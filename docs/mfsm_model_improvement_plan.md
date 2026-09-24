@@ -91,15 +91,20 @@ These are mathematical/software checks. They do not establish market validity.
 
 ### Stage 2 — Test sensitivity to structural rules
 
-**Remaining; the recommended next step.** Prespecify a small set of alternatives:
-another admissible dealer impact curve, a different liquidation-sizing rule,
-and a distributed buyer delay with its own closed state. Preserve the accounting
-and failure definitions so the comparison has a clear meaning.
+**Completed for one synthetic parameter set in MFSM-RE-SENS-1.** The
+[prespecified comparison](mfsm_reference_sensitivity_protocol.md) changes the
+dealer impact curve, liquidation-sizing rule, and delayed buyer kernel while
+preserving accounting and failure definitions. The
+[result](mfsm_reference_sensitivity_result.md) records all paths and limits.
 
-Compare headroom response, total forced sales, failure before the deadline, and
-restoration of margin. Include zero-impact, no-buyer, depleted-cash, and long-delay
-limits. State which conclusions survive, which depend on assumptions, and which
-disappear.
+The comparison reports headroom, total forced sales, failure before the
+deadline, and restoration of margin, with zero-impact, no-buyer, depleted-cash,
+and long-delay controls. The curves share a local slope but produce different
+finite marks; the lot and kernel change path magnitude or timing. These rows do
+not disagree on margin restoration or failure, so no general robustness claim
+follows. The no-cash/long-delay row cannot identify a delay effect because no
+initial inventory discount activates buying. Preserve that diagnostic failure
+rather than interpreting it as confirmation of the clock mechanism.
 
 Acceptance: every conclusion names its required assumptions; disagreement yields
 a range or `not identified`. No variant is selected because it draws a convincing
@@ -107,19 +112,28 @@ crash. An alternative curve is a new member, not evidence for the original curve
 
 ### Stage 3 — Determine what incomplete observations can identify
 
-**Remaining.** Use this same economy and hide participant cash/positions. Specify
-what the observer receives and when. Construct two hidden states compatible with
-those observations and check whether their disturbance responses differ.
+**Completed as a constructive counterexample in MFSM-RE-SENS-1.** The observer
+sees mark, benchmark, and dealer inventory but not holder debt. Two admissible
+states with identical observations yield a forced sale versus no sale after the
+same shock. The impact curves also agree on the initial observation but differ
+on the finite next mark. See the [result](mfsm_reference_sensitivity_result.md).
 
-Acceptance: separate state uncertainty from law/parameter uncertainty. If the
-observations permit opposite responses, report non-identification and name the
-additional observation needed. Do not fill missing information with a score.
+Acceptance met for this map: hidden debt and impact-law uncertainty are separate.
+Holder margin headroom distinguishes the state pair; execution measurements
+away from zero inventory are needed for the law pair. This does not prove that
+those observations are sufficient in a real market.
 
-### Stage 4 — Add a mechanism only for a named limitation
+### Stage 4 — Resolve a named limitation before adding a mechanism
 
-**Remaining and conditional.** Potential extensions are both long and short
-constraints, participant heterogeneity, changing margin terms, or anticipation.
-These are optional directions, not a requirement to add every mechanism.
+**Next, conditional.** First repair the inconclusive timing diagnostic with an
+initial state in which the buyer has a nonzero observable discount and sufficient
+cash to act, then compare deadlines under the same law. Freeze the pair before
+running it. This is a better test of the existing mechanism, not a reason to add
+a new state coordinate.
+
+Potential extensions are both long and short constraints, participant
+heterogeneity, changing margin terms, or anticipation. These are optional
+directions, not a requirement to add every mechanism.
 
 For an addition, document the current member's limitation, the missing economic
 rule, its update equation and observation implications, and a limiting case that
@@ -145,7 +159,9 @@ causal refutation. Decision claims also require relevant costs and constraints.
 1. Read the canonical file and reference economy before changing symbols.
 2. Preserve primitive accounts, derived responses, and observed measurements as
    distinct objects. Do not add a universal fragility score.
-3. Work on the earliest incomplete stage above with one coherent change.
+3. Work on the earliest incomplete stage above with one coherent change. The
+   next diagnostic is the timing counterexample described in Stage 4; do not
+   retroactively interpret row D as evidence for delay.
 4. State the error or unanswered question and its discriminating check first.
    Do not choose a mechanism after seeing a desired result.
 5. After a transition change, run accounting, timing, limiting-case, and relevant
@@ -153,5 +169,6 @@ causal refutation. Decision claims also require relevant costs and constraints.
 6. Preserve previous empirical protocols/results. A theory revision does not
    silently revise an earlier frozen empirical claim.
 
-The current revision supplies a specific response-generating member. Whether
-its rules describe a real market remains open.
+The reference and its structural comparison supply response-generating members
+and one explicit non-identification result. Whether any member describes a real
+market remains open.

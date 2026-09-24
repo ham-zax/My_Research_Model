@@ -25,6 +25,9 @@ Its invariant question is:
 - [Model improvement plan](./docs/mfsm_model_improvement_plan.md)
   Model weaknesses, canonical corrections, distinct sources of error, and remaining work with acceptance criteria. Start here for what to improve next.
 
+- [Reference sensitivity and observation result](./docs/mfsm_reference_sensitivity_result.md)
+  Frozen synthetic structural comparisons and an explicit case where identical limited observations conceal different market responses.
+
 - [MFSM_Reference_Economy.md](./MFSM_Reference_Economy.md)
   Complete deterministic reference economy with finite budgets, inventory-dependent execution, margin rules, delayed buying, and derived response conditions. Includes executable mathematical checks; parameters are synthetic and uncalibrated.
 

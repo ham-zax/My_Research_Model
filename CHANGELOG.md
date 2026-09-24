@@ -2,6 +2,16 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
+## 2026-09-24 - Canonical structural sensitivity and observation limits
+
+- Add [MFSM-RE-SENS-1](docs/mfsm_reference_sensitivity_result.md), a frozen
+  synthetic comparison of impact curves, liquidation sizing, and buyer delay,
+  with full path receipts and conservative interpretation.
+- Add a limited-observation counterexample: identical mark, benchmark, and
+  dealer inventory can conceal different margin states and next forced sales.
+- Record that the no-cash/long-delay diagnostic does not isolate delay, and
+  make its correction the next model step.
+
 ## 2026-09-24 - Canonical operational contract and reference economy
 
 Owner-approved theoretical revision, separate from existing empirical protocols
