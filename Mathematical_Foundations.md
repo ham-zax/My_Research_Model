@@ -1,7 +1,7 @@
 # Mathematical Foundations of the Market Feedback-State Model (MFSM)
 
 Status: Canonical companion specification  
-Date: 2026-09-22  
+Date: 2026-09-24
 Role: Exact mathematical layer beneath Market_Feedback_State_Model_Canonical.md
 
 ---
@@ -23,6 +23,12 @@ It exists to prevent a future researcher or LLM from quietly making any of these
 - treating an equation from biology or physics as a financial model without an independently specified financial mechanism.
 
 MFSM uses mathematics as a language for causal structure, not as decoration and not as proof of predictive edge.
+
+The operational contract has a complete restricted member in
+[MFSM_Reference_Economy.md](MFSM_Reference_Economy.md), version MFSM-RE-1.
+Its execution integrals, resource accounting, ordered transition, finite memory,
+and terminal modes specify a deterministic path. The foundations below remain
+general mathematics whose financial interpretation needs an instantiated law.
 
 ---
 
@@ -46,7 +52,17 @@ Interpretation:
 
 "Closed" includes the memory required by the transition law. For a fixed delay \(\tau\), the exact Markov state is a history segment (for example, \(\mathbf Z_{[t-\tau,t]}\)), not merely the instantaneous vector \(\mathbf Z_t\). A general distributed kernel can likewise require a function-valued history state. A finite-dimensional representation is exact only when the chosen kernel admits a finite-dimensional realization, such as the exponential kernel represented by its filter coordinate; otherwise it must be labeled an approximation.
 
-Buffers \(B_t\), expectation / coordination state \(Q_t\), control states, discrete hybrid modes, and any endogenously evolving coefficients/topology are components or measurable projections of \(\mathbf Z_t\). A time-varying object outside \(\mathbf Z_t\) is permitted only when it is predetermined or exogenous with an explicit law in \(\mathcal G\). Thus \(K_t\), \(W_t\), or \(\Sigma_t\) must be functions of the closed state, fixed/predetermined inputs, or governed by explicit exogenous laws. A finite local Jacobian \(J_t\) is derived only for a finite-dimensional realization or labeled approximation; exact fixed-delay linearization is an operator on histories. The termination label \(M_t^{term}\) is a derived prospective classification, not primitive state.
+Primitive resource stocks, expectation / coordination state \(Q_t\), control
+states, hybrid modes, and endogenously evolving coefficients/topology belong to
+\(\mathbf Z_t\). Current buffers can be state projections under the constraint
+rules; path-qualified capacities are derived from the state law and transition
+system with their intervention/horizon arguments. A time-varying object outside
+\(\mathbf Z_t\) is permitted only when predetermined or exogenous with an
+explicit law in \(\mathcal G\). Thus \(K_t\), \(W_t\), and \(\Sigma_t\)
+must be state functions, fixed inputs, or have explicit exogenous laws. A finite
+local Jacobian requires a finite-dimensional realization or labeled approximation;
+exact fixed-delay linearization acts on histories. The termination label is a
+derived prospective classification, not primitive state.
 
 Observed data \(\mathbf Y_t\) need not equal \(\mathbf Z_t\), and an analyst's fitted measurement model need not equal the true observation mechanism.
 
@@ -1259,7 +1275,12 @@ d\mathbf Z_t
 
 where \(\boldsymbol\beta_t\) is Brownian motion and \(h_e\) is an expectation horizon.
 
-Capacities \(\mathbf r_t\), control / counterflow states \(\mathbf u_t\), coordination states, and discrete hybrid modes that evolve independently are coordinates of \(\mathbf Z_t\). If an application writes separate evolution equations for them, those equations are part of the structural transition law \(\mathcal G\).
+Primitive resource coordinates \(\mathbf r_t\), control / counterflow states
+\(\mathbf u_t\), coordination states, and discrete hybrid modes that evolve
+independently are coordinates of \(\mathbf Z_t\). Path-qualified capacities
+derived from the transition law are not additional free resource stocks. If an
+application writes separate evolution equations for state coordinates, those
+equations are part of \(\mathcal G\).
 
 This stochastic differential equation is a finite-dimensional template, not an exact representation of every delay model above. Under a fixed delay, two paths with the same current \(\mathbf Z_t\) but different past segments can have different next derivatives. Use the history segment as the state for an exact delay model, or state the finite-memory approximation and its validation. The ordinary finite matrix \(J_t\), \(e^{J_t s}\), and its eigenvalues apply to the finite-dimensional realization or approximation; an exact fixed-delay model uses its history-state evolution and characteristic roots. The conditional expectation term also needs an expectation-formation rule in \(\mathcal G\) before this template defines a transition law.
 
@@ -1444,6 +1465,38 @@ The expectation term is structurally important in finance because agents can:
 - thereby alter the effective coefficients of the system itself.
 
 ---
+
+### 23.1 Reference closure and economic feasibility
+
+Sections 22–23 are templates. Instantiation requires actions, execution/clearing,
+accounting, expectations, initial/history conditions, hybrid guards/resets, and
+the exogenous law. Establish a well-defined transition or a declared solution
+set/selection rule. Listing coordinates alone does not close the model.
+
+Let \(\mathcal A(\mathbf Z;\mathcal G)\) be the jointly feasible actions under
+cash, collateral, inventory, and credit constraints. The same resource cannot
+independently fund every capacity projection. Operational \(R^-\) comes from
+paths permitted by this set and the transition law; it must not be a free input
+inferred from the outcome it explains.
+
+In MFSM-RE-1, the dealer marks inventory at \(p(q_D)=v e^{-\lambda q_D}\).
+A forced sale \(f\) earns the integral
+\(A_p(f)=p(1-e^{-\lambda f})/\lambda\), with limit \(pf\) at zero impact.
+After that sale, holder headroom is
+
+\[
+H(f)=c_L+A_p(f)+(1-m)p e^{-\lambda f}(q_L-f)-B,
+\qquad H'(0)=p\{m-\lambda(1-m)q_L\}.
+\]
+
+This sign condition is local and depends on the stated execution/risk rules.
+The reference separately proves accounting, no-impact, delayed-buying, and
+permanent-repricing limits. Those results do not establish market identification.
+
+Applications can report a set of response functionals over specified admissible
+structural/observation models, or its extrema. Such a scenario bound is not a
+confidence interval without additional coverage assumptions. Disagreement on
+effect sign must remain visible. Prediction and causal identification differ.
 
 # Part IX — Network propagation
 

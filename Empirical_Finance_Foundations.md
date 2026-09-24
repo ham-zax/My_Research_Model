@@ -958,7 +958,14 @@ A prespecified MFSM implementation must improve genuine out-of-sample performanc
 - standard network measures;
 - and, critically, a **flexible nonlinear model using the same primitive information set, including the same prespecified historical windows/lags**, from which MFSM features are engineered.
 
-The flexible baseline must receive every primitive history used to construct an MFSM feature, with a model-selection/tuning budget no smaller than the MFSM model's. If MFSM interactions beat a linear baseline but a generic nonlinear model on the same primitive information recovers the same performance, MFSM may still be useful feature engineering, but it has not demonstrated incremental structural information.
+The flexible baseline must receive every primitive history used to construct an
+MFSM feature, with a model-selection/tuning budget no smaller than the MFSM
+model's. If it recovers the same performance, MFSM has not demonstrated
+incremental predictive value for that task. Deterministic features add no new
+information to their inputs, although they can encode useful restrictions.
+Such a tie does not by itself refute a causal mechanism; superior prediction does
+not establish one. Sample efficiency, interpretation, and intervention transport
+are separate potential advantages requiring their own criteria and evidence.
 
 Evaluation should include:
 

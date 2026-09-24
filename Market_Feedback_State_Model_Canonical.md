@@ -1,8 +1,8 @@
 # Market Feedback-State Model (MFSM)
 ## Canonical Deep Specification
 
-Version: Current canonical synthesis
-Date: 2026-09-22
+Version: Canonical synthesis 2026-09-24 — operational contract revision
+Date: 2026-09-24
 Status: Research framework, not a validated trading system
 Primary purpose: Diagnose the internal feedback state of reflexive markets and generate falsifiable hypotheses about continuation, exhaustion, instability, and failure propagation.
 
@@ -11,6 +11,8 @@ Companion specifications:
 - `Mathematical_Foundations.md` — exact delay, memory-kernel, local-stability, stochastic-recovery, network, threshold, and adaptive-capacity mathematics.
 - `Empirical_Finance_Foundations.md` — finance-native evidence base, measurement map, falsification standards, and durable source list.
 - `Research_Protocol.md` — required procedure for applying, testing, extending, and versioning MFSM.
+- `MFSM_Reference_Economy.md` — complete deterministic reference member, with accounting, transition rules, derived propositions, executable checks, and explicit limits.
+- `docs/mfsm_model_improvement_plan.md` — ordered model-improvement work, error categories, acceptance criteria, and current completion state.
 
 The canonical file defines the model. The mathematical file preserves exact formal results. The empirical file determines what is finance-supported. The protocol controls how the model may evolve.
 
@@ -95,6 +97,27 @@ This may support use as a diagnostic input, but causal interpretation still depe
 A prespecified implementation improves genuine out-of-sample prediction, calibration, or decision value beyond strong finance-specific baselines.
 
 MFSM as a complete framework has not yet reached Level 4.
+
+### 2.1 Separate validity claims
+
+The four levels above describe the provenance and support of a claim. They are
+not a chain in which analogy is required before financial evidence, or successful
+prediction establishes causality. Report these four dimensions separately:
+
+| Claim | Required support | What it does not establish |
+|---|---|---|
+| Mathematical completeness | Explicit domain, transition/observation laws, initial/history conditions, feasible accounting, and a well-defined path or declared solution set | That the assumptions describe a real market |
+| Mechanistic validity | Evidence distinguishing the proposed causal links from observationally equivalent alternatives | An exploitable forecast |
+| Predictive usefulness | Prespecified forecasts that improve relevant out-of-sample scores against appropriate comparators | The proposed causal explanation |
+| Decision usefulness | Better decisions under named losses, constraints, costs, and available information | Universal usefulness across users or regimes |
+
+An MFSM feature constructed deterministically from the baseline's information
+does not create new information. It can encode a useful restriction or inductive
+bias. A tie with a flexible baseline fails to establish predictive improvement
+on that task; it does not by itself disprove a causal mechanism. Claims of better
+sample efficiency, interpretability, or transport to new interventions need their
+own stated criteria and evidence. Mathematical validity alone establishes none
+of those empirical advantages.
 
 ---
 
@@ -263,7 +286,15 @@ Closure rule: any object written with a time index—such as \(K_t\), \(W_t\), \
 
 Thus, when delay kernels or network topology evolve endogenously, write them as mappings such as \(K(\mathbf Z_t)\) and \(W(\mathbf Z_t)\), or include the state variables that determine them inside \(\mathbf Z_t\). They may not remain free time-varying objects outside the closed state.
 
-Named objects such as buffers \(B_t\), expectation / coordination state \(Q_t\), capacities, discrete threshold modes, and control states are therefore either **components or measurable projections of \(\mathbf Z_t\)**. The local Jacobian \(J_t\) is derived from a local linearization of \(\mathcal G\); \(M_t^{term}\) is a derived prospective classification, not a primitive state variable.
+Primitive resource stocks, expectation / coordination state \(Q_t\), discrete
+threshold modes, and control states are components of \(\mathbf Z_t\) when they
+evolve independently. Current buffers \(B_t\) and headroom can be measurable
+projections of that state under the rules. Path-qualified capacities such as
+\(R^-_t(h;\delta,\varepsilon,\varphi)\) are derived from the state law and
+\(\mathcal G\), with their stated intervention and horizon. They must not be
+introduced as independent resource stocks without a separate justified closure.
+The local Jacobian \(J_t\) is derived from a local linearization of
+\(\mathcal G\); \(M_t^{term}\) is a derived prospective classification.
 
 The true observation relation can be written conceptually as a conditional law
 
@@ -376,6 +407,40 @@ The mean causal response is only a derived projection:
 \]
 
 In practice, an empirical implementation need not estimate the unrestricted path law; it should target decision-relevant projections such as threshold probabilities, maximum stress, tail loss, cascade size, or recovery time.
+
+### 4.1 Contract for an operational model member
+
+The canonical framework specifies a **restricted model family**. Naming
+\(\mathbf Z,\mathcal G,\mathcal O\) does not complete a member of that family.
+An operational member must supply:
+
+1. A system boundary, units, admissible states, parameter domain, and initial
+   conditions, including required history and any latent-state distribution.
+2. Participant action rules, transaction/execution or clearing rules, and
+   balance-sheet updates. Every trade must identify its counterparties; external
+   funding, issuance, settlement, and write-offs must be explicit boundary flows.
+3. A joint feasible set of actions: cash, collateral, credit, inventory, and risk
+   limits constrain simultaneous uses of the same underlying resource.
+4. An expectation/learning rule where behavior uses expectations, together with
+   every exogenous process. An unspecified conditional expectation is not a law.
+5. Threshold guards, reset/default rules, the ordering of simultaneous events,
+   and a solution-selection rule where multiple solutions can occur.
+6. An observation law and the information actually available to the decision
+   maker. Exact-state observability is permitted as a labeled theoretical case.
+7. An admissible intervention, path functional, horizon, and baseline/coupling
+   when needed. The intervention must respect accounting or name the external
+   transfer that changes it.
+8. Conditions for a well-defined finite-horizon path, or a declared solution set,
+   plus limiting cases and propositions that can fail.
+
+Accounting consistency conserves transferred asset units/cash within a closed
+transaction boundary; it does not conserve marked wealth when prices change.
+Positive quoted liquidity is not permission to invent a funded counterparty.
+
+This contract instantiates existing state categories. It does not require every
+optional mechanism in this document to appear in every member. The complete
+[reference economy](MFSM_Reference_Economy.md) is one deliberately restricted
+example; wider applicability requires additional justified rules.
 
 ---
 
@@ -557,6 +622,14 @@ A decline in \(H\) is categorically different from a decline in any mechanism-sp
 
 Low H means a small adverse move can transform voluntary actors into forced actors.
 
+Distinct functions need not have disjoint resources. The same collateral can
+support current positions, new directional exposure, or purchases from a forced
+seller, subject to a common constraint. Specify a joint feasible action set
+\(\mathcal A(\mathbf Z_t;\mathcal G)\); separate capacity calculations cannot
+all spend the same available cash or collateral at once. An aggregate headroom
+number also requires an aggregation rule that preserves the relevant threshold
+distribution, or an explicit approximation error.
+
 ### 7.3 R_minus: opposing absorptive capacity
 
 R_minus = capacity available to take the opposite side of an unwind.
@@ -600,6 +673,15 @@ The consequence metric attached to \(\varepsilon\) must be named explicitly. Exa
 If the design specifies a set \(\Phi\) of admissible arrival profiles, a conservative capacity may be defined by the worst profile in that set.
 
 Thus a quantity of visible depth is not automatically \(R^-\). Absorptive capacity is always defined relative to a horizon, disturbance environment, tolerated consequence, and incoming-flow schedule.
+
+**Dependency rule:** the underlying inventories, funding, admissible actions,
+and response law generate paths; those paths define the consequence metric and
+therefore this operational \(R^-\). It is a derived response property. Using an
+\(R^-\) reconstructed from an outcome to explain that same outcome is circular.
+If an application instead evolves a reduced capacity coordinate, it must name
+that coordinate's distinct meaning, give its transition/measurement law, and
+justify its relation to the path-qualified object. A displayed-depth proxy does
+not meet that requirement merely by being renamed.
 
 When \(\varphi\) is fixed by the research design, \(R^-_t(h;\delta,\varepsilon)\) is acceptable shorthand. When tolerance and profile are fixed, \(R^-_t(h;\delta)\) is acceptable shorthand. When disturbance, tolerance, and profile are all fixed, \(R^-_t(h)\) is acceptable shorthand.
 
@@ -1192,35 +1274,26 @@ The system is no longer merely pricing information. Balance-sheet mechanics and 
 
 ---
 
-## 16. The current dangerous-state signature
+## 16. Conditional mechanism propositions
 
-MFSM intentionally does not define a universal scalar fragility score.
+The former dangerous-state checklist is replaced by conditional propositions.
+The rows below are obligations for a model member to derive or test, not universal
+theorems about markets. A member must specify assumptions, exceptions, and a
+mechanism-discriminating observation for every retained claim.
 
-A state deserving close attention often combines:
+| Mechanism | Conditions that must be specified | Candidate implication | Boundary / alternative |
+|---|---|---|---|
+| Constraint amplification | Participant-level headroom, forced-action rule, impact, and executable counterparties | Selling can destroy more headroom through repricing than it releases | In a funded zero-impact limit, selling can restore margin instead |
+| Mobilization mismatch | Actual arrival law, available funds, and binding deadline | Capital arriving after termination cannot meet the earlier obligation | Anticipation or already-posted funds can remove that mismatch |
+| Exposure transmission | Contractual/common-holding channel and receiving participants' constraints | A first loss changes another participant's feasible actions | Correlated news can produce similar prices without that transmission |
+| Continuation exhaustion | Identified channel and its resource/use rule | That channel's contribution diminishes when its usable resources end | Other channels can continue; exhaustion alone supplies no counterflow |
+| Delayed opposition | An explicit funded action rule and timing | Counterflow can relieve a particular constraint after arrival | Permanent repricing, insufficient funding, or an earlier deadline can prevent recovery |
 
-- strong endogenous amplification;
-- high nonlinear leverage / threshold exposure;
-- falling financing or collateral headroom;
-- falling opposing absorptive capacity;
-- rising economically operative connectivity;
-- falling functional diversity;
-- large gain-delay or timescale separation;
-- increasing dependence on endogenous rather than external confirmation.
-
-Symbolically, as a qualitative pattern only:
-
-A up,
-L up,
-H down,
-R_minus down,
-C up,
-D down,
-Theta or Phi up,
-S_end / S_ext up.
-
-This is not a deterministic crash condition.
-
-It is a structural vulnerability configuration whose predictive value must be tested.
+Separate **invariants** (e.g. transaction accounting), **theorems conditional on
+assumptions**, and **empirical hypotheses**. Violating an invariant is a model or
+implementation defect. Reproducing a consequence built into a model's equations
+does not independently validate those equations. The reference economy derives
+specific conditions and counterexamples in its propositions P1–P6.
 
 ---
 
@@ -1341,12 +1414,15 @@ d\mathbf Z_t
 
 where \(\boldsymbol\beta_t\) is Brownian motion and \(h_e\) is an expectation horizon.
 
-Capacities, buffers, control states, and discrete regimes that evolve independently are coordinates of \(\mathbf Z_t\), not hidden side states.
+Primitive resources, independent buffers, control states, and discrete regimes
+that evolve independently are coordinates of \(\mathbf Z_t\). Path-qualified
+capacities are derived from those resources and the transition law; they are not
+additional free resource stocks.
 The displayed finite-dimensional equation does not cover an exact fixed delay or arbitrary distributed kernel unless the necessary history is included in a function-valued state or the kernel has an exact finite-dimensional realization. A finite matrix \(J_t\) and its eigenvalues describe the finite-dimensional realization or a labeled approximation; exact delay stability uses the corresponding history-state/characteristic equation. Forward-looking expectations also require a specified expectation-formation rule inside \(\mathcal G\).
 
 ### 18.2 Capacity components
 
-If \(\mathbf r_t\) denotes the capacity coordinates of \(\mathbf Z_t\), an application may write
+If \(\mathbf r_t\) denotes primitive resource coordinates of \(\mathbf Z_t\), an application may write
 
 \[
 \dot{\mathbf r}_t
@@ -1356,7 +1432,11 @@ If \(\mathbf r_t\) denotes the capacity coordinates of \(\mathbf Z_t\), an appli
 \mathbf c(\mathbf Z_t,\mathbf r_t),
 \]
 
-to separate replenishment from consumption. Relevant projections include mechanism-specific \(R^+\), headroom \(H\), and horizon-/disturbance-/tolerance-/flow-profile-qualified \(R^-_t(h;\delta,\varepsilon,\varphi)\).
+to separate replenishment from consumption. The terms must respect the joint
+feasible action set and name the source of replenishment. Headroom is derived
+under the constraint rules; operational continuation/absorption capacities must
+be derived with their declared mechanism and path qualifications. They cannot
+be independent free inputs when their definitions already depend on the response.
 
 ### 18.3 Delayed response
 
@@ -1388,6 +1468,21 @@ Then determine whether the dominant mode implies:
 - or no local instability despite vulnerability to large shocks.
 
 Nonlinear basin analysis and explicit threshold constraints are needed for large disturbances.
+
+### 18.6 A complete reference member
+
+[MFSM-RE-1](MFSM_Reference_Economy.md) supplies a deterministic, discrete-time
+member with a leveraged holder, constrained dealer, and delayed buyer. It fixes
+execution prices, cash/position updates, margin restoration, signal history,
+default precedence, and the deadline. Its path law is degenerate conditional on
+the supplied state/law; the example supplies no fitted probabilities.
+
+It proves accounting invariants and limiting cases, including a local condition
+under which a forced sale worsens headroom, and shows why exhausted selling need
+not rebound. This demonstrates mathematical content for that member. Its
+valuation/behavioral assumptions, one-sided exposure, and omitted institutions
+limit its scope. It is neither a universal choice of \(\mathcal G\) nor financial
+validation of the general framework.
 
 ---
 
@@ -1989,6 +2084,19 @@ A proxy that becomes optimistically biased under stress must not be treated as a
 
 When another LLM applies this model, it should return something structurally similar to:
 
+Empty or `not identified` is the default for unsupported outputs. A filled
+empirical slot requires a named source/proxy, available timestamp, applicable
+transition/measurement assumptions, and stress-bias sign with rationale (or
+`ambiguous`). Hypothetical values must be labeled as assumptions. A qualitative
+mechanism story is not a computed path law or probability.
+
+### Instantiated law and validity
+- Model member/version and applicable domain:
+- Primitive accounts/resources, action/execution rules, and joint constraints:
+- Expectation rule, event ordering, and termination/settlement rules:
+- Mathematical, mechanistic, predictive, and decision support, separately:
+- Unsupported slots and optional mechanisms omitted:
+
 ### System boundary
 - Market:
 - Relevant participants:
@@ -2098,6 +2206,9 @@ When another LLM applies this model, it should return something structurally sim
 - Stress-state failure mode:
 - Expected stress-state bias sign + rationale:
 - Main measurement risks:
+- Structural alternatives compatible with the observations:
+- Response range over those alternatives; distinguish scenario ranges from statistical intervals:
+- Conclusions whose sign or decision changes across alternatives (`not identified` where unresolved):
 
 ### Dominant feedback mode
 - Stable decay / damped oscillation / transient amplification / threshold risk / other:
@@ -2269,11 +2380,17 @@ The framework does not need to predict exact tops to be useful.
 
 Structural state and shock-response diagnosis are the primary objectives.
 
+These are empirical usefulness criteria. Mathematical completeness is evaluated
+by section 4.1, and causal interpretation requires separate identification.
+Matching a flexible predictor establishes no improvement for the stated forecast
+task; it neither proves nor refutes the mechanism alone. Different claimed
+advantages must have separate prespecified evaluations.
+
 ---
 
 ## 30. What would falsify or materially weaken the framework
 
-The framework should be downgraded if, after careful implementation:
+The predictive claims of a specified application should be downgraded if, after careful implementation:
 
 - its variables add no out-of-sample information beyond standard leverage, liquidity, momentum, valuation, volatility, and credit indicators;
 - estimated interaction effects are unstable across samples and cannot be tied to institutional differences;
@@ -2285,6 +2402,12 @@ The framework should be downgraded if, after careful implementation:
 - cross-domain concepts fail to produce any measurable variable or testable financial implication.
 
 An explanatory vocabulary without incremental empirical value should not be presented as a market edge.
+
+A failed proxy or an unidentifiable mechanism limits what that application can
+claim. It does not alone falsify all members of an unspecified model family.
+Conversely, a budget violation, missing transition rule, or ill-defined path is
+a theoretical defect even before any forecast is scored. Record which claim
+failed; do not rescue it by changing mechanisms or targets after inspection.
 
 ---
 
@@ -2377,7 +2500,7 @@ When loading this file, treat the following as authoritative for the current ver
 
 The entire framework can be compressed to the following:
 
-> A financial market is a state-dependent response system. Its current **closed augmented state** determines how new disturbances are amplified, damped, delayed, transmitted, or converted into forced behavior. Price trends are one state-transforming process among several: coordination runs, collateral feedback, funding stress, strategy imitation, and network spillovers can also rewrite the response law. MFSM therefore requires a structural intervention operator, evaluates that intervention through a conditional counterfactual path law, derives decision-relevant path functionals from that law, separates absolute stressed consequence from incremental causal consequence, and treats structural susceptibility as the change in loss-oriented consequence as a standardized intervention amplitude varies. The relevant state includes same-direction capacity, financing and collateral headroom, horizon-/disturbance-/consequence-/flow-profile-qualified opposing absorptive capacity, local and finite-shock buffer response, delayed or distributed counterforces, participant reaction diversity, strategic complementarity, network propagation, and threshold geometry. The same market can be robust to one disturbance and vulnerable to another.
+> A financial market is a state-dependent response system. Its current **closed augmented state** determines how new disturbances are amplified, damped, delayed, transmitted, or converted into forced behavior. Price trends are one state-transforming process among several: coordination runs, collateral feedback, funding stress, strategy imitation, and network spillovers can also rewrite the response law. MFSM therefore requires a structural intervention operator, evaluates that intervention through a conditional counterfactual path law, derives decision-relevant path functionals from that law, separates absolute stressed consequence from incremental causal consequence, and treats structural susceptibility as the change in loss-oriented consequence as a standardized intervention amplitude varies. Its state includes primitive positions, resources, constraints, required memory, and hybrid modes; mechanism-specific continuation capacity, headroom, path-qualified opposing capacity, buffer response, and propagation are derived under the specified law. The same market can be robust to one disturbance and vulnerable to another.
 
 The deepest operating question is:
 
@@ -2450,6 +2573,7 @@ The following works are especially relevant to the current framework.
 model:
   name: Market Feedback-State Model
   acronym: MFSM
+  revision: canonical_operational_contract_2026_09_24
   status: research_framework
   objective: diagnose_structural_market_response_state
   primary_question: "How is the current structural state changing the system's response law for the next disturbance?"
@@ -2526,6 +2650,12 @@ response_objects:
 
 core_constraints:
   - dynamic_state_must_be_closed
+  - operational_member_requires_explicit_actions_accounting_execution_and_solution_rules
+  - shared_resources_require_a_joint_feasible_action_set
+  - derive_path_qualified_capacity_from_resources_and_response_not_from_its_own_outcome
+  - unsupported_outputs_default_to_not_identified
+  - distinguish_invariants_conditional_theorems_and_empirical_hypotheses
+  - structural_disagreement_must_not_be_hidden_by_a_single_measurement_model
   - every_time_varying_structural_object_must_be_state_predetermined_or_have_explicit_exogenous_law
   - do_not_collapse_R_plus_k_family_H_R_minus
   - make_R_minus_horizon_disturbance_consequence_tolerance_and_flow_profile_qualified_when_relevant
@@ -2567,6 +2697,7 @@ empirical_priority:
   - stress_state_proxy_bias_sign_and_rationale
 
 validation_standard:
+  - separate_mathematical_mechanistic_predictive_and_decision_support
   - prespecified_definitions
   - explicit_disturbance_class_descriptor_operator_amplitude_units_path_and_horizon
   - explicit_absorptive_capacity_consequence_tolerance_and_incoming_flow_profile

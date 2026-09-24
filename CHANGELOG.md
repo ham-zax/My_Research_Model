@@ -2,6 +2,31 @@
 
 This file records material changes to the Market Feedback-State Model so definitions are not silently rewritten after empirical failure.
 
+## 2026-09-24 - Canonical operational contract and reference economy
+
+Owner-approved theoretical revision, separate from existing empirical protocols
+and results. No new canonical state category or fitted market claim.
+
+- Require explicit actions, execution, accounting, expectations, event order,
+  and termination rules for an operational member.
+- Link capacity roles through joint resource constraints; derive operational
+  absorption from the response law to prevent circular use.
+- Replace the dangerous-state checklist with conditional propositions and
+  exceptions. Separate invariants, theorems, and empirical hypotheses.
+- Default unsupported outputs to `not identified` and expose structural
+  disagreement. Separate mathematical, mechanistic, predictive, and decision
+  support; prediction alone cannot establish causality.
+- Add [MFSM-RE-1](MFSM_Reference_Economy.md), a complete deterministic one-asset
+  reference with a leveraged holder, constrained dealer, and delayed buyer.
+  Accounting, execution integrals, headroom sensitivity, limiting cases, and
+  failure rules are explicit and executable.
+- Add the [model improvement plan](docs/mfsm_model_improvement_plan.md), with
+  sources of error, acceptance criteria, and remaining structural-sensitivity,
+  observation/identification, and application work.
+
+This supplies mathematical content for one restricted member. It does not
+calibrate that member, establish a causal market mechanism, or demonstrate edge.
+
 ## 2026-09-24 - Separate exploratory BTC test
 
 Added a versioned first-of-month observational BTC study using local-receipt spot midquotes, ordinary sell trades and open interest. It scored 126 held-out hourly decisions; the extra sell-pressure × spread interaction improved paired Brier by only +0.00016791, while both fitted models scored worse than an earlier-history positive-rate diagnostic. The [result and limits](docs/e001_exploratory_btc_result.md) are preserved with source, protocol, code and output hashes. This does not change the original shock-triggered E001 rules or its `BLOCKED_TIMING` status, and it does not establish trading edge. ETH remains sealed.

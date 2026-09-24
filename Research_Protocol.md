@@ -1,7 +1,7 @@
 # MFSM Research and Extension Protocol
 
 Status: Canonical workflow companion  
-Date: 2026-09-22  
+Date: 2026-09-24
 Role: Instructions for humans or LLMs applying, testing, criticizing, or extending the Market Feedback-State Model.
 
 ---
@@ -30,6 +30,10 @@ Before extending MFSM, read:
 Do not infer the model only from the shorthand variables \(A,R,H,C,D,\tau\).
 
 The mature framework is a state-dependent dynamical system, not a checklist.
+
+For a concrete theoretical member, also read
+[MFSM_Reference_Economy.md](MFSM_Reference_Economy.md). The ordered corrections
+and remaining work are in [the model improvement plan](docs/mfsm_model_improvement_plan.md).
 
 ---
 
@@ -247,6 +251,40 @@ The mean causal response is
 If the analysis uses the **distribution** of a pathwise counterfactual difference \(\mathbf Z^{\delta}-\mathbf Z^0\), state the structural coupling that makes those two potential paths jointly defined.
 
 ---
+
+### 4.3 Complete the operational member before interpreting its paths
+
+Apply canonical section 4.1. Record the admissible state/parameter domain,
+initial/history conditions, actions, execution/clearing, accounting, joint
+resource constraints, expectations, exogenous law, threshold/default ordering,
+and observation mechanism. Establish a well-defined transition or an explicit
+solution set/selection rule.
+
+Distinguish primitive accounts from derived headroom and path-qualified capacity.
+Prove that transfers do not create cash or assets within the named boundary.
+Record external funding, issuance, and write-offs; marked wealth need not be
+conserved. Show which uses compete for cash/collateral. Do not infer absorption
+from an outcome and use it to explain that same outcome without identification.
+
+Classify each claim as an invariant, a conditional theorem, or an empirical
+hypothesis. Include limiting cases exposing when mechanisms cease to apply.
+A synthetic run consistent with its equations does not validate their financial
+assumptions.
+
+### 4.4 Preserve structural disagreement and unsupported outputs
+
+Use `not identified` by default for unsupported outputs. Filled empirical slots
+need a source/proxy, availability timestamp, assumptions, and stress-bias
+sign/rationale; `ambiguous` is allowed. Label hypothetical parameters explicitly.
+
+Separate state uncertainty within a model from uncertainty about transition and
+observation models. Prespecify alternatives and report disagreements in response
+sign or decision. Scenario envelopes are not automatically confidence intervals.
+
+Report mathematical completeness, mechanistic validity, predictive usefulness,
+and decision usefulness separately. A predictive tie does not refute a mechanism;
+better prediction does not establish causality. Other advantages need their own
+tests. Attach failures to the member, proxy, or claim actually evaluated.
 
 ## 5. Identify endogenous amplification
 

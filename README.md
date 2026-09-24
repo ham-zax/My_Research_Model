@@ -22,6 +22,12 @@ Its invariant question is:
 - [Research_Protocol.md](./Research_Protocol.md)
   Application, extension, falsification, evidence, versioning, and future-LLM discipline for evolving the model without turning it into an unfalsifiable story.
 
+- [Model improvement plan](./docs/mfsm_model_improvement_plan.md)
+  Model weaknesses, canonical corrections, distinct sources of error, and remaining work with acceptance criteria. Start here for what to improve next.
+
+- [MFSM_Reference_Economy.md](./MFSM_Reference_Economy.md)
+  Complete deterministic reference economy with finite budgets, inventory-dependent execution, margin rules, delayed buying, and derived response conditions. Includes executable mathematical checks; parameters are synthetic and uncalibrated.
+
 - [CHANGELOG.md](./CHANGELOG.md)
   Material model changes and preserved definitions, so the framework is not silently redefined after results.
 
@@ -76,6 +82,18 @@ The framework distinguishes four levels of support:
 4. validated out-of-sample predictive contribution.
 
 Only level 4 would justify treating a component as demonstrated predictive edge. The complete MFSM has not reached level 4.
+
+The 2026-09-24 canonical revision separately evaluates mathematical completeness,
+mechanistic validity, predictive usefulness, and decision usefulness. The
+reference economy supplies a complete theoretical member; it does not establish
+empirical support for its chosen behavioral or valuation rules.
+
+Run the synthetic examples and mathematical checks with:
+
+```bash
+uv run --locked python scripts/run_mfsm_reference_economy.py
+uv run --locked pytest -q tests/test_reference_economy.py
+```
 
 ## How another LLM or research system should use this repository
 
