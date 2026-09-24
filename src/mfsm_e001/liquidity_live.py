@@ -5,13 +5,15 @@ from decimal import Decimal
 import json
 
 from .data import DataError, normalize_bybit_message
-from .liquidity_state import NS, decision_liquidity_state, top_level_book
+from .liquidity_state import (
+    NS, decision_liquidity_state, liquidity_model_features, top_level_book,
+)
 from .replay import Replay, ReplayError, replay_grid
 
 
 BOOK_KEY = 'bybit_linear:orderbook.50.BTCUSDT'
 OBSERVATION_POLICY = 'E001-forward-liquidity-observation-1'
-OBSERVATION_FEATURE_SCHEMA = 'E001-top-level-liquidity-diagnostic-1'
+OBSERVATION_FEATURE_SCHEMA = 'E001-LIQ-OBS-features-1'
 ZERO = Decimal(0)
 MAX_SOURCE_LEAD_NS = 100_000_000  # Diagnostic protective guard, not a venue delay bound.
 
@@ -212,6 +214,7 @@ class LiquidityReplay(Replay):
 
     def dataset_feature_row(self, decision_s):
         measured = self.features(decision_s-15)
+        model = liquidity_model_features(measured)
         return {
             'schema': OBSERVATION_FEATURE_SCHEMA,
             'decision_second': decision_s,
@@ -223,9 +226,11 @@ class LiquidityReplay(Replay):
             },
             'latest_input_available_ns': self.latest_available_ns,
             'primary_eligible': False,
-            'shared': {},
-            'mfsm': {},
+            'eligibility_reason': 'sealed_capture_quality_gate_not_applied',
+            'shared': model['shared'],
+            'mfsm': model['mfsm'],
             'raw': measured,
+            'feature_vector_ready': model['ready'],
             'model_ready': False,
         }
 

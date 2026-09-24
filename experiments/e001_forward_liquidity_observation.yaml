@@ -1,7 +1,8 @@
 {
   "schema": "E001-forward-liquidity-observation-1",
   "data_kind": "separate_receipt_time_observational_btc",
-  "purpose": "Collect fresh public BTC book and trade messages for a later fixed-level liquidity-state study.",
+  "purpose": "Collect fresh public BTC book and trade messages for the prespecified fixed-level liquidity-state study.",
+  "analysis_protocol": "experiments/e001_liquidity_observational_protocol.yaml",
   "asset": "BTC",
   "symbol": "BTCUSDT",
   "capture_module": "mfsm_e001.collect",

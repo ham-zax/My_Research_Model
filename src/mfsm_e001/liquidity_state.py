@@ -185,8 +185,34 @@ def decision_liquidity_state(states, observations, trades, *, trigger_s,
         'buy_notional_30s': buy, 'sell_notional_30s': sell,
         'net_buy_notional_30s': buy-sell,
         'gross_trade_notional_30s': buy+sell,
+        'buy_relative_total_depth_30s': buy/total_scale,
+        'sell_relative_total_depth_30s': sell/total_scale,
         'net_buy_relative_total_depth_30s': (buy-sell)/total_scale,
         'gross_trade_relative_total_depth_30s': (buy+sell)/total_scale,
         'source_freshness_certified': False,
         'model_ready': False,
     }
+
+
+def liquidity_model_features(state):
+    """Return the frozen matched B4/MFSM inputs for E001-LIQ-OBS-1."""
+    if not isinstance(state, dict) or state.get('valid') is not True:
+        return {'shared': {}, 'mfsm': {}, 'ready': False}
+    shared_names = (
+        'top_bid_relative', 'top_ask_relative', 'imbalance', 'spread_bps',
+        'buy_relative_total_depth_30s', 'sell_relative_total_depth_30s',
+        'gross_trade_relative_total_depth_30s',
+        'persistent_bid_add_relative_15s',
+    )
+    shared = {name: state.get(name) for name in shared_names}
+    if any(value is None for value in shared.values()):
+        return {'shared': {}, 'mfsm': {}, 'ready': False}
+    bid_relative = shared['top_bid_relative']
+    replenish = shared['persistent_bid_add_relative_15s']
+    sell_pressure = shared['sell_relative_total_depth_30s']
+    if bid_relative <= 0 or replenish < 0 or sell_pressure < 0:
+        return {'shared': {}, 'mfsm': {}, 'ready': False}
+    mfsm = dict(shared)
+    mfsm['sell_pressure_x_inverse_bid_depth'] = sell_pressure/bid_relative
+    mfsm['sell_pressure_x_inverse_replenishment'] = sell_pressure/(1+replenish)
+    return {'shared': shared, 'mfsm': mfsm, 'ready': True}

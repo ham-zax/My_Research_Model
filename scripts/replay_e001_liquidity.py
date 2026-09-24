@@ -65,6 +65,9 @@ def run(manifest, output, *, sealed_prefix=False, segment_limit=None):
         'sealed_segment_count': len(capture.segments),
         'timing_policy': OBSERVATION_POLICY,
         'feature_schema': OBSERVATION_FEATURE_SCHEMA,
+        'analysis_protocol': 'experiments/e001_liquidity_observational_protocol.yaml',
+        'analysis_protocol_sha256': sha256(
+            root/'experiments/e001_liquidity_observational_protocol.yaml'),
         'grid_path': str(grid_path),
         'grid_sha256': sha256(grid_path),
         'feature_path': str(feature_path),
@@ -85,6 +88,7 @@ def run(manifest, output, *, sealed_prefix=False, segment_limit=None):
                 'src/mfsm_e001/liquidity_state.py',
                 'src/mfsm_e001/replay.py',
                 'scripts/replay_e001_liquidity.py',
+                'experiments/e001_liquidity_observational_protocol.yaml',
             )
         },
     }

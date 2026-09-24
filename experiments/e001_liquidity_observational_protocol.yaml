@@ -1,0 +1,121 @@
+{
+  "schema": "E001-LIQ-OBS-protocol-1",
+  "status": "predeclared_during_outcome_blind_forward_capture_before_event_labels_or_model_scoring",
+  "experiment_version": "E001-LIQ-OBS-1",
+  "feature_schema": "E001-LIQ-OBS-features-1",
+  "label_schema": "E001-LIQ-OBS-label-1",
+  "data_kind": "separate_receipt_time_observational_btc",
+  "scientific_question": "After an independent BTC spot decline crosses -1% over exactly five minutes, do prespecified interactions between observed sell pressure and contemporaneous visible liquidity state improve 30-minute downside-before-recovery probability beyond a flexible model receiving the identical primitive liquidity summaries?",
+  "claim_boundary": {
+    "allowed": "observational predictive contribution of theory-motivated liquidity-state interactions on fresh BTC data",
+    "not_allowed": [
+      "literal market absorption capacity",
+      "causal liquidation effect",
+      "certified exchange-event source age",
+      "original E001 confirmation",
+      "trading profitability"
+    ]
+  },
+  "capture": {
+    "protocol": "experiments/e001_forward_liquidity_observation.yaml",
+    "selected_run_id": "9c4ee7b3301742aabf31377f5d2c894c",
+    "selection_timing": "selected while acquisition was still running and before event labels or model scores were inspected",
+    "require_completed_or_explicitly_sealed_input": true,
+    "require_segment_hash_verification": true,
+    "require_feed_epoch_and_gap_audit": true,
+    "fit_during_capture": false
+  },
+  "event": {
+    "asset": "BTC",
+    "spot_reference": "equal_weight_Binance_and_Bybit_spot_midquote_at_local_receipt_cutoff",
+    "spot_max_receipt_age_seconds": 5,
+    "trigger_return_window_seconds": 300,
+    "trigger_return_threshold": -0.01,
+    "crossing_rule": "first second moving from return > -0.01 to return <= -0.01",
+    "episode_lockout_seconds": 7200,
+    "decision_delay_seconds": 15,
+    "unknown_pre_capture_lockout_history": "exclude_or_retain_as_ambiguous_never_assume_quiet"
+  },
+  "liquidity_measurement": {
+    "source": "Bybit linear orderbook.50.BTCUSDT and publicTrade.BTCUSDT",
+    "clock": "local_application_receipt_time",
+    "levels_per_side": 50,
+    "pretrigger_history_seconds": 1800,
+    "minimum_valid_pretrigger_seconds": 1710,
+    "maximum_pretrigger_gap_seconds": 5,
+    "trade_flow_window_seconds": 30,
+    "bid_addition_window_seconds": 15,
+    "bid_addition_minimum_dwell_seconds": 1,
+    "reset_epoch_rule": "clock steps, linear reconnect/reset boundaries, invalid book epochs and required-window gaps invalidate dependent state",
+    "interpretation": "observable liquidity state not a sell-flow capacity bound"
+  },
+  "shared_features": [
+    "top_bid_relative",
+    "top_ask_relative",
+    "imbalance",
+    "spread_bps",
+    "buy_relative_total_depth_30s",
+    "sell_relative_total_depth_30s",
+    "gross_trade_relative_total_depth_30s",
+    "persistent_bid_add_relative_15s"
+  ],
+  "mfsm_combinations": {
+    "sell_pressure_x_inverse_bid_depth": "sell_relative_total_depth_30s / top_bid_relative",
+    "sell_pressure_x_inverse_replenishment": "sell_relative_total_depth_30s / (1 + persistent_bid_add_relative_15s)"
+  },
+  "feature_parity": "B4 and MFSM receive identical shared feature values; MFSM receives only the two declared deterministic combinations in addition",
+  "missing_policy": "any missing, nonfinite, nonpositive required scale, invalid top-level state or invalid required history excludes the episode before fitting; never impute zero",
+  "labels": {
+    "primary_horizon_seconds": 1800,
+    "secondary_horizon_seconds": 7200,
+    "lower_barrier_relative_to_decision": -0.01,
+    "upper_barrier_relative_to_decision": 0.0075,
+    "primary_target": "downside barrier hit before recovery barrier within 30 minutes",
+    "neither_by_horizon_value": 0,
+    "missing_price_before_first_hit_or_horizon": "label_unavailable",
+    "training_maturity": "full_prespecified_horizon_must_end_before_label_can_enter_fit_or_selection"
+  },
+  "evaluation": {
+    "learner": "sklearn.ensemble.HistGradientBoostingClassifier",
+    "library": "scikit-learn==1.8.0",
+    "calibration": "CalibratedClassifierCV(FrozenEstimator(fitted_model), method=sigmoid)",
+    "seed": 1001,
+    "early_stopping": false,
+    "l2_regularization": 0.1,
+    "tuning_grid_in_tie_break_order": [
+      {"max_iter": 20, "max_leaf_nodes": 7, "min_samples_leaf": 5},
+      {"max_iter": 40, "max_leaf_nodes": 7, "min_samples_leaf": 5}
+    ],
+    "selection_metric": "equal_episode_weight_pooled_30m_calibrated_Brier",
+    "minimum_eligible_episodes": 130,
+    "walk_forward": {
+      "minimum_initial_fit": 50,
+      "calibration_block": 20,
+      "inner_validation_block": 20,
+      "outer_test_block": 20,
+      "minimum_full_outer_test_blocks": 2,
+      "fit": "all earlier episodes before the calibration block",
+      "unused_final_partial_test_block": "reported_not_scored"
+    },
+    "classes_required_in_fit_and_calibration": [0, 1],
+    "primary_metric": "paired_mean_Brier_improvement_equal_to_B4_Brier_minus_MFSM_Brier",
+    "required_reference_comparator": "for every outer test block also score the constant probability equal to the earlier fit-block positive rate; this is diagnostic context and cannot replace the paired B4-vs-MFSM primary metric",
+    "real_fit_gate": "capture complete and hash verified; feed/epoch/gap audit passed; exact feature contract applied; at least 130 eligible episodes; split and class requirements satisfied",
+    "real_fit_enabled_before_gate": false
+  },
+  "data_reuse": {
+    "previous_42_first_of_month_shallow_capacity_dates": "development_only_not_validation_for_this_feature_family",
+    "E001_OBS_1_exploratory_sample": "separate_prior_experiment_not_part_of_this_evaluation",
+    "ETH": "sealed_and_out_of_scope"
+  },
+  "trading_edge_gate": {
+    "enabled": false,
+    "reason": "no prespecified causal fee_slippage_market_impact execution benchmark is part of this protocol",
+    "required_before_any_trading_edge_claim": "separate frozen execution-cost protocol and fresh evaluation"
+  },
+  "terminal_statuses": [
+    "INSUFFICIENT_DATA",
+    "BTC_DEVELOPMENT_FAILED",
+    "BTC_DEVELOPMENT_PASSED"
+  ]
+}
