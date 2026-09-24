@@ -4,6 +4,7 @@ import json
 import pytest
 
 from mfsm_e001.collect import SNAPSHOT_URL
+from mfsm_e001.liquidity_live import LiquidityReplay
 from mfsm_e001.replay import (NS, BinanceBook, BybitBook, CaptureInput, Replay, ReplayError,
                               Ticker, replay_grid)
 from mfsm_e001.capture_store import CaptureStore, atomic_json
@@ -150,6 +151,30 @@ def test_delayed_rest_result_cannot_be_backdated_in_capture_order():
     grid = list(replay_grid(rows, replay))
     assert not grid[2]['quotes']['binance']['valid']  # second 3
     assert grid[3]['quotes']['binance']['available_ns'] == 4*NS
+    assert replay.diagnostics['receipt_order_clamped'] == 1
+
+
+def test_liquidity_replay_recovers_after_delayed_rest_result():
+    spot = bybit()
+    spot['topic'] = 'orderbook.1.BTCUSDT'
+    rows = [
+        row('connected', NS, 'binance_spot'),
+        row('connected', NS, 'bybit_spot'),
+        row('ws_message', NS, 'bybit_spot', raw=json.dumps(spot)),
+        row('ws_message', 2*NS, 'binance_spot', raw=json.dumps({
+            'stream': 'btcusdt@depth@100ms', 'data': delta(10, 12, event_ms=2000)})),
+        row('noop', 4*NS),
+        row('rest_snapshot', 3*NS, 'binance_spot', url=SNAPSHOT_URL,
+            raw=json.dumps(snapshot())),
+        row('noop', 5*NS),
+    ]
+    replay = LiquidityReplay()
+    grid = {item['second']: item for item in replay_grid(rows, replay)}
+
+    assert grid[3]['composite_price'] is None
+    assert grid[4]['quotes']['binance']['valid'], grid[4]['quotes']['binance']
+    assert grid[4]['quotes']['binance']['available_ns'] == 4*NS
+    assert grid[4]['composite_price'] == D('100')
     assert replay.diagnostics['receipt_order_clamped'] == 1
 
 

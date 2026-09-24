@@ -35,8 +35,6 @@ class LiquidityReplay(Replay):
         self.capture_start_ns = None
         self.latest_available_ns = 0
         self.epoch_start_ns = 0
-        self.last_received_ns = None
-        self.receipt_monotonic = True
 
     def _clear_linear_history(self):
         self.liquidity_epoch += 1
@@ -51,15 +49,8 @@ class LiquidityReplay(Replay):
             self.epoch_start_ns = available_ns
         self.latest_available_ns = available_ns
         kind, source = row['kind'], row.get('source')
-        received_ns = row['received_ns']
         if kind == 'clock_step':
             self.epoch_start_ns = available_ns
-            self.last_received_ns = received_ns
-            self.receipt_monotonic = True
-        elif self.last_received_ns is not None and received_ns < self.last_received_ns:
-            self.receipt_monotonic = False
-        else:
-            self.last_received_ns = received_ns
         active = self.connections.get(source) == row.get('connection_id')
         message = (json.loads(row['raw']) if kind == 'ws_message' and
                    source == 'bybit_linear' and active else None)
@@ -144,8 +135,6 @@ class LiquidityReplay(Replay):
                 self.trade_ids.pop(trade_id, None)
 
     def _receipt_quote(self, key, boundary_ns):
-        if not self.receipt_monotonic:
-            return {'valid': False, 'reason': 'receipt_time_not_monotonic'}
         book = self.books.get(key)
         if book is None or not book.ready:
             return {'valid': False, 'reason': 'not_connected_or_initialized'}
@@ -182,9 +171,6 @@ class LiquidityReplay(Replay):
                 book.bids, book.asks, levels=self.levels,
                 epoch=self.liquidity_epoch, last_us=book.available_ns//1000,
                 boundary_us=boundary_us)
-        if not self.receipt_monotonic:
-            state['top_level_valid'] = False
-            state['reason'] = 'receipt_time_not_monotonic'
         if self.max_source_lead_ns > MAX_SOURCE_LEAD_NS:
             state['top_level_valid'] = False
             state['reason'] = 'source_clock_lead_quarantine'
