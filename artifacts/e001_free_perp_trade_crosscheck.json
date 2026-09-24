@@ -1,0 +1,55 @@
+{
+  "captured_utc": "2026-09-24T21:47:33.941849+00:00",
+  "crosscheck": {
+    "event_time_offset_seconds_max": "0.000",
+    "event_time_offset_seconds_min": "-0.0009",
+    "first_public_ids_checked": 10000,
+    "first_public_ids_found_in_tardis": 10000,
+    "first_public_ids_side_price_size_mismatches": 0,
+    "public_only_ids": 9,
+    "tardis_only_ids": 0
+  },
+  "date": "2024-03-01",
+  "limitations": [
+    "This compares one historical day, not all event days.",
+    "The public file lacks recorder receive timestamps and order-book states.",
+    "No event outcome, label, model, or trading score was computed."
+  ],
+  "public": {
+    "columns": [
+      "timestamp",
+      "symbol",
+      "side",
+      "size",
+      "price",
+      "tickDirection",
+      "trdMatchID",
+      "grossValue",
+      "homeNotional",
+      "foreignNotional"
+    ],
+    "path": "data/raw/bybit_perp_trades/BTCUSDT2024-03-01.csv.gz",
+    "rows": 1330157,
+    "sha256": "bf7855dc552436725064045c01f08f2daea94cf2d21b4a29ff3e5117f1d9bf1e",
+    "timestamp_regressions": 0,
+    "url": "https://public.bybit.com/trading/BTCUSDT/BTCUSDT2024-03-01.csv.gz"
+  },
+  "purpose": "free_archive_schema_and_one_day_trade_id_crosscheck_only",
+  "schema": "E001-free-perp-trade-crosscheck-1",
+  "tardis": {
+    "columns": [
+      "exchange",
+      "symbol",
+      "timestamp",
+      "local_timestamp",
+      "id",
+      "side",
+      "price",
+      "amount"
+    ],
+    "path": "data/raw/tardis/2024-03-01/bybit_trades_2024-03-01_BTCUSDT.csv.gz",
+    "rows": 1330148,
+    "sha256": "51e16f56271c6cba43a2c59a03c66e03ce34d6b332be7e166e314e23febcae58",
+    "unique_ids": 1330148
+  }
+}

@@ -29,6 +29,13 @@ result. Bybit's [public trade documentation](https://bybit-exchange.github.io/do
 defines `side` as the taker side for its API; archive CSV correspondence still
 needs validation before using side as aggressor flow.
 
+A [one-day public/Tardis trade cross-check](../artifacts/e001_free_perp_trade_crosscheck.json)
+on 2024-03-01 found 1,330,157 public trades and 1,330,148 Tardis trades.
+All 1,330,148 Tardis IDs occurred in the public file; nine IDs occurred only
+in the public file. The first 10,000 public IDs all matched Tardis on reported
+side, price, and size. This verifies the mapping on one day, while leaving
+every other selected day and source-time completeness unverified.
+
 ## Recommended no-cost next experiment
 
 Version a separate BTC trade-flow protocol **before** computing labels or model
