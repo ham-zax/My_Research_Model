@@ -117,8 +117,23 @@
     ],
     "common_catalog_coverage_start": "2023-07",
     "free_event_yield_source": "official Binance BTCUSDT 1-second archive",
-    "candidate_day_rule": "must be frozen after the multi-year free incidence scan and before paid L2 outcome/model inspection",
-    "final_trigger_rule": "unchanged two-venue receipt-time midpoint event definition; Binance-only screening can never become the research trigger",
+    "candidate_day_rule": {
+      "status": "frozen_before_new_paid_CryptoStruct_L2_outcome_or_model_inspection",
+      "calibration_receipt": "artifacts/e001_historical_screen_calibration.json",
+      "return_window_seconds": 300,
+      "free_reference": "equal-weight Binance one-second close and latest Bybit public spot trade available by second-end with Bybit trade age <= 5 seconds at both endpoints",
+      "primary_condition": "retain UTC day if any valid free-reference five-minute return <= -0.0060",
+      "missing_reference_fallback": "when the free reference is unavailable at an endpoint retain UTC day if Binance-only five-minute return <= -0.0050",
+      "screening_lockout": "none; the wider acquisition screen must not suppress a later true -1% event",
+      "use": "paid-data acquisition only"
+    },
+    "paid_acquisition_order": [
+      "buy CryptoStruct Binance Spot 67838 and Bybit Spot 2000 only for retained screen days plus deterministic boundary support",
+      "rebuild the exact frozen two-venue receipt-time trigger and two-hour lockout from paid spot files",
+      "buy CryptoStruct Bybit perpetual 2449 only for finalized exact event windows needing 30-minute liquidity prehistory and t0+15s state",
+      "buy any additional spot boundary day required by a finalized 120-minute label horizon"
+    ],
+    "final_trigger_rule": "unchanged two-venue receipt-time midpoint event definition; free screening prices can never become the research trigger",
     "model_fit_enabled": false
   },
   "data_reuse": {

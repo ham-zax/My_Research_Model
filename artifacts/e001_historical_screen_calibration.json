@@ -1,0 +1,94 @@
+{
+  "schema": "E001-historical-screen-calibration-1",
+  "checked_utc_date": "2026-09-24",
+  "purpose": "freeze a price-only paid-data acquisition screen before any new paid CryptoStruct L2 outcome/model inspection",
+  "model_fitted": false,
+  "labels_used_for_model_selection": false,
+  "development_sources": {
+    "quote_grid_days": {
+      "period": "2023-07-01 through 2026-08-01 first-of-month development days",
+      "files": 38,
+      "bytes": 107479436,
+      "manifest_sha256": "55138d7dad265003e31f81c697a14f71d02799b976c0482ab16b70cfd7e4c061"
+    },
+    "free_bybit_spot_trade_days": {
+      "provider": "Bybit public archive",
+      "files": 38,
+      "bytes": 218015607,
+      "manifest_sha256": "24800a4eedda4100fe8a57526a96ecffd67b514d61e0a9522ec7e7a6ebda4678",
+      "url_pattern": "https://public.bybit.com/spot/BTCUSDT/BTCUSDT_YYYY-MM-DD.csv.gz"
+    },
+    "binance_reference": "official BTCUSDT one-second monthly klines already checksum-verified by scripts/scan_e001_binance_event_yield.py"
+  },
+  "calibration": {
+    "quote_valid_seconds": 3283131,
+    "free_trade_composite_valid_seconds": 3115456,
+    "free_trade_composite_coverage_percent": 94.89283248216412,
+    "five_minute_comparisons": 2972750,
+    "quote_composite_minus_1pct_seconds": 1506,
+    "quote_shock_seconds_with_free_reference": 1444,
+    "quote_shock_free_reference_coverage_percent": 95.88313413014608,
+    "free_trade_composite_minus_quote_composite_return_error_bps": {
+      "minimum": -40.9597135186983,
+      "p01": -2.920745089302029,
+      "p99": 2.912537563059184,
+      "maximum": 43.06857267716833,
+      "maximum_absolute": 43.06857267716833
+    },
+    "dangerous_one_sided_shock_error": {
+      "maximum_free_minus_quote_bps": 35.24750670358603,
+      "free_trade_composite_return_bps": -69.5146243887828,
+      "quote_composite_return_bps": -104.76213109236885,
+      "date": "2024-05-01",
+      "second": 1714551784
+    },
+    "shock_second_recall_when_free_reference_exists": {
+      "free_threshold_-0.90pct": 98.33795013850416,
+      "free_threshold_-0.85pct": 99.37673130193906,
+      "free_threshold_-0.80pct": 99.7229916897507,
+      "free_threshold_-0.75pct": 99.93074792243767,
+      "free_threshold_-0.70pct": 99.93074792243767,
+      "free_threshold_-0.65pct": 100.0,
+      "free_threshold_-0.60pct": 100.0
+    },
+    "day_level_check": {
+      "development_days": 38,
+      "days_with_quote_composite_minus_1pct_condition": 14,
+      "binance_-0.60pct_selected_days": 20,
+      "binance_-0.60pct_missed_final_days": 0,
+      "free_trade_composite_-0.65pct_selected_days": 19,
+      "free_trade_composite_-0.65pct_missed_final_days": 0,
+      "free_trade_composite_-0.60pct_selected_days": 21,
+      "free_trade_composite_-0.60pct_missed_final_days": 0
+    }
+  },
+  "frozen_candidate_day_rule": {
+    "return_window_seconds": 300,
+    "free_reference": "equal-weight Binance one-second close and latest Bybit public spot trade available by second-end, with Bybit trade age <= 5 seconds at both endpoints",
+    "primary_condition": "retain the UTC day if any valid free-reference five-minute return is <= -0.0060",
+    "missing_reference_fallback": "if the free reference is unavailable at an endpoint, retain the UTC day if the Binance-only five-minute return is <= -0.0050",
+    "screening_lockout": "none",
+    "reason_no_lockout": "a wider screening event must never suppress a later true -1% final event",
+    "use": "paid-data acquisition only",
+    "not_final_trigger": true,
+    "final_trigger": "unchanged equal-weight Binance and Bybit spot receipt-time midpoint crossing <= -1% over exactly five minutes with the frozen two-hour lockout"
+  },
+  "paid_acquisition_order": [
+    "1. run the frozen free screen over the common historical window",
+    "2. buy only CryptoStruct Binance Spot 67838 and Bybit Spot 2000 for retained UTC days plus deterministic boundary support",
+    "3. rebuild the exact frozen two-venue receipt-time trigger and two-hour lockout from those paid spot files",
+    "4. buy CryptoStruct Bybit perpetual 2449 only for finalized exact event windows requiring the frozen 30-minute liquidity prehistory and t0+15s decision state",
+    "5. acquire any additional spot boundary day needed for a finalized 120-minute label horizon",
+    "6. do not fit B4 or MFSM until the existing 130-episode and quality gates pass"
+  ],
+  "claim_boundary": {
+    "supported": "development evidence supports the acquisition screen as a conservative cost-control device",
+    "not_supported": [
+      "the screen is the research trigger",
+      "the screen is guaranteed to have zero false negatives outside development data",
+      "CryptoStruct is fully qualified on all historical days",
+      "prediction edge",
+      "trading edge"
+    ]
+  }
+}
