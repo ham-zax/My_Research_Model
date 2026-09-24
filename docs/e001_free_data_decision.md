@@ -43,7 +43,8 @@ scores. Use the free multi-year price and perpetual-trade archives to compare a
 simple historical-rate forecast, a price-only baseline, and one prespecified
 trade-flow addition on chronological holdouts. Define trade timestamp/order,
 staleness, gaps, event lockout, labels, feature windows, class minima, and a
-causal fee/slippage benchmark in that protocol. Keep the paid-path acquisition
+conservative cross-venue timestamp-lag sensitivity and causal fee/slippage
+benchmark in that protocol. Keep the paid-path acquisition
 screen and the ETH holdout untouched.
 
 This can test whether a *trade-flow* signal survives simple baselines across
