@@ -156,6 +156,25 @@ def build_episode_dataset(grid_rows, feature_rows, *, asset, experiment_version,
             'crossings': crossings, 'episodes': episodes, 'exclusions': exclusions}
 
 
+def build_liquidity_observation_dataset(
+        records, *, source_sha256, training_as_of_ms, experiment_version,
+        label_schema, replay=None):
+    """Build a diagnostic real-BTC dataset from the top-level liquidity replay.
+
+    The caller must supply explicit experiment and label versions. Current
+    liquidity feature rows remain model-ineligible until those scientific
+    contracts are frozen and the feature adapter is promoted separately.
+    """
+    from .liquidity_live import OBSERVATION_POLICY, replay_dataset_inputs
+
+    grid_rows, feature_rows = replay_dataset_inputs(records, replay=replay)
+    return build_episode_dataset(
+        grid_rows, feature_rows, asset='BTC',
+        experiment_version=experiment_version,
+        timing_policy=OBSERVATION_POLICY, label_schema=label_schema,
+        source_sha256=source_sha256, training_as_of_ms=training_as_of_ms)
+
+
 def build_synthetic_fixture(path):
     """Expand an explicit compact grid fixture; never infer market provenance."""
     path = Path(path)
