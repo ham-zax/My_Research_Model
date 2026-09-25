@@ -184,10 +184,13 @@ For each selected UTC event day, the preferred historical inputs are:
 The common advertised coverage window starts on 2023-07-18, excluding the
 perpetual gap. The [2026-09-24 catalog receipt](../artifacts/e001_cryptostruct_catalog_coverage.json)
 records the keyless `get_coverage` responses for all three instrument IDs.
-The frozen screen still covers 2023-07-01 onward; the acquisition manifest must
-flag selected days before Bybit spot coverage, and no two-venue event can be
-certified there. Availability for each purchasable selected day still needs a
-read-only price/availability quote before purchase.
+The frozen July 2023-August 2026 screen retained 748 candidate UTC days and 775
+spot seed/support days. The [frozen acquisition manifest](../artifacts/e001_historical_spot_acquisition_manifest.json)
+flags 12 early days before Bybit spot coverage, where no two-venue event can be
+certified. A subsequent [read-only price/availability quote](../artifacts/e001_historical_spot_price_quote.json)
+found all 1,526 purchasable Binance/Bybit spot instrument-days available with
+zero missing at a quoted total of EUR 1,526. No checkout or paid download was
+created.
 
 Acquire adjacent UTC files whenever the required 30-minute pre-trigger history,
 two-hour lockout history, or 120-minute secondary label window crosses a day

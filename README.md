@@ -25,6 +25,9 @@ Its invariant question is:
 - [Model improvement plan](./docs/mfsm_model_improvement_plan.md)
   Model weaknesses, canonical corrections, distinct sources of error, and remaining work with acceptance criteria. Start here for what to improve next.
 
+- [BTC edge evaluation plan](./docs/mfsm_btc_edge_evaluation_plan.md)
+  Concrete gates for a separate BTC forecast, executable short-or-flat decision and untouched confirmation test.
+
 - [Reference sensitivity and observation result](./docs/mfsm_reference_sensitivity_result.md)
   Frozen synthetic structural comparisons and an explicit case where identical limited observations conceal different market responses.
 

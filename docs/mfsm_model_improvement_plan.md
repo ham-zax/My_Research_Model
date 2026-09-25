@@ -148,8 +148,11 @@ inadequate proxy fails, or retain a coordinate solely because it has a symbol.
 
 ### Stage 5 — Assess a real application against its actual claims
 
-**Later.** Select the institution, information set, intervention or observational
-question, and path loss once the applicable member is explicit. Measurement and
+**Next.** The [BTC edge evaluation plan](mfsm_btc_edge_evaluation_plan.md)
+defines a narrow observational forecast and short-or-flat decision test. Its
+protocol, calendar, execution rules and data gates still need to be frozen and
+implemented before any result is scored. Select the institution, information
+set, observational question and path loss explicitly; measurement and
 identification determine which claims are supportable.
 
 Acceptance: financial sources, identified/partially identified quantities, and

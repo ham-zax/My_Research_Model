@@ -1,0 +1,67 @@
+{
+  "acquisition_manifest_sha256": "164d309e9ff3bcbfd4f45aa4a092e7d61bbf925de7127cf99ef007bfd284fef6",
+  "batch_receipts": [
+    {
+      "items_available": 365,
+      "items_requested": 365,
+      "missing": [],
+      "total_eur": "365"
+    },
+    {
+      "items_available": 365,
+      "items_requested": 365,
+      "missing": [],
+      "total_eur": "365"
+    },
+    {
+      "items_available": 365,
+      "items_requested": 365,
+      "missing": [],
+      "total_eur": "365"
+    },
+    {
+      "items_available": 365,
+      "items_requested": 365,
+      "missing": [],
+      "total_eur": "365"
+    },
+    {
+      "items_available": 66,
+      "items_requested": 66,
+      "missing": [],
+      "total_eur": "66"
+    }
+  ],
+  "captured_utc": "2026-09-25T00:18:54.384580+00:00",
+  "checkout_created": false,
+  "excluded_spot_days": [
+    "2023-07-02",
+    "2023-07-03",
+    "2023-07-05",
+    "2023-07-06",
+    "2023-07-07",
+    "2023-07-09",
+    "2023-07-10",
+    "2023-07-11",
+    "2023-07-12",
+    "2023-07-13",
+    "2023-07-14",
+    "2023-07-17"
+  ],
+  "items_available": 1526,
+  "items_requested": 1526,
+  "items_sha256": "d5730c331fd8f05965924250868306231cf5e6677ecf98723cad02480857a0f0",
+  "missing": [],
+  "model_fitted": false,
+  "paid_l2_acquired": false,
+  "purpose": "read_only_availability_and_cost_before_purchase",
+  "quoted_spot_day_count": 763,
+  "schema": "E001-historical-spot-price-quote-1",
+  "source": "https://cryptostruct.com/mcp",
+  "source_tool": "get_price_quote",
+  "spot_instruments": {
+    "binance": 67838,
+    "bybit": 2000
+  },
+  "total_eur": "1526"
+}
