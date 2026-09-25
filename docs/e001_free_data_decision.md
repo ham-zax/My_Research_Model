@@ -38,8 +38,16 @@ every other selected day and source-time completeness unverified.
 
 ## Recommended no-cost next experiment
 
-Version a separate BTC trade-flow protocol **before** computing labels or model
-scores. Use the free multi-year price and perpetual-trade archives to compare a
+The first no-cost screen is now complete: the separately frozen
+[Binance spot flow result](mfsm_free_btc_flow_001_result.md) used the cached
+38-month one-second archive and found that its single taker-sell fraction
+**worsened** the reserved 2026 Brier score versus a price/volume baseline.
+That is a result for this one aggregate spot-flow feature, not for historical
+perpetual fills or book replenishment. Do not tune it on the scored months.
+
+A distinct, separately versioned BTC perpetual trade-flow protocol would need
+to be frozen **before** computing its labels or model scores. It could use the
+free multi-year price and perpetual-trade archives to compare a
 simple historical-rate forecast, a price-only baseline, and one prespecified
 trade-flow addition on chronological holdouts. Define trade timestamp/order,
 staleness, gaps, event lockout, labels, feature windows, class minima, and a

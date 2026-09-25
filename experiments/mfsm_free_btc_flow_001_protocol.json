@@ -1,0 +1,59 @@
+{
+  "schema": "MFSM-FREE-BTC-FLOW-001-protocol-1",
+  "status": "frozen_before_this_study_labels_or_flow_scores",
+  "purpose": "screen_incremental_predictive_information_in_public_spot_taker_flow",
+  "asset": "BTCUSDT",
+  "source": "official_Binance_spot_monthly_1s_klines",
+  "period_first_month": "2023-07",
+  "period_last_month": "2026-08",
+  "source_sha256_manifest": "artifacts/e001_historical_spot_acquisition_manifest.json",
+  "bar_time": "open_utc_second; completed close and volume available at open_second_plus_1",
+  "event": {
+    "return_seconds": 300,
+    "return_lte": -0.01,
+    "crossing": "first_true_bar_after_a_false_bar_with_contiguous_history",
+    "lockout_seconds": 7200
+  },
+  "decision": {
+    "last_completed_bar_offset_seconds": 15,
+    "available_at_offset_seconds": 16,
+    "reference_price": "close_of_last_completed_bar",
+    "flow_window_completed_bars": 30,
+    "volatility_window_returns": 300
+  },
+  "label": {
+    "first_future_bar_offset_seconds": 16,
+    "horizon_seconds": 1800,
+    "downside_close_return_lte": -0.01,
+    "upside_close_return_gte": 0.0075,
+    "neither_value": 0,
+    "barrier_source": "completed_one_second_close_only",
+    "gap_policy": "exclude_episode_if_any_required_bar_is_missing"
+  },
+  "features": {
+    "baseline": ["trigger_return_300s", "decision_return_30s", "realized_vol_300s", "log_quote_volume_30s", "log_trade_count_30s"],
+    "single_flow_addition": "sell_quote_fraction_30s",
+    "flow_definition": "sum(quote_volume_minus_taker_buy_quote_volume)/sum(quote_volume); require_positive_denominator"
+  },
+  "split": {
+    "fit_last_month": "2025-12",
+    "test_first_month": "2026-01",
+    "test_last_month": "2026-08",
+    "minimum_fit_episodes": 150,
+    "minimum_fit_each_class": 20,
+    "minimum_test_episodes": 60,
+    "minimum_test_each_class": 10
+  },
+  "models": {
+    "historical_rate": "fit_period_positive_fraction",
+    "price_volume_baseline": "StandardScaler_then_LogisticRegression_C1_fixed",
+    "price_volume_plus_flow": "StandardScaler_then_LogisticRegression_C1_fixed",
+    "same_information_flexible": "HistGradientBoostingClassifier_max_iter40_max_leaf_nodes7_min_samples_leaf20_l2_0.1_fixed",
+    "random_seed": 1001,
+    "tuning": "none"
+  },
+  "primary_metric": "paired_test_Brier_baseline_minus_plus_flow",
+  "additional_metrics": ["test_Brier_all_models", "paired_month_block_bootstrap_95pct_interval_5000_draws", "monthly_episode_and_class_counts"],
+  "interpretation": "retrospective_observational_flow_screen_only; no_order_book_mechanism_or_trading_edge_claim",
+  "eth_access": "sealed"
+}

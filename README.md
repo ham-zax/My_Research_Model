@@ -79,6 +79,9 @@ Its invariant question is:
 - [Separate exploratory BTC result](./docs/e001_exploratory_btc_result.md)
   Fixed hourly receipt-time test on 19 free first-of-month BTC sample days. The added sell-pressure interaction gave only a tiny, unstable Brier improvement and did not demonstrate trading edge. The original E001 remains blocked.
 
+- [Free historical BTC spot flow result](./docs/mfsm_free_btc_flow_001_result.md)
+  Frozen 38-month public-bar screen with 428 independent price-proxy episodes. On 84 reserved 2026 episodes, adding one taker-sell fraction worsened Brier versus price and volume alone; the L2 mechanism remains untested.
+
 ## Epistemic status
 
 MFSM is **not a validated trading system** and is **not a universal fragility score**.

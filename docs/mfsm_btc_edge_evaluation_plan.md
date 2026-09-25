@@ -27,6 +27,13 @@ no execution test. Treat those dates and the already inspected liquidity feature
 development dates as development material, never as fresh confirmation of this
 claim. Keep ETH sealed.
 
+The later [free historical spot-flow screen](mfsm_free_btc_flow_001_result.md)
+found no predictive gain from one aggregate Binance taker-sell fraction on its
+reserved 2026 months. It used Binance spot bars and a different event and
+measurement contract. It does not supply a book-depth result or an edge score
+for this plan; its scored months are no longer fresh confirmation material for
+the same flow idea.
+
 ## One candidate decision and its information boundary
 
 Start with the existing, separately versioned BTC liquidity observation:

@@ -148,12 +148,16 @@ inadequate proxy fails, or retain a coordinate solely because it has a symbol.
 
 ### Stage 5 — Assess a real application against its actual claims
 
-**Next.** The [BTC edge evaluation plan](mfsm_btc_edge_evaluation_plan.md)
+**Underway.** The [BTC edge evaluation plan](mfsm_btc_edge_evaluation_plan.md)
 defines a narrow observational forecast and short-or-flat decision test. Its
-protocol, calendar, execution rules and data gates still need to be frozen and
-implemented before any result is scored. Select the institution, information
-set, observational question and path loss explicitly; measurement and
-identification determine which claims are supportable.
+execution rules and data gates still need to be frozen and implemented before
+any edge result is scored. The separately frozen
+[free spot-flow screen](mfsm_free_btc_flow_001_result.md) found that one taker-sell
+fraction worsened a reserved 2026 forecast against price and volume alone.
+This constrains that measured proxy; it neither estimates the canonical latent
+state nor tests the proposed L2 absorption interaction. Select the institution,
+information set, observational question and path loss explicitly; measurement
+and identification determine which claims are supportable.
 
 Acceptance: financial sources, identified/partially identified quantities, and
 frozen comparisons are recorded separately from mathematical checks. A flexible
