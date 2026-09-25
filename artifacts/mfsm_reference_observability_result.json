@@ -1,0 +1,266 @@
+{
+  "comparison_tolerance": 1e-09,
+  "economy_code_sha256": "8bf6864af83b8697ede73cc973958871cc10fd9a8590b73b66087526fefbb840",
+  "empirical_data_used": false,
+  "horizon_transitions": 1,
+  "interpretation_limits": [
+    "A reported mark range is conditional on the declared candidate set of that case.",
+    "The range is not a confidence interval and has no probability.",
+    "Agreement means the one-step response is invariant within the compatible declared candidates, not that it is identified outside that set.",
+    "The benchmark change is a declared scenario input, not a signal inferred from the public mark.",
+    "The headroom-enhanced reading is a privileged diagnostic, not public data.",
+    "No candidate is selected by a preferred price path, and no trading edge is claimed.",
+    "This protocol does not revise MFSM-RE-1, MFSM-RE-SENS-1, MFSM-RE-TIME-1, or any empirical protocol."
+  ],
+  "intervention": {
+    "name": "benchmark_100_to_98",
+    "not_a_public_signal": true,
+    "parameter": "value",
+    "post_shock_value": 98,
+    "pre_shock_value": 100,
+    "role": "declared_scenario_input",
+    "timing": "before_one_transition"
+  },
+  "model_fitted": false,
+  "observation_code_sha256": "f751a5405b60bd408c2cbf36c72e8dfe1c5f9079ee0a51dbd103dc1167914c87",
+  "observer": [
+    {
+      "case_id": "hidden_debt",
+      "compatible_candidate_count": 2,
+      "compatible_candidate_ids": [
+        "debt_750_exponential",
+        "debt_700_exponential"
+      ],
+      "maximum_next_mark": 98.0,
+      "minimum_next_mark": 95.88971904482011,
+      "observed_pre_shock_mark": 100.0,
+      "possible_forced_sale_outcomes": [
+        false,
+        true
+      ],
+      "range_interpretation": "conditional_on_declared_candidates_not_a_confidence_interval",
+      "status": "not_identified",
+      "witness_ids": [
+        "debt_750_exponential",
+        "debt_700_exponential"
+      ]
+    },
+    {
+      "case_id": "impact_law",
+      "compatible_candidate_count": 2,
+      "compatible_candidate_ids": [
+        "debt_750_exponential",
+        "debt_750_hyperbolic"
+      ],
+      "maximum_next_mark": 95.91211717709719,
+      "minimum_next_mark": 95.88971904482011,
+      "observed_pre_shock_mark": 100.0,
+      "possible_forced_sale_outcomes": [
+        true
+      ],
+      "range_interpretation": "conditional_on_declared_candidates_not_a_confidence_interval",
+      "status": "not_identified",
+      "witness_ids": [
+        "debt_750_exponential",
+        "debt_750_hyperbolic"
+      ]
+    }
+  ],
+  "oracle_candidates": [
+    {
+      "candidate_id": "debt_750_exponential",
+      "forced_sale": 2.17687074829932,
+      "forced_sale_occurred": true,
+      "law": {
+        "buyer_speed": 20,
+        "currency_tolerance": 1e-09,
+        "deadline": 10,
+        "delay": 2,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "exponential",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 100
+      },
+      "mode": "NORMAL",
+      "next_mark": 95.88971904482011,
+      "pre_intervention_headroom": 0.0,
+      "pre_intervention_mark": 100.0,
+      "state": {
+        "breach_ticks": 0,
+        "buyer": {
+          "cash": 1000,
+          "units": 0
+        },
+        "dealer": {
+          "cash": 1000,
+          "units": 0
+        },
+        "debt": 750,
+        "holder": {
+          "cash": 0,
+          "units": 10
+        },
+        "mode": "NORMAL",
+        "signals": [],
+        "tick": 0
+      }
+    },
+    {
+      "candidate_id": "debt_700_exponential",
+      "forced_sale": 0.0,
+      "forced_sale_occurred": false,
+      "law": {
+        "buyer_speed": 20,
+        "currency_tolerance": 1e-09,
+        "deadline": 10,
+        "delay": 2,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "exponential",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 100
+      },
+      "mode": "NORMAL",
+      "next_mark": 98.0,
+      "pre_intervention_headroom": 50.0,
+      "pre_intervention_mark": 100.0,
+      "state": {
+        "breach_ticks": 0,
+        "buyer": {
+          "cash": 1000,
+          "units": 0
+        },
+        "dealer": {
+          "cash": 1000,
+          "units": 0
+        },
+        "debt": 700,
+        "holder": {
+          "cash": 0,
+          "units": 10
+        },
+        "mode": "NORMAL",
+        "signals": [],
+        "tick": 0
+      }
+    },
+    {
+      "candidate_id": "debt_750_hyperbolic",
+      "forced_sale": 2.17687074829932,
+      "forced_sale_occurred": true,
+      "law": {
+        "buyer_speed": 20,
+        "currency_tolerance": 1e-09,
+        "deadline": 10,
+        "delay": 2,
+        "delay_weights": null,
+        "impact": 0.01,
+        "impact_curve": "hyperbolic",
+        "inventory_limit": 20,
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "value": 100
+      },
+      "mode": "NORMAL",
+      "next_mark": 95.91211717709719,
+      "pre_intervention_headroom": 0.0,
+      "pre_intervention_mark": 100.0,
+      "state": {
+        "breach_ticks": 0,
+        "buyer": {
+          "cash": 1000,
+          "units": 0
+        },
+        "dealer": {
+          "cash": 1000,
+          "units": 0
+        },
+        "debt": 750,
+        "holder": {
+          "cash": 0,
+          "units": 10
+        },
+        "mode": "NORMAL",
+        "signals": [],
+        "tick": 0
+      }
+    }
+  ],
+  "privileged_diagnostic": {
+    "added_field": "pre_intervention_headroom",
+    "cases": [
+      {
+        "case_id": "hidden_debt",
+        "readings": [
+          {
+            "compatible_candidate_count": 1,
+            "compatible_candidate_ids": [
+              "debt_750_exponential"
+            ],
+            "pre_intervention_headroom": 0.0,
+            "removed_candidate_ids": [
+              "debt_700_exponential"
+            ],
+            "source_candidate_id": "debt_750_exponential"
+          },
+          {
+            "compatible_candidate_count": 1,
+            "compatible_candidate_ids": [
+              "debt_700_exponential"
+            ],
+            "pre_intervention_headroom": 50.0,
+            "removed_candidate_ids": [
+              "debt_750_exponential"
+            ],
+            "source_candidate_id": "debt_700_exponential"
+          }
+        ]
+      },
+      {
+        "case_id": "impact_law",
+        "readings": [
+          {
+            "compatible_candidate_count": 2,
+            "compatible_candidate_ids": [
+              "debt_750_exponential",
+              "debt_750_hyperbolic"
+            ],
+            "pre_intervention_headroom": 0.0,
+            "removed_candidate_ids": [],
+            "source_candidate_id": "debt_750_exponential"
+          },
+          {
+            "compatible_candidate_count": 2,
+            "compatible_candidate_ids": [
+              "debt_750_exponential",
+              "debt_750_hyperbolic"
+            ],
+            "pre_intervention_headroom": 0.0,
+            "removed_candidate_ids": [],
+            "source_candidate_id": "debt_750_hyperbolic"
+          }
+        ]
+      }
+    ],
+    "classification": "privileged_diagnostic",
+    "not_public_data": true
+  },
+  "probabilities_used": false,
+  "protocol_sha256": "75188639e3bc85e4decf108aabccec25cdeb428fc73bc02ddaed93942670902f",
+  "question": "After the named benchmark shock, which one-step responses are determined by information visible before the shock?",
+  "runner_sha256": "1e3630ca613dfb3d622270878cb6feeb192d518f6a5b1bb122b50d541de4e0c1",
+  "schema": "MFSM-RE-OBS-1-result-1",
+  "status": "synthetic_observability_check_only",
+  "trading_edge_claim": false
+}

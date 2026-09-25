@@ -1,0 +1,192 @@
+{
+  "schema": "MFSM-RE-OBS-1-protocol-1",
+  "version": "MFSM-RE-OBS-1",
+  "date": "2026-09-25",
+  "status": "frozen_before_execution",
+  "question": "After the named benchmark shock, which one-step responses are determined by information visible before the shock?",
+  "transition": {
+    "member": "MFSM-RE-1",
+    "implementation": "src/mfsm_reference/economy.py",
+    "function": "step",
+    "rule": "Use the existing deterministic transition. Do not add a market mechanism."
+  },
+  "observation_map": {
+    "public": {
+      "name": "pre_intervention_mark",
+      "function": "price(state, law)",
+      "fields": ["mark"],
+      "timing": "before the intervention and before step()",
+      "excludes": [
+        "debt",
+        "dealer_inventory",
+        "benchmark_value",
+        "account_balances",
+        "forced_sale",
+        "post_intervention_value"
+      ]
+    },
+    "privileged_diagnostic": {
+      "name": "headroom_enhanced",
+      "classification": "privileged_diagnostic",
+      "not_public_data": true,
+      "added_field": "pre_intervention_headroom",
+      "function": "headroom(state, law) together with price(state, law), both before the intervention",
+      "monotone_rule": "Adding this reading can only remove candidates already compatible with the public mark."
+    }
+  },
+  "intervention": {
+    "name": "benchmark_100_to_98",
+    "parameter": "value",
+    "pre_shock_value": 100,
+    "post_shock_value": 98,
+    "timing": "before_one_transition",
+    "role": "declared_scenario_input",
+    "not_a_public_signal": true
+  },
+  "horizon": {
+    "transitions": 1
+  },
+  "comparison_tolerance": 1e-9,
+  "comparison_rules": {
+    "mark_agreement": "absolute difference at most comparison_tolerance",
+    "forced_sale_occurred": "forced-sale quantity strictly greater than comparison_tolerance",
+    "disagree_when": "next marks disagree or forced-sale occurrence disagrees",
+    "evaluated_on": "candidates compatible with the observed pre-shock mark, in protocol order",
+    "witness": "first protocol-order pair among compatible candidates whose one-step responses disagree"
+  },
+  "status_vocabulary": {
+    "compatible_responses_disagree": "not_identified",
+    "compatible_responses_agree": "invariant_within_declared_candidates",
+    "no_compatible_candidate": "incompatible_observation",
+    "forbidden": ["globally_identified", "confidence_interval", "probability"]
+  },
+  "candidates": [
+    {
+      "id": "debt_750_exponential",
+      "state": {
+        "holder": {"cash": 0, "units": 10},
+        "dealer": {"cash": 1000, "units": 0},
+        "buyer": {"cash": 1000, "units": 0},
+        "debt": 750,
+        "signals": [],
+        "tick": 0,
+        "breach_ticks": 0,
+        "mode": "NORMAL"
+      },
+      "law": {
+        "value": 100,
+        "impact": 0.01,
+        "inventory_limit": 20,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "buyer_speed": 20,
+        "delay": 2,
+        "deadline": 10,
+        "currency_tolerance": 1e-9,
+        "impact_curve": "exponential",
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "delay_weights": null
+      }
+    },
+    {
+      "id": "debt_700_exponential",
+      "state": {
+        "holder": {"cash": 0, "units": 10},
+        "dealer": {"cash": 1000, "units": 0},
+        "buyer": {"cash": 1000, "units": 0},
+        "debt": 700,
+        "signals": [],
+        "tick": 0,
+        "breach_ticks": 0,
+        "mode": "NORMAL"
+      },
+      "law": {
+        "value": 100,
+        "impact": 0.01,
+        "inventory_limit": 20,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "buyer_speed": 20,
+        "delay": 2,
+        "deadline": 10,
+        "currency_tolerance": 1e-9,
+        "impact_curve": "exponential",
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "delay_weights": null
+      }
+    },
+    {
+      "id": "debt_750_hyperbolic",
+      "state": {
+        "holder": {"cash": 0, "units": 10},
+        "dealer": {"cash": 1000, "units": 0},
+        "buyer": {"cash": 1000, "units": 0},
+        "debt": 750,
+        "signals": [],
+        "tick": 0,
+        "breach_ticks": 0,
+        "mode": "NORMAL"
+      },
+      "law": {
+        "value": 100,
+        "impact": 0.01,
+        "inventory_limit": 20,
+        "maintenance": 0.25,
+        "restore": 0.3,
+        "buyer_speed": 20,
+        "delay": 2,
+        "deadline": 10,
+        "currency_tolerance": 1e-9,
+        "impact_curve": "hyperbolic",
+        "liquidation_rule": "restore_target",
+        "lot_units": 2.0,
+        "delay_weights": null
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "hidden_debt",
+      "observed_pre_shock_mark": 100.0,
+      "candidate_ids": ["debt_750_exponential", "debt_700_exponential"],
+      "purpose": "MFSM-RE-SENS-1 hidden-debt pair. Same reference exponential law and accounts; holder debt 750 versus 700."
+    },
+    {
+      "id": "impact_law",
+      "observed_pre_shock_mark": 100.0,
+      "candidate_ids": ["debt_750_exponential", "debt_750_hyperbolic"],
+      "purpose": "Same holder state at zero dealer inventory. Exponential versus hyperbolic impact."
+    }
+  ],
+  "outputs": {
+    "oracle_table": [
+      "candidate_id",
+      "pre_intervention_mark",
+      "pre_intervention_headroom",
+      "next_mark",
+      "forced_sale",
+      "forced_sale_occurred",
+      "mode"
+    ],
+    "observer": [
+      "compatible_candidate_count",
+      "compatible_candidate_ids",
+      "minimum_next_mark",
+      "maximum_next_mark",
+      "possible_forced_sale_outcomes",
+      "status",
+      "witness_ids"
+    ]
+  },
+  "interpretation_limits": [
+    "A reported mark range is conditional on the declared candidate set of that case.",
+    "The range is not a confidence interval and has no probability.",
+    "Agreement means the one-step response is invariant within the compatible declared candidates, not that it is identified outside that set.",
+    "The benchmark change is a declared scenario input, not a signal inferred from the public mark.",
+    "The headroom-enhanced reading is a privileged diagnostic, not public data.",
+    "No candidate is selected by a preferred price path, and no trading edge is claimed.",
+    "This protocol does not revise MFSM-RE-1, MFSM-RE-SENS-1, MFSM-RE-TIME-1, or any empirical protocol."
+  ]
+}
