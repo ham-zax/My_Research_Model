@@ -81,6 +81,14 @@ def test_persistent_top_bid_additions_reject_reset_and_unknown_changes():
                                        window_seconds=5)['reason'] == 'unknown_bid_change'
 
 
+def test_replenishment_excludes_unknown_change_at_left_boundary():
+    rows = [observation(0, known=False), observation(1), observation(5)]
+    result = persistent_top_bid_add_rate(rows, boundary_ns=5*NS,
+                                         window_seconds=5)
+    assert result['valid'] is True
+    assert result['persistent_bid_add_rate'] == 0
+
+
 def test_decision_feature_uses_only_past_book_and_trade_flow():
     decision, states, observations, trades = complete_inputs()
     result = decision_liquidity_state(states, observations, trades, trigger_s=1800,

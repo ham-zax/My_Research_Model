@@ -86,11 +86,12 @@ def reconstruct_book_inputs(path, *, target_seconds, observation_ranges,
 
     def apply_cohort(stamp_us, rows):
         nonlocal initialized, epoch, last_us, bids, asks
+        observe = in_observation_range(stamp_us)
         snapshot = any(row['is_snapshot'].lower() == 'true' for row in rows)
         if snapshot and not all(row['is_snapshot'].lower() == 'true' for row in rows):
             diagnostics['invalid_cohorts'] += 1
             return
-        previous = (dict(bids), dict(asks))
+        previous = (dict(bids), dict(asks)) if observe else None
         if snapshot:
             bids, asks = {}, {}
             initialized = True
@@ -115,12 +116,12 @@ def reconstruct_book_inputs(path, *, target_seconds, observation_ranges,
                 valid = False
                 break
             side = bids if row['side'] == 'bid' else asks
-            old = side.get(price, ZERO)
+            old = side.get(price, ZERO) if observe and not snapshot else ZERO
             if amount:
                 side[price] = amount
             else:
                 side.pop(price, None)
-            if not snapshot and amount != old:
+            if observe and not snapshot and amount != old:
                 changes.append((row['side'], price, amount-old))
         if not valid:
             diagnostics['invalid_cohorts'] += 1
@@ -128,8 +129,9 @@ def reconstruct_book_inputs(path, *, target_seconds, observation_ranges,
             bids, asks = {}, {}
             return
         last_us = stamp_us
-        observe = in_observation_range(stamp_us)
-        cohort_view = view(stamp_us, include_top_levels=observe)
+        if not observe:
+            return
+        cohort_view = view(stamp_us, include_top_levels=True)
         known = {'bid': True, 'ask': True}
         if not snapshot and cohort_view.get('midpoint') is not None and previous[0] and previous[1]:
             mid = cohort_view['midpoint']
@@ -140,23 +142,28 @@ def reconstruct_book_inputs(path, *, target_seconds, observation_ranges,
                 outside = price < min(prior) if side_name == 'bid' else price > max(prior)
                 inside = (mid*(1-band) <= price <= mid if side_name == 'bid'
                           else mid <= price <= mid*(1+band))
-                if outside and inside:
+                # Top-level persistence credits only additions that enter the
+                # observed top levels, even when they lie beyond the capacity
+                # audit's band. Preserve the original band guard otherwise.
+                uncertain = (inside if top_levels is None else
+                    price in cohort_view['top_bid_prices' if side_name == 'bid'
+                                         else 'top_ask_prices'])
+                if outside and uncertain:
                     known[side_name] = False
-        if observe:
-            observation = {
-                'event_ns': stamp_us*1000, 'available_ns': stamp_us*1000,
-                'reset': snapshot, 'valid': cohort_view['top_valid'],
-                'mid': cohort_view.get('midpoint'),
-                'bid_covered': cohort_view.get('bid_covered', False),
-                'ask_covered': cohort_view.get('ask_covered', False),
-                'bid_changes_known': known['bid'], 'ask_changes_known': known['ask'],
-                'changes': changes, 'book_epoch': epoch}
-            if top_levels is not None:
-                observation.update(
-                    top_level_valid=cohort_view['top_level_valid'],
-                    top_bid_prices=cohort_view['top_bid_prices'],
-                    top_ask_prices=cohort_view['top_ask_prices'])
-            observations.append(observation)
+        observation = {
+            'event_ns': stamp_us*1000, 'available_ns': stamp_us*1000,
+            'reset': snapshot, 'valid': cohort_view['top_valid'],
+            'mid': cohort_view.get('midpoint'),
+            'bid_covered': cohort_view.get('bid_covered', False),
+            'ask_covered': cohort_view.get('ask_covered', False),
+            'bid_changes_known': known['bid'], 'ask_changes_known': known['ask'],
+            'changes': changes, 'book_epoch': epoch}
+        if top_levels is not None:
+            observation.update(
+                top_level_valid=cohort_view['top_level_valid'],
+                top_bid_prices=cohort_view['top_bid_prices'],
+                top_ask_prices=cohort_view['top_ask_prices'])
+        observations.append(observation)
 
     with gzip.open(path, 'rt', newline='') as stream:
         reader = csv.DictReader(stream)

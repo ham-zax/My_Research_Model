@@ -146,6 +146,39 @@ def test_tardis_reconstruction_supports_separate_shallow_band(tmp_path):
     assert shallow[1]['depth_bid'] == D('100')
 
 
+def test_top_level_change_guard_ignores_only_deeper_unseen_additions(tmp_path):
+    import gzip
+
+    path = tmp_path/'book.csv.gz'
+    header = 'exchange,symbol,timestamp,local_timestamp,is_snapshot,side,price,amount\n'
+    rows = [
+        'bybit,BTCUSDT,100000,100000,true,bid,100,1\n',
+        'bybit,BTCUSDT,100000,100000,true,bid,99,1\n',
+        'bybit,BTCUSDT,100000,100000,true,ask,101,1\n',
+        'bybit,BTCUSDT,100000,100000,true,ask,102,1\n',
+        # A newly visible bid below the prior book cannot enter the top two.
+        'bybit,BTCUSDT,200000,200000,false,bid,98,1\n',
+        # After 99 disappears, an unseen 97 enters the top two.
+        'bybit,BTCUSDT,300000,300000,false,bid,99,0\n',
+        'bybit,BTCUSDT,300000,300000,false,bid,98,0\n',
+        'bybit,BTCUSDT,300000,300000,false,bid,97,1\n',
+    ]
+    with gzip.open(path, 'wt') as stream:
+        stream.write(header+''.join(rows))
+    _, top_observations, _ = reconstruct_book_inputs(
+        path, target_seconds={1}, observation_ranges=[(0, 1)],
+        band_bps=D('500'), top_levels=2)
+    _, band_observations, _ = reconstruct_book_inputs(
+        path, target_seconds={1}, observation_ranges=[(0, 1)],
+        band_bps=D('500'))
+    _, narrow_top_observations, _ = reconstruct_book_inputs(
+        path, target_seconds={1}, observation_ranges=[(0, 1)],
+        band_bps=D('25'), top_levels=2)
+    assert [row['bid_changes_known'] for row in top_observations] == [True, True, False]
+    assert [row['bid_changes_known'] for row in band_observations] == [True, False, False]
+    assert [row['bid_changes_known'] for row in narrow_top_observations] == [True, True, False]
+
+
 def test_tardis_trade_reader_uses_receipt_time_and_requested_windows(tmp_path):
     import gzip
 

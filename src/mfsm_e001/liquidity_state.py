@@ -78,7 +78,7 @@ def persistent_top_bid_add_rate(observations, *, boundary_ns, window_seconds=15)
     if any(not row.get('top_level_valid') for row in relevant):
         return {'valid': False, 'reason': 'incomplete_top_levels_in_window'}
     if any(not row.get('bid_changes_known', False)
-           for row in relevant if row['event_ns'] >= left):
+           for row in relevant if row['event_ns'] > left):
         return {'valid': False, 'reason': 'unknown_bid_change'}
     if any(later['event_ns']-earlier['event_ns'] > MAX_BOOK_AGE_NS
            for earlier, later in zip(relevant, relevant[1:])):
