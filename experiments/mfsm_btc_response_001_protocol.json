@@ -1,0 +1,170 @@
+{
+  "schema": "MFSM-BTC-RESPONSE-1-protocol-1",
+  "experiment_version": "MFSM-BTC-RESPONSE-1",
+  "protocol_revision": "1.1",
+  "protocol_revision_reason": "Clarify pre-trigger bin endpoints before any response-feature values are extracted; the feasibility gate and scientific question are unchanged.",
+  "date": "2026-09-27",
+  "status": "development_feasibility_frozen_before_new_response_feature_values_or_model_scoring",
+  "purpose": "Test whether observable pre-shock market response behavior adds predictive information beyond ordinary price, flow, volatility and liquidity summaries without claiming recovery of the latent MFSM state.",
+  "scientific_question": "After the existing independent BTC spot decline crosses -1% over exactly five minutes, do pre-trigger measurements of realized sell-pressure impact and bid replenishment improve the 30-minute downside-before-recovery forecast beyond matched comparators using the same observable history?",
+  "claim_boundary": {
+    "allowed": [
+      "observational predictive value of prespecified public response-law summaries",
+      "development feasibility of computing those summaries from causal receipt-time market data",
+      "partial-identification language when multiple latent states remain observationally compatible"
+    ],
+    "not_allowed": [
+      "identification of hidden debt, leverage, margin headroom or liquidation-distance mass",
+      "causal effect of aggressive selling without an independent identification design",
+      "literal market absorption capacity",
+      "trading profitability",
+      "live-capital readiness",
+      "ETH confirmation"
+    ]
+  },
+  "inheritance": {
+    "event_and_label_source": "experiments/e001_liquidity_observational_protocol.yaml",
+    "event_contract": {
+      "asset": "BTC",
+      "spot_reference": "equal_weight_Binance_and_Bybit_spot_midquote_at_local_receipt_cutoff",
+      "spot_max_receipt_age_seconds": 5,
+      "trigger_return_window_seconds": 300,
+      "trigger_return_threshold": -0.01,
+      "crossing_rule": "first second moving from return > -0.01 to return <= -0.01",
+      "episode_lockout_seconds": 7200,
+      "decision_delay_seconds": 15
+    },
+    "label_contract": {
+      "primary_horizon_seconds": 1800,
+      "lower_barrier_relative_to_decision": -0.01,
+      "upper_barrier_relative_to_decision": 0.0075,
+      "primary_target": "downside barrier hit before recovery barrier within 30 minutes",
+      "neither_by_horizon_value": 0
+    },
+    "rule": "The inherited event and label definitions are copied for this new experiment and are not modifications to E001-LIQ-OBS-1."
+  },
+  "response_history": {
+    "clock": "local_receipt_time",
+    "window_start_seconds_relative_to_trigger": -1800,
+    "window_end_seconds_relative_to_trigger": -5,
+    "bin_seconds": 5,
+    "bin_anchor": "For integer k >= 0, pressure-bin start = trigger - 1800 seconds + 5k seconds and end = start + 5 seconds.",
+    "pressure_trade_interval": "(start, end] by local receipt time; a trade exactly at end belongs to this bin, not the next bin.",
+    "book_state_endpoint_rule": "For start and end midpoints/depth, use only reconstructed book state available at or before that endpoint by local receipt time.",
+    "replenishment_interval": "(pressure_bin_end, pressure_bin_end + 5 seconds] by local receipt time; the existing persistent-addition helper may include observations at its endpoint.",
+    "window_end_meaning": "The last pressure-bin end considered is trigger - 5 seconds; consideration alone does not make a bin eligible.",
+    "replenishment_end_strictly_before_trigger": true,
+    "last_eligible_pressure_bin_end_seconds_relative_to_trigger": -10,
+    "excluded_pressure_bin_end_seconds_relative_to_trigger": -5,
+    "shared_bin_eligibility": "A bin is eligible for either response summary only if its pressure end <= trigger - 5 seconds and its replenishment end = pressure end + 5 seconds is strictly earlier than trigger. On this five-second grid, exclude the final considered pressure bin ending at trigger - 5 seconds; the last eligible pressure bin ends at trigger - 10 seconds and its replenishment ends at trigger - 5 seconds.",
+    "reason_for_end_cutoff": "Every eligible pressure bin and its five-second replenishment interval end strictly before the trigger, including updates exactly at the replenishment endpoint.",
+    "required_book": "Bybit linear BTCUSDT top 50 levels reconstructed causally from incremental L2",
+    "required_trades": "Bybit linear BTCUSDT aggressor trades available by local receipt timestamp",
+    "missing_policy": "Any bin with missing or stale required book state, an epoch/reset boundary, or missing trade continuity is unavailable; never impute zero."
+  },
+  "response_measurements": {
+    "pretrigger_sell_impact_beta_5s": {
+      "interpretation": "observed local price response to normalized net aggressive sell pressure; descriptive, not causal",
+      "per_bin_pressure": "q_k = (sell_notional_k - buy_notional_k) / total_top50_notional_at_bin_start",
+      "eligible_bins": "q_k > 0 with valid positive top-50 depth and valid midpoint at bin start and end, subject to response_history.shared_bin_eligibility",
+      "per_bin_response": "r_k = -10000 * ln(midpoint_bin_end / midpoint_bin_start)",
+      "summary": "sum(q_k * r_k) / sum(q_k^2)",
+      "minimum_eligible_bins": 30
+    },
+    "pretrigger_bid_replenishment_beta_5s": {
+      "interpretation": "observed bid-replenishment response following normalized net aggressive sell pressure; descriptive, not causal",
+      "per_bin_pressure": "same q_k as pretrigger_sell_impact_beta_5s",
+      "eligible_bins": "same shared pressure-bin eligibility as pretrigger_sell_impact_beta_5s, with valid causal book continuity throughout the following five-second replenishment interval",
+      "per_bin_response": "a_k = persistent_top50_bid_add_notional_during_(pressure_end,pressure_end+5s] / top50_bid_notional_at_bin_start",
+      "persistence_rule": "an added bid quantity must remain present for at least one second; use the existing causal persistent-addition semantics",
+      "summary": "sum(q_k * a_k) / sum(q_k^2)",
+      "minimum_eligible_bins": 30
+    }
+  },
+  "matched_comparison_draft": {
+    "shared_current_state": [
+      "top_bid_relative",
+      "top_ask_relative",
+      "imbalance",
+      "spread_bps",
+      "buy_relative_total_depth_30s",
+      "sell_relative_total_depth_30s",
+      "gross_trade_relative_total_depth_30s",
+      "persistent_bid_add_relative_15s"
+    ],
+    "neutral_pretrigger_summaries_to_freeze_before_scoring": [
+      "five_second_midpoint_realized_volatility",
+      "median_top50_bid_depth",
+      "median_top50_ask_depth",
+      "median_spread_bps",
+      "mean_net_aggressive_sell_pressure",
+      "standard_deviation_net_aggressive_sell_pressure",
+      "mean_persistent_bid_addition_relative_to_bid_depth"
+    ],
+    "mfsm_increment": [
+      "pretrigger_sell_impact_beta_5s",
+      "pretrigger_bid_replenishment_beta_5s"
+    ],
+    "fairness_rule": "The response model may add only the two declared response coefficients. A same-information comparator must receive the same current-state features and neutral summaries derived from the same pre-trigger history.",
+    "scoring_status": "disabled_until_field_feasibility_and_fresh_calendar_are_frozen"
+  },
+  "development_data_policy": {
+    "local_tardis_first_of_month_days": "development_and_software_feasibility_only; prior experiments have already inspected some events and outcomes",
+    "existing_spot_event_discovery": "may be reused only to count price-defined candidate events and calendar blocks; do not read labels or L2 outcomes for this feasibility milestone",
+    "fresh_confirmation_requirement": "a new continuous prospective period or another untouched predeclared archive is required before a confirmation claim",
+    "ETH": "sealed"
+  },
+  "feasibility": {
+    "tardis_root": "data/raw/tardis",
+    "existing_spot_discovery": "data/derived/e001_shallow_event_discovery_001/result.json",
+    "required_local_files": {
+      "binance_spot_quotes": {
+        "filename": "binance_quotes_{date}_BTCUSDT.csv.gz",
+        "required_columns": ["exchange", "symbol", "timestamp", "local_timestamp", "ask_amount", "ask_price", "bid_price", "bid_amount"]
+      },
+      "bybit_spot_quotes": {
+        "filename": "bybit-spot_quotes_{date}_BTCUSDT.csv.gz",
+        "required_columns": ["exchange", "symbol", "timestamp", "local_timestamp", "ask_amount", "ask_price", "bid_price", "bid_amount"]
+      },
+      "bybit_linear_l2": {
+        "filename": "bybit_incremental_book_L2_{date}_BTCUSDT.csv.gz",
+        "required_columns": ["exchange", "symbol", "timestamp", "local_timestamp", "is_snapshot", "side", "price", "amount"]
+      },
+      "bybit_linear_trades": {
+        "filename": "bybit_trades_{date}_BTCUSDT.csv.gz",
+        "required_columns": ["exchange", "symbol", "timestamp", "local_timestamp", "id", "side", "price", "amount"]
+      }
+    },
+    "pass_condition": "At least one development date has all four required files with valid headers and at least one price-defined accepted BTC candidate event falls on a complete-input date.",
+    "this_milestone_must_not": [
+      "replay L2 outcomes",
+      "compute response-feature values",
+      "read event labels",
+      "fit a model",
+      "score predictions",
+      "compute P&L",
+      "download paid data",
+      "access ETH"
+    ]
+  },
+  "alternative_data_routes": {
+    "binance_historical_futures_l2": {
+      "status": "access_gated_not_used",
+      "official_reference": "https://github.com/binance/binance-public-data/blob/master/futures/orderbook/README.md",
+      "known_contract": "Historical Futures L2 offers T_DEPTH and BTCUSDT S_DEPTH; access documentation requires a Futures account and a whitelisted API key. Cost/eligibility is not assumed.",
+      "use_rule": "Do not request credentials or download data until the owner explicitly chooses this route."
+    },
+    "cryptostruct": {
+      "status": "paid_not_authorized_not_used",
+      "quote_receipt": "artifacts/e001_historical_spot_price_quote.json",
+      "rule": "No checkout or paid download."
+    },
+    "prospective_public_collector": {
+      "status": "implemented_but_no_current_acquisition_window",
+      "collector": "src/mfsm_e001/collect.py",
+      "prior_capture_contract": "experiments/e001_forward_liquidity_observation.yaml",
+      "rule": "A new continuous period must be fixed before launch; do not silently extend the expired 2026-09-25 window."
+    }
+  },
+  "next_gate": "Run the read-only field/calendar feasibility audit. If it passes, implement outcome-blind response-feature extraction on development-only dates and freeze neutral comparator summaries plus a fresh evaluation calendar before any scoring."
+}

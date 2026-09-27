@@ -1,0 +1,176 @@
+{
+  "schema": "MFSM-RE-PUBHIST-1-protocol-1",
+  "version": "MFSM-RE-PUBHIST-1",
+  "date": "2026-09-27",
+  "status": "frozen_before_execution",
+  "question": "Can a public pre-shock price history, with anonymous total executed volume as a negative-control extension, narrow the one-step response to the named benchmark shock within a declared finite candidate catalog?",
+  "transition": {
+    "member": "MFSM-RE-1",
+    "implementation": "src/mfsm_reference/economy.py",
+    "function": "step",
+    "rule": "Keep the existing deterministic transition unchanged. Only the observation map and declared candidate filtering vary."
+  },
+  "initial_state": {
+    "holder": {"cash": 0.0, "units": 10.0},
+    "dealer": {"cash": 1000.0, "units": 0.0},
+    "buyer": {"cash": 1000.0, "units": 0.0},
+    "signals": [],
+    "tick": 0,
+    "breach_ticks": 0,
+    "mode": "NORMAL"
+  },
+  "fixed_law": {
+    "value": 100.0,
+    "inventory_limit": 20.0,
+    "maintenance": 0.25,
+    "restore": 0.30,
+    "buyer_speed": 20.0,
+    "delay": 2,
+    "deadline": 10,
+    "currency_tolerance": 1e-9,
+    "liquidation_rule": "restore_target",
+    "lot_units": 2.0,
+    "delay_weights": null
+  },
+  "candidate_grid": {
+    "debts": [
+      {"id": "d700", "value": 700.0},
+      {"id": "d725", "value": 725.0},
+      {"id": "d750", "value": 750.0}
+    ],
+    "impacts": [
+      {"id": "i005", "value": 0.005},
+      {"id": "i010", "value": 0.01},
+      {"id": "i015", "value": 0.015}
+    ],
+    "impact_curves": ["exponential", "hyperbolic"],
+    "candidate_count": 18,
+    "role": "illustrative finite catalog, not an inferred market distribution"
+  },
+  "preludes": [
+    {
+      "id": "flat",
+      "benchmark_values": [100.0, 100.0, 100.0],
+      "transitions": 3
+    },
+    {
+      "id": "dip_return",
+      "benchmark_values": [100.0, 99.0, 100.0],
+      "transitions": 3
+    }
+  ],
+  "observation_maps": {
+    "P0": {
+      "fields": ["final_pre_shock_mark"],
+      "timing": "after the final prelude transition and before the named shock"
+    },
+    "P1": {
+      "fields": ["initial_mark", "post_transition_marks"],
+      "timing": "initial mark plus one mark after each completed pre-shock transition"
+    },
+    "P2": {
+      "fields": ["initial_mark", "post_transition_marks", "anonymous_total_executed_units_per_transition"],
+      "volume_definition": "forced_sale + buyer_purchase",
+      "timing": "volume is recorded only after the same completed pre-shock transition as its mark"
+    }
+  },
+  "public_excludes": [
+    "holder_debt",
+    "account_balances",
+    "dealer_inventory",
+    "benchmark_value",
+    "prelude_id",
+    "candidate_id",
+    "margin_mode",
+    "attributed_forced_sale",
+    "attributed_buyer_purchase",
+    "maintenance_headroom",
+    "post_shock_mark",
+    "post_shock_sale",
+    "post_shock_mode"
+  ],
+  "observation_settings": {
+    "exact": {
+      "price_abs_band": 1e-9,
+      "volume_abs_band": 1e-9
+    },
+    "wide": {
+      "price_abs_band": 0.05,
+      "volume_abs_band": 0.1,
+      "interpretation": "synthetic matching bands around noiseless traces; not estimates of exchange feed error"
+    }
+  },
+  "response_comparison": {
+    "next_mark_abs_tolerance": 1e-9,
+    "sale_occurrence_threshold_units": 1e-9,
+    "rule": "responses disagree when next marks differ by more than the fixed next-mark tolerance or forced-sale occurrence differs",
+    "independence": "observation matching bands never alter either response threshold"
+  },
+  "intervention": {
+    "name": "benchmark_100_to_98",
+    "parameter": "value",
+    "pre_shock_value": 100.0,
+    "post_shock_value": 98.0,
+    "timing": "after the complete prelude and before exactly one response transition",
+    "role": "declared scenario input",
+    "not_a_public_signal": true
+  },
+  "truth_cases": {
+    "count": 36,
+    "construction": "all 18 candidate configurations crossed with both preludes",
+    "oracle_metadata": ["candidate_id", "prelude_id"],
+    "primary_observer_scope": "all 36 possible histories without candidate_id or prelude_id",
+    "known_path_diagnostic": "only the 18 histories sharing the truth case prelude; privileged scenario knowledge"
+  },
+  "matching_rules": {
+    "fieldwise": "every observed field must match within its own absolute band",
+    "trace_length": "unequal trace lengths are incompatible",
+    "subset_invariant": "for a fixed catalog and setting, P2 compatible histories must be a subset of P1, which must be a subset of P0",
+    "band_monotonicity": "wider observation bands cannot remove a history compatible under the exact setting"
+  },
+  "predeclared_negative_control": {
+    "claim": "P2 compatible sets should equal P1 compatible sets for both declared preludes and both observation settings",
+    "reason": "under the frozen preludes anonymous total volume adds no separation beyond the public price history",
+    "failure_action": "audit the adapter and deduction before interpreting any response result"
+  },
+  "status_vocabulary": {
+    "compatible_responses_disagree": "not_identified",
+    "compatible_responses_agree": "invariant_within_declared_candidates",
+    "no_compatible_history": "incompatible_observation",
+    "forbidden": ["globally_identified", "confidence_interval", "probability"]
+  },
+  "outputs": {
+    "oracle": [
+      "opaque_history_id",
+      "candidate_id",
+      "prelude_id",
+      "prelude_trace",
+      "final_hidden_state",
+      "one_step_response"
+    ],
+    "observer": [
+      "opaque_truth_history_id",
+      "setting",
+      "map",
+      "observed_public_trace",
+      "compatible_history_count",
+      "compatible_opaque_history_ids",
+      "minimum_next_mark",
+      "maximum_next_mark",
+      "possible_forced_sale_outcomes",
+      "status",
+      "witness_ids"
+    ]
+  },
+  "interpretation_limits": [
+    "All spans are conditional on the declared finite catalog and are not confidence intervals.",
+    "Compatible-history counts are not probabilities.",
+    "The primary observer does not receive candidate or prelude identity.",
+    "The known-path diagnostic uses privileged scenario knowledge and must remain separately labeled.",
+    "The benchmark path is hidden from the primary observer; the final 100 to 98 change is a declared intervention applied after the history.",
+    "The wide bands are synthetic matching tolerances around noiseless traces, not an exchange-noise model and not a robustness guarantee over every perturbation.",
+    "Anonymous total executed units contain no trader attribution.",
+    "No empirical data are used, no model is fitted, and no trading-edge claim is made.",
+    "This protocol does not revise MFSM-RE-1, MFSM-RE-OBS-1, or any empirical protocol."
+  ]
+}

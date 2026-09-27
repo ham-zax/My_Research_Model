@@ -1,0 +1,50 @@
+{
+  "schema": "MFSM-BTC-RESPONSE-1-feasibility-receipt-1",
+  "date": "2026-09-27",
+  "experiment_version": "MFSM-BTC-RESPONSE-1",
+  "protocol_revision": "1.1",
+  "correction": "Gate-failure report wording and strict pre-trigger replenishment boundary clarified before response-feature extraction; successful field/calendar counts are unchanged.",
+  "status": "DEVELOPMENT_FEASIBLE_NOT_VALIDATION_READY",
+  "protocol": "experiments/mfsm_btc_response_001_protocol.json",
+  "protocol_sha256": "79d07c191eac9a506815ecaf641927f482f3495afff540987cc2946d306f0a5b",
+  "runner": "scripts/audit_mfsm_btc_response_feasibility.py",
+  "runner_sha256": "0d1dc56aa6eefd27c9c342ed3d8187cc2c6eb3756fe483909b44cbf30c23b791",
+  "derived_result": "data/derived/mfsm_btc_response_feasibility_002/result.json",
+  "derived_result_sha256": "c4fd72139d509a4b63d7d8ae3c5e8d644caea705ece16ef9ed5a5e93a7cf71f4",
+  "derived_report": "data/derived/mfsm_btc_response_feasibility_002/report.md",
+  "derived_report_sha256": "3276aca3641568cecb7eb7684a16a0260f1b11a7646ee10343552ab7d99d9188",
+  "measured": {
+    "tardis_sample_date_directories": 42,
+    "complete_required_input_dates": 32,
+    "complete_input_first_date": "2023-05-01",
+    "complete_input_last_date": "2026-09-01",
+    "required_header_failures": 0,
+    "crossings_on_complete_input_dates": 90,
+    "accepted_candidate_events_on_complete_input_dates": 20,
+    "independent_utc_weeks_with_accepted_candidates": 16
+  },
+  "required_local_sources": [
+    "Binance BTCUSDT spot quotes with local_timestamp",
+    "Bybit spot BTCUSDT quotes with local_timestamp",
+    "Bybit linear BTCUSDT incremental L2 with local_timestamp",
+    "Bybit linear BTCUSDT aggressor trades with local_timestamp"
+  ],
+  "response_measurements_field_feasible": [
+    "pretrigger_sell_impact_beta_5s",
+    "pretrigger_bid_replenishment_beta_5s"
+  ],
+  "fresh_validation_ready": false,
+  "historical_full_period_l2_ready": false,
+  "model_fit_performed": false,
+  "labels_read_by_this_audit": false,
+  "l2_outcomes_replayed_by_this_audit": false,
+  "pnl_computed": false,
+  "paid_data_used": false,
+  "eth_accessed": false,
+  "alternative_routes": {
+    "binance_historical_futures_l2": "access_gated_not_used",
+    "cryptostruct": "paid_not_authorized_not_used",
+    "prospective_public_collector": "implemented_but_requires_new_predeclared_capture_period"
+  },
+  "next_gate": "Implement outcome-blind response-feature extraction on development-only complete dates, inspect feature availability/distributions only, then freeze neutral comparator summaries and a fresh evaluation calendar before any model scoring."
+}

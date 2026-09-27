@@ -118,10 +118,25 @@ states with identical observations yield a forced sale versus no sale after the
 same shock. The impact curves also agree on the initial observation but differ
 on the finite next mark. See the [result](mfsm_reference_sensitivity_result.md).
 
-Acceptance met for this map: hidden debt and impact-law uncertainty are separate.
-Holder margin headroom distinguishes the state pair; execution measurements
-away from zero inventory are needed for the law pair. This does not prove that
-those observations are sufficient in a real market.
+The later [mark-only observability check](mfsm_reference_observability_result.md)
+made the stricter public information boundary explicit and reproduced both
+counterexamples. The subsequent
+[public-history check](mfsm_reference_public_history_result.md), implemented from
+the [frozen plan](mfsm_public_observability_implementation_plan.md), tested a
+causal pre-shock price and anonymous-volume history over a declared 18-member
+candidate catalog and two fixed preludes. With the prelude hidden, exact price
+history narrowed the response for the dip-return cases, but flat histories
+retained the hidden-debt ambiguity. Widening the price matching band restored
+impact-law ambiguity in cases that exact measurements separated. The
+predeclared anonymous-volume extension added no discrimination beyond the price
+history (`P2 = P1`) for these preludes.
+
+Acceptance met for this map: hidden debt and impact-law uncertainty remain
+separate, and the result shows when the declared public history does and does
+not narrow them. Holder margin headroom distinguishes the flat hidden-debt pair
+only as a privileged diagnostic; sufficiently precise execution-response
+measurements away from zero inventory are needed for the law pair. This does not
+prove that those observations are sufficient or available in a real market.
 
 ### Stage 4 — Resolve a named limitation before adding a mechanism
 
@@ -155,9 +170,22 @@ any edge result is scored. The separately frozen
 [free spot-flow screen](mfsm_free_btc_flow_001_result.md) found that one taker-sell
 fraction worsened a reserved 2026 forecast against price and volume alone.
 This constrains that measured proxy; it neither estimates the canonical latent
-state nor tests the proposed L2 absorption interaction. Select the institution,
-information set, observational question and path loss explicitly; measurement
-and identification determine which claims are supportable.
+state nor tests the proposed L2 absorption interaction.
+
+The next empirical member is now the
+[observable-response development protocol](../experiments/mfsm_btc_response_001_protocol.json).
+Its [field/calendar feasibility result](mfsm_btc_response_feasibility.md) found
+32 local first-of-month dates with both spot quote feeds plus Bybit perpetual
+L2/trades, zero required-header failures, and 20 price-defined accepted BTC
+candidate events across 16 UTC weeks on those complete-input dates. This is
+development feasibility only: the sample is non-continuous and previously used
+for development, and the audit did not replay L2, compute response coefficients,
+read new labels, fit models, or score P&L. The next gate is outcome-blind
+construction of the two pretrigger response coefficients followed by freezing
+same-information comparator summaries and a genuinely fresh evaluation calendar.
+
+Select the institution, information set, observational question and path loss
+explicitly; measurement and identification determine which claims are supportable.
 
 Acceptance: financial sources, identified/partially identified quantities, and
 frozen comparisons are recorded separately from mathematical checks. A flexible
@@ -169,9 +197,14 @@ causal refutation. Decision claims also require relevant costs and constraints.
 1. Read the canonical file and reference economy before changing symbols.
 2. Preserve primitive accounts, derived responses, and observed measurements as
    distinct objects. Do not add a universal fragility score.
-3. Work on the earliest incomplete stage above with one coherent change. The
-   next stage is a named real application or a specific failure of this member;
-   do not add a mechanism solely because a canonical symbol lacks an equation.
+3. Work on the earliest incomplete task above with one coherent change. The
+   public-history Stage 3 task and the MFSM-BTC-RESPONSE-1 field/calendar
+   feasibility gate are complete. Next implement only outcome-blind response-
+   feature extraction on the declared development dates, report availability and
+   feature distributions, then freeze neutral same-information comparator
+   summaries and a fresh evaluation calendar before any scoring. Do not collect
+   more data to compensate for an unobservable variable, and do not add a
+   mechanism solely because a canonical symbol lacks an equation.
 4. State the error or unanswered question and its discriminating check first.
    Do not choose a mechanism after seeing a desired result.
 5. After a transition change, run accounting, timing, limiting-case, and relevant
