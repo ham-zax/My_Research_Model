@@ -42,6 +42,76 @@ Status: Phases 1–2 built and tested on development seeds; no protocol frozen; 
   artifact of the generator. This addition must also reduce to the current member
   when the informed share is zero.
 
+## Next steps (ordered)
+
+Direction: [research direction 2026-09-27](mfsm_research_direction_2026-09-27.md). Agent-executable detail for each step: [implementation plan](mfsm_sim_edge_implementation_plan.md) (T1 = step 1, T2 = step 3, T3 = step 4, T4 = risk-control view, T5 = step 5, T6 = step 6, T7 = step 7 plus sample size, T8 = step 8).
+
+Each step ends with tests passing and a short entry in the progress log. Only
+development seeds are used until step 6 freezes the protocol.
+
+1. **Informed news selling (Phase 2b).** Add `informed_share` in `[0, 1]` to
+   `WorldLaw`, drawn per episode from a declared prior (development default
+   `U(0.3, 0.9)`). After a news jump, an informed seller holding a declared
+   inventory sells toward the new value against the dealer. Its desired size is
+   `informed_share * informed_speed * (1 - value/mark)` units per tick, and it
+   stops when the mark reaches value. The anchor absorbs only the remaining
+   `1 - informed_share` of the jump. Tests: `informed_share = 0` reproduces the
+   current member bit for bit; conservation holds; and a news episode now shows
+   net selling comparable to a liquidity episode of the same size. The
+   `noise` account keeps its role; the informed seller is a new account.
+2. **Re-baseline on development seeds.** Rerun `run_mfsm_sim_edge.py` on
+   seeds 0–999 and record S0–S3 and S6. Expected: S3's share of the oracle edge
+   falls well below 70%. If the oracle edge falls to or below costs, record that,
+   and apply the stopping rule before any retuning.
+3. **Richer public tape features.** Extend `tape_features` with causal
+   summaries a real desk could see: return path shape (depth and speed of the
+   decline, the last-tick bounce), volume acceleration, sell-flow persistence
+   across ticks, realized volatility before the trigger, and the pre-trigger
+   impact per unit of flow (the synthetic analogue of the BTC sell-impact
+   coefficient). S3 and S5 both use these, so neither strategy gets a
+   private advantage.
+4. **S5 flexible comparator.** Gradient boosting (`scikit-learn`, already an
+   optional `eval` dependency) on the step 3 features. The target is forward P&L
+   sign, with a no-trade band. Fit on seeds 0–4,999 with 5-fold cross-validation
+   by seed; the threshold is chosen on seeds 5,000–9,999.
+5. **S4 MFSM trader (Phase 3).**
+   - a bootstrap particle filter over hidden structure and state, using the
+     MFSM-SIM-1 transition with a declared observation-noise band on the mark
+     and volume;
+   - a forward valuation of buy, sell and flat per particle, reusing
+     `execute_trade`;
+   - it acts only if the expected P&L exceeds the declared margin, and reports
+     `not_identified` when the posterior disagrees on the sign;
+   - it gets the same development seeds and tuning budget as S5;
+   - pure Python first; NumPy only if a 1,000-episode development run takes
+     more than about 30 minutes;
+   - tests: the posterior concentrates on the truth with a noise-free tape, stays
+     diffuse for observationally equivalent candidates, and never reads hidden
+     fields.
+6. **Freeze and score `mfsm_sim_edge_001`.** Write the protocol JSON:
+   - priors, the informed-share prior, trade spec, strategy settings and
+     metrics;
+   - seed ranges: `test` 1,000,000–1,001,999; `ood` 2,000,000–2,001,999 with
+     hyperbolic impact, longer buyer delays, a higher news share and reversed
+     holder order, all unknown to S4;
+   - remove the development-only guard in the runner only for the frozen
+     protocol.
+
+   Run once, write the receipt with hashes, and publish
+   `docs/mfsm_sim_edge_001_result.md` answering Q1–Q3 and Q5 against the frozen
+   edge criterion.
+7. **Value of information and capacity (Phase 4, protocol `002`).** Give S4 one
+   privileged input at a time and sweep size and fees. This ranks which hidden
+   quantity is worth measuring and gives the break-even cost.
+8. **Bring it back (Phase 5).** Map the step 7 ranking to BTC observables. Then
+   decide whether to resume the parked BTC top-20 replenishment revision, or to
+   pursue a different measurement (open interest, liquidation prints, or the
+   basis), and update the canonical known-weaknesses section with any confirmed
+   limitation.
+
+Not planned yet: crowding with several MFSM traders (Phase 6), which happens
+only if step 6 finds an edge.
+
 ## Why this plan exists
 
 The executable reference economy, [MFSM-RE-1](../MFSM_Reference_Economy.md), is a
@@ -269,7 +339,7 @@ Q8 mapping candidates (to be confirmed by Q4, not assumed):
 
 ## Phases, deliverables and acceptance
 
-### Phase 1 — World generator (MFSM-SIM-1)
+### Phase 1 — World generator (MFSM-SIM-1) — done
 
 Files: `src/mfsm_sim/__init__.py`, `src/mfsm_sim/world.py`,
 `tests/test_sim_world.py`, and a synthetic-member section appended to this plan
@@ -280,9 +350,9 @@ reference and sensitivity scenarios; seeded determinism; the four scenarios
 produce qualitatively distinct average post-shock drifts on a small `dev` batch
 (a sanity check, not a result).
 
-### Phase 2 — Tape, harness, baselines and oracle
+### Phase 2 — Tape, harness, baselines and oracle — done
 
-Files: `src/mfsm_sim/tape.py`, `src/mfsm_sim/harness.py`,
+Files (the tape is `PublicRow` in `world.py`; no separate `tape.py`): `src/mfsm_sim/harness.py`,
 `src/mfsm_sim/strategies.py`, `tests/test_sim_harness.py`,
 `scripts/run_mfsm_sim_edge.py`.
 

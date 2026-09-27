@@ -25,6 +25,12 @@ Its invariant question is:
 - [Model improvement plan](./docs/mfsm_model_improvement_plan.md)
   Model weaknesses, canonical corrections, distinct sources of error, and remaining work with acceptance criteria. Start here for what to improve next.
 
+- [Research direction, 2026-09-27](./docs/mfsm_research_direction_2026-09-27.md)
+  Reassessment of the model, BTC experiments and simulation: sample size is the binding constraint; simulation-first, value of information and required event counts decide any further real-data work.
+
+- [Simulated edge implementation plan](./docs/mfsm_sim_edge_implementation_plan.md)
+  Agent-executable tasks T1–T8 with context, rules, interfaces, tests, acceptance and orchestrator decision points.
+
 - [Simulated edge plan](./docs/mfsm_sim_edge_plan.md)
   Stochastic multi-holder extension of the reference economy, an outside trader restricted to the public tape, and paired comparisons of an MFSM model-based trader against naive, flexible and oracle traders. Tests whether MFSM reasoning can yield an edge in its own world and which hidden quantities carry it.
 
