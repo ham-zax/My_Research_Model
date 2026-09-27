@@ -161,6 +161,12 @@ Acceptance: the change addresses a demonstrated limitation while preserving
 accounting and falsifiability. Do not discard a mechanism merely because one
 inadequate proxy fails, or retain a coordinate solely because it has a symbol.
 
+**Simulated edge (next).** The [simulated edge plan](mfsm_sim_edge_plan.md)
+adds hidden value, noise traders, many holders and an outside public-tape
+trader, then tests whether an MFSM model-based trader beats naive and flexible
+same-information traders after costs on frozen seeds. Each addition reduces
+exactly to MFSM-RE-1 in a declared limit.
+
 ### Stage 5 — Assess a real application against its actual claims
 
 **Underway.** The [BTC edge evaluation plan](mfsm_btc_edge_evaluation_plan.md)
